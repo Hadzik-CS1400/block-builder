@@ -1,4 +1,78 @@
+# =============================================================================
+# .gitignore for CS 1400 Student Repos
+# =============================================================================
+
+# --- Python ---
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# --- Virtual Environments ---
 .venv/
+venv/
+env/
+ENV/
+Lib/
+Scripts/
+pyvenv.cfg
+pip-selfcheck.json
+
+# --- Testing ---
+.pytest_cache/
+htmlcov/
+.coverage
+.tox/
+
+# --- IDE: VS Code ---
+.vscode/
+!.vscode/settings.json
+!.vscode/launch.json
+*.code-workspace
+
+# --- IDE: JetBrains (PyCharm) ---
+.idea/
+*.iml
+
+# --- IDE: Other ---
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# --- Claude Code ---
+.claude/
+
+# --- OS Files ---
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Environment / Secrets ---
+.env
+.env.local
+*.pem
+*.key
+
+# --- Game Save Files (created at runtime) ---
+savegame.json
 blockbuilder_save.json
+*.save
+
+# --- Misc ---
+*.log
+*.tmp
+*.bak
+*.orig
