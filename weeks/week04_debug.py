@@ -1,22 +1,41 @@
 # =============================================================================
-# Block Builder — Week 4: Debug & Plan the Game
+# Block Builder - Week 4: Debug & Plan the Game
 # =============================================================================
-# NEW this week: nothing! No new Python syntax.
-#                You practise the VS Code debugger, breakpoints, reading
-#                tracebacks, and writing pseudocode.
+# Module topic: the VS Code debugger, breakpoints, tracebacks, pseudocode
+# NEW Python this week: none. No new syntax.
 #
-# THIS WEEK IS DIFFERENT: you do NOT edit game.py.
+# THIS WEEK IS DIFFERENT: you do NOT touch game.py.
 # You fix THIS file, right here, and commit it.
-#
-# There are EIGHT bugs. Each one is marked with a "# BUG n" comment on the
-# line above it — but the comment does NOT tell you what's wrong. That's your
-# job. Some crash immediately. Some run fine and quietly produce nonsense,
-# which is the harder and more important kind to find.
 #
 #   Run it:   python weeks/week04_debug.py
 #   Test it:  pytest tests/test_week04.py -v
 #
-# Then fill in the PSEUDOCODE block at the bottom.
+# WHAT YOU'LL DO
+#   There are EIGHT bugs below. Each is marked with a "# BUG n" comment on the
+#   line above it - but the comment does NOT tell you what's wrong. That's your
+#   job. Some crash immediately. Some run fine and quietly produce nonsense,
+#   which is the harder and more important kind to find.
+#
+#   Then fill in the PSEUDOCODE block at the bottom. That plan is what you'll
+#   actually build in Weeks 5 and 6.
+#
+# WHAT'S TESTED (20 points)
+#   5 pts  The program runs start to finish without crashing
+#   5 pts  Gathering and eating change resources correctly
+#   5 pts  The if-conditions are right
+#   5 pts  At least 5 pseudocode steps are written
+#
+# TIPS
+#   - Fix the crash FIRST. Python won't run any of the file until the syntax
+#     error is gone. The traceback names the line.
+#   - Read a traceback from the BOTTOM UP. The last line says what went wrong;
+#     the line above says where.
+#   - Set a breakpoint (click left of the line number) and press F5. Step with
+#     F10 and watch the Variables panel. A number moving the wrong way is your
+#     bug.
+#   - A misspelled variable name doesn't crash. Python just makes a NEW
+#     variable. That's why the damage disappears.
+#   - Pseudocode is plain English, one step per line. No Python.
 # =============================================================================
 
 import random

@@ -9,9 +9,21 @@ from pathlib import Path
 
 GAME_FILE = Path(__file__).parent.parent / "game.py"
 
+MISSING = (
+    "game.py not found in the top folder of your repo. In Week 2, open "
+    "weeks/week02_todo.py and use File > Save As to save it as game.py "
+    "next to README.md (NOT inside weeks/)."
+)
+
+
+def require_game_file():
+    if not GAME_FILE.exists():
+        raise AssertionError(MISSING)
+
 
 def run_game(difficulty="2"):
     """Run game.py answering the difficulty prompt with the given choice."""
+    require_game_file()
     stdin = "TestCrafter\n" + difficulty + "\n" + "1\n" * 50
     return subprocess.run(
         [sys.executable, str(GAME_FILE)],
@@ -20,6 +32,7 @@ def run_game(difficulty="2"):
 
 
 def get_source_code():
+    require_game_file()
     return GAME_FILE.read_text(encoding="utf-8")
 
 
