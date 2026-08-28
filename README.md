@@ -101,6 +101,7 @@ alone. Edit those and you'll get conflicts every week.
 |---|---|---|
 | `game.py` | **you** | Your game. Personalise it — colours, numbers, story. |
 | `weeks/` | instructor | This week's instructions and skeleton. Read-only. |
+| `solutions/` | instructor | Last week's worked answer. Arrives one week behind. |
 | `tests/` | instructor | What you're graded on. **Read them** — they say exactly what's expected. |
 | `sync.py` | instructor | Fetches each week's files. Don't edit it. |
 | `README.md` | instructor | This file. |
@@ -126,17 +127,19 @@ not that you printed one exact sentence. Make the game yours.
 
 ## Stuck, or fell behind?
 
-Every week has a worked solution on the **`solutions` branch**, tagged by week:
+**Last week's worked solution arrives with this week's sync**, in the
+`solutions/` folder. Week 2's answer lands when you sync for Week 3, Week 3's
+when you sync for Week 4, and so on.
 
-```
-git fetch upstream
-git show week-03:game.py          # a specific week
-```
+It's always one week behind on purpose: last week's submission closes Tuesday
+at midnight, so a solution only appears once that week is closed. You'll never
+find the answer to something you can still earn points for.
 
-Or browse the `solutions` branch on GitHub.
+**Use it to catch up, not to check.** If a week beat you, open
+`solutions/weekNN_game.py` beside your `game.py`, take what you're missing, and
+keep going. A week behind is recoverable; three weeks behind is not.
 
-If you missed a week entirely, copy that week's solution into your `game.py`
-and carry on. You'll score 0 for the week you skipped but full marks going
-forward — much better than falling further behind.
+You'll score 0 for a week you skipped and full marks on everything after — far
+better than falling further back.
 
 Ask in Discord or at office hours. Don't sit stuck for a week.

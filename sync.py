@@ -142,16 +142,26 @@ def main():
 
     say()
     if new:
+        todo = [f for f in new if f.startswith("weeks/")]
+        test = [f for f in new if f.startswith("tests/")]
+        sols = [f for f in new if f.startswith("solutions/")
+                and f.endswith(".py")]
+
         say("  New this week:", GREEN + BOLD)
         for f in new:
             say(f"    {f}", GREEN)
-        todo = [f for f in new if f.startswith("weeks/")]
-        test = [f for f in new if f.startswith("tests/")]
         say()
         if todo:
             say(f"  Start here:  {todo[0]}", BOLD)
         if test:
             say(f"  Score it:    pytest {test[0]} -v")
+        if sols:
+            say()
+            say("  Last week's solution is now available:", YELLOW + BOLD)
+            for f in sols:
+                say(f"    {f}", YELLOW)
+            say("  Behind, or missed last week? Open it beside your game.py", DIM)
+            say("  and copy across what you're missing. Don't fall further.", DIM)
     elif git("rev-parse", "HEAD^{tree}").stdout.strip() != before_tree:
         say("  Updated. No new week files - your instructor fixed", GREEN)
         say("  something in the existing ones.", GREEN)
