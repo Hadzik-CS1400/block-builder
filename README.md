@@ -24,15 +24,7 @@ git clone https://github.com/YOUR-USERNAME/block-builder.git
 cd block-builder
 ```
 
-### 2. Connect to the class repo
-
-This is how you get each week's new files. Do it once:
-
-```
-git remote add upstream https://github.com/Hadzik-CS1400/block-builder.git
-```
-
-### 3. Install what you need
+### 2. Install what you need
 
 ```
 pip install -r requirements.txt
@@ -40,7 +32,7 @@ pip install -r requirements.txt
 
 That's `rich` (colourful terminal output) and `pytest` (the tests that grade you).
 
-### 4. Create your game file
+### 3. Create your game file
 
 Open **`weeks/week02_todo.py`**, then **File → Save As** and save it as
 **`game.py`** in the top folder of your repo — next to `README.md`, not inside
@@ -52,22 +44,17 @@ That file is your starting skeleton. Fill in the TODOs and it becomes your game.
 
 ## Every week
 
-Block Builder runs on **Wednesdays**. Each week starts like this:
+Block Builder runs on **Wednesdays**. Every session starts the same way:
 
 ```
-git pull upstream main --no-rebase
+python sync.py
 ```
 
-> **First time only.** Because your repo was made from a template, it doesn't
-> share history with the class repo, so your *first* pull needs:
->
-> ```
-> git pull upstream main --no-rebase --allow-unrelated-histories
-> ```
->
-> After that once, the plain command works for the rest of the semester.
+That one command is your whole routine. It connects you to the class repo the
+first time, pulls down the new week's files, and tells you what arrived and
+where to start. Run it whenever you like — running it twice does nothing bad.
 
-That drops in two new files for the week:
+Each week it brings two new files:
 
 - **`weeks/weekNN_todo.py`** — what you're building and the code skeleton
 - **`tests/test_weekNN.py`** — the tests that score it
@@ -75,6 +62,8 @@ That drops in two new files for the week:
 Open the week's todo file beside `game.py` and work through it. **From Week 3
 on you don't Save As** — that would wipe your work. You copy the new sections
 into the `game.py` you already have.
+
+Then:
 
 ```
 python game.py                     # run it
@@ -84,16 +73,25 @@ git commit -m "Week NN"
 git push
 ```
 
-Then submit your repo link on Canvas.
+Submit your repo link on Canvas.
+
+### If sync.py asks you to do something
+
+It only ever asks for two things:
+
+- **"Commit your work first"** — you have unsaved changes. Run the two commands
+  it shows you, then run `python sync.py` again.
+- **"Sync hit a conflict"** — stop and show your instructor. Don't run more git
+  commands. Nothing is lost and it's a two-minute fix.
 
 ### Why pulling is safe
 
 You only ever edit `game.py`. Your instructor only ever *adds* new files to
-`weeks/` and `tests/`. `game.py` doesn't exist in the class repo at all — you
-made it — so a pull can't touch it. Your personalisations are never at risk.
+`weeks/` and `tests/`. **`game.py` doesn't exist in the class repo at all** —
+you made it — so a sync can't touch it. Your personalisations are never at risk.
 
-That only holds if you leave `README.md`, `weeks/` and `tests/` alone. Edit
-those and you'll get merge conflicts every week.
+That only holds if you leave `README.md`, `sync.py`, `weeks/` and `tests/`
+alone. Edit those and you'll get conflicts every week.
 
 ---
 
@@ -104,6 +102,7 @@ those and you'll get merge conflicts every week.
 | `game.py` | **you** | Your game. Personalise it — colours, numbers, story. |
 | `weeks/` | instructor | This week's instructions and skeleton. Read-only. |
 | `tests/` | instructor | What you're graded on. **Read them** — they say exactly what's expected. |
+| `sync.py` | instructor | Fetches each week's files. Don't edit it. |
 | `README.md` | instructor | This file. |
 
 ---
