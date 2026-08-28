@@ -30,19 +30,27 @@ def strip_comments(source):
 
 
 def test_difficulty_actually_changes_the_game():
-    """Peaceful and Hardcore produce different starts (5 pts)."""
-    peaceful = run_game("1")
-    hardcore = run_game("3")
-    assert peaceful.returncode == 0, (
-        "game.py crashed on Peaceful. Error was:\n" + peaceful.stderr
+    """Difficulty drives an if/elif/else and all three run (5 pts)."""
+    source = strip_comments(get_source_code())
+
+    branches = re.findall(r"^\s*(?:if|elif)\s+.*difficulty.*:", source,
+                          re.MULTILINE)
+    assert len(branches) >= 2, (
+        f"Found {len(branches)} conditions testing `difficulty`, expected at "
+        f"least 2 (an `if` and an `elif`). Difficulty should decide your "
+        f"starting resources, not just get printed back out."
     )
-    assert hardcore.returncode == 0, (
-        "game.py crashed on Hardcore. Error was:\n" + hardcore.stderr
+    assert re.search(r"^\s*else\s*:", source, re.MULTILINE), (
+        "Expected an `else` so difficulty 3 (Hardcore) is handled too."
     )
-    assert peaceful.stdout != hardcore.stdout, (
-        "Choosing 1 (Peaceful) and 3 (Hardcore) produced identical output. "
-        "Use if/elif/else on `difficulty` to set different starting resources."
-    )
+
+    # Every branch has to actually work, not just exist
+    for choice, label in (("1", "Peaceful"), ("2", "Normal"), ("3", "Hardcore")):
+        result = run_game(choice)
+        assert result.returncode == 0, (
+            f"game.py crashed on difficulty {choice} ({label}). Error was:\n"
+            + result.stderr
+        )
 
 
 def test_random_events_are_used():
