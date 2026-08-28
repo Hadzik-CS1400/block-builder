@@ -101,6 +101,7 @@ def main():
             "instructor - it may be a GitHub sign-in problem.")
 
     before = set(git("ls-files").stdout.split())
+    before_tree = git("rev-parse", "HEAD^{tree}").stdout.strip()
 
     # --- 4. Already up to date? ------------------------------------------
     local = git("rev-parse", "HEAD").stdout.strip()
@@ -151,9 +152,11 @@ def main():
             say(f"  Start here:  {todo[0]}", BOLD)
         if test:
             say(f"  Score it:    pytest {test[0]} -v")
-    else:
+    elif git("rev-parse", "HEAD^{tree}").stdout.strip() != before_tree:
         say("  Updated. No new week files - your instructor fixed", GREEN)
         say("  something in the existing ones.", GREEN)
+    else:
+        say("  You're up to date. Nothing new this week yet.", GREEN)
 
     check_game_file()
 
