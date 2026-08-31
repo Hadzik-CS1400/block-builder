@@ -97,7 +97,9 @@ Every week after this is the same panel with a different message.
 
 ## Every week
 
-Block Builder runs on **Wednesdays**. Every session starts the same way:
+Block Builder runs on **Wednesdays**. Every session starts the same way —
+**type this in the terminal**, from inside your `block-builder` folder (in VS
+Code, open one with `` Ctrl+` ``):
 
 ```
 python sync.py
@@ -116,15 +118,28 @@ Open the week's todo file beside `game.py` and work through it. **From Week 3
 on you don't Save As** — that would wipe your work. You copy the new sections
 into the `game.py` you already have.
 
-Then:
+Then, in the terminal:
 
 ```
-python game.py                     # run it
-pytest tests/test_weekNN.py -v     # check your score
+python game.py                              # run it
+python -m pytest tests/test_weekNN.py -v    # check your score
+```
+
+And to save your work to GitHub — **either** the terminal:
+
+```
 git add -A
 git commit -m "Week NN"
 git push
 ```
+
+**or** VS Code's **Source Control** tab, which does the same three things:
+stage with **+**, type `Week NN` as the message, click **Commit**, then
+**Sync Changes**. Use whichever you prefer.
+
+> **"Sync Changes" showing a big number after your first sync?** Normal, and
+> you are not behind — it is the class repo's history arriving alongside your
+> own. Click it once and it stops.
 
 Then **screenshot the scorecard** and upload it to Canvas. Push your work
 too — your last commit is your submission time.
