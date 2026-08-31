@@ -192,6 +192,20 @@ def main():
     after = set(git("ls-files").stdout.split())
     new = sorted(after - before)
 
+    # The first sync merges the class repo's whole history into a repo that
+    # started with a single commit, so VS Code's Source Control suddenly shows
+    # a dozen-plus commits to push. That looks alarming and reads as "you are
+    # behind", when it is the opposite -- they are ahead, once, by the class
+    # repo's own history. Say so before they ask.
+    ahead = git("rev-list", "--count", "origin/main..HEAD").stdout.strip()
+    if ahead.isdigit() and int(ahead) > 1:
+        say()
+        say(f"  You now have {ahead} commits to push. That is normal the first",
+            DIM)
+        say("  time - most of them are the class repo's own history, not", DIM)
+        say("  anything you did. Push once and it stops:", DIM)
+        say("    git push", BOLD)
+
     say()
     if new:
         todo = [f for f in new if f.startswith("weeks/")]

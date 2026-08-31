@@ -76,9 +76,7 @@ git push
 ```
 
 **Prefer not to type git commands?** The **Source Control** tab in VS Code does
-the same three things:
-
-![The Source Control panel in VS Code. The branch icon in the left sidebar carries a badge showing one pending change. A message box at the top has Week 02 start typed into it, with a blue Commit button directly beneath. Under a Changes heading, game.py is listed as the single changed file, marked U for untracked.](images/vscode_commit.png)
+the same three things — there is a screenshot of it on the Canvas assignment:
 
 | Step | In VS Code |
 |---|---|
