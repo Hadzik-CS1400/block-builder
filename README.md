@@ -75,6 +75,20 @@ git commit -m "Week 02 start"
 git push
 ```
 
+**Prefer not to type git commands?** The **Source Control** tab in VS Code does
+the same three things:
+
+![The Source Control panel in VS Code. The branch icon in the left sidebar carries a badge showing one pending change. A message box at the top has Week 02 start typed into it, with a blue Commit button directly beneath. Under a Changes heading, game.py is listed as the single changed file, marked U for untracked.](images/vscode_commit.png)
+
+| Step | In VS Code |
+|---|---|
+| 1 | Click the **Source Control** icon in the left sidebar — the branch symbol, badged with how many files changed |
+| 2 | Hover `game.py` under **Changes** and click **+** to stage it. The `U` only means Git has not seen this file before |
+| 3 | Type your message in the box — **`Week 02 start`** |
+| 4 | Click **✓ Commit**, then **Sync Changes** to push |
+
+Every week after this is the same panel with a different message.
+
 > **Why now?** `sync.py` refuses to pull while you have uncommitted work — it
 > will not risk your game to fetch a file. A brand-new `game.py` counts as
 > uncommitted, so if you skip this the very first sync stops with
