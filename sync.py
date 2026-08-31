@@ -49,6 +49,25 @@ def die(title, *lines):
     sys.exit(1)
 
 
+# Paths the instructor owns. Everything here is fetched, never authored by a
+# student, so upstream's version is correct by definition and a conflict in one
+# can be resolved without asking. Anything NOT matching this is the student's,
+# and is never touched automatically.
+#
+# game.py is the important omission: it does not exist in the class repo at
+# all, so it can never conflict -- but if that ever changes, it falls through
+# to the "your own work" branch and stops for a human.
+INSTRUCTOR_PATHS = ("weeks/", "tests/", "solutions/", "images/")
+INSTRUCTOR_FILES = ("README.md", "sync.py", "requirements.txt", ".gitignore")
+
+
+def owned_by_student(path):
+    path = path.replace("\\", "/")
+    if path in INSTRUCTOR_FILES:
+        return False
+    return not path.startswith(INSTRUCTOR_PATHS)
+
+
 def main():
     say()
     say("  Block Builder - weekly sync", BOLD)
@@ -122,19 +141,52 @@ def main():
     pulled = git(*args)
     if pulled.returncode != 0:
         conflicts = git("diff", "--name-only", "--diff-filter=U").stdout.split()
-        if conflicts:
-            die("Sync hit a conflict.",
-                "This usually means a file you weren't meant to edit got",
-                "changed. Show your instructor this list:",
+
+        # Conflicts in files the student does not own are not a student
+        # problem, and on the first sync they are close to guaranteed.
+        #
+        # A repo made from the template starts its own history, so there is no
+        # common ancestor for git to compare against. It cannot tell that the
+        # student's copy of README.md is simply the older one -- both sides
+        # look like "added this file", and every instructor file that changed
+        # since the repo was created comes back as an add/add conflict. Adding
+        # new files stays clean; editing existing ones is what collides.
+        #
+        # The ownership rule already answers it: these files are mine, the
+        # student never edits them, so upstream is correct by definition. Take
+        # it and carry on rather than stopping them on their first run.
+        mine = [c for c in conflicts if not owned_by_student(c)]
+        theirs = [c for c in conflicts if owned_by_student(c)]
+
+        if conflicts and not theirs:
+            for path in mine:
+                git("checkout", "--theirs", "--", path)
+                git("add", "--", path)
+            committed = git("commit", "--no-edit")
+            if committed.returncode == 0:
+                say()
+                say("  Updated my files to the current version.", DIM)
+                for path in mine:
+                    say(f"    {path}", DIM)
+                say("  Your game.py was not touched.", DIM)
+            else:
+                die("Sync failed.",
+                    "Show your instructor this message:",
+                    "",
+                    *committed.stderr.strip().splitlines()[:6])
+        elif conflicts:
+            die("Sync hit a conflict in your own work.",
+                "These are files you own, so I will not overwrite them:",
                 "",
-                *[f"  - {c}" for c in conflicts],
+                *[f"  - {c}" for c in theirs],
                 "",
                 "Nothing is lost. Do not run any more git commands until",
                 "you've asked - it's a two-minute fix.")
-        die("Sync failed.",
-            "Show your instructor this message:",
-            "",
-            *pulled.stderr.strip().splitlines()[:6])
+        else:
+            die("Sync failed.",
+                "Show your instructor this message:",
+                "",
+                *pulled.stderr.strip().splitlines()[:6])
 
     # --- 6. Report what arrived ------------------------------------------
     after = set(git("ls-files").stdout.split())
