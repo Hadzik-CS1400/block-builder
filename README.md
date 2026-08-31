@@ -16,13 +16,23 @@ edit for the rest of the semester.
 
 ### 1. Get your own copy
 
-Click **Use this template → Create a new repository** on GitHub. Name it
-`block-builder`. Then clone it:
+Use the **course tool**, the same one you used for the Code-Togethers — it
+makes the repo for you, already named correctly and already connected to me:
+
+**[Create my Block Builder repository →](https://hadzikcs.netlify.app/gh?course=sh/CS1400&task=block-builder)**
+
+Enter your **GitHub username** and the course passcode `monkey_jive`.
+
+Then **accept the invitation** (the repo is private until you do — check the
+green success panel or your email), and clone it:
 
 ```
-git clone https://github.com/YOUR-USERNAME/block-builder.git
-cd block-builder
+git clone https://github.com/Hadzik-CS1400/block-builder-YOUR-USERNAME.git
+cd block-builder-YOUR-USERNAME
 ```
+
+> Do **not** use "Use this template" on GitHub. That makes a repo I cannot see,
+> with no invitation and no grading hook — your work would not reach me.
 
 ### 2. Install what you need
 
@@ -73,7 +83,8 @@ git commit -m "Week NN"
 git push
 ```
 
-Submit your repo link on Canvas.
+Then **screenshot the scorecard** and upload it to Canvas. Push your work
+too — your last commit is your submission time.
 
 ### If sync.py asks you to do something
 
@@ -116,8 +127,32 @@ Four tests, 5 points each. Run them as often as you like:
 pytest tests/test_week02.py -v
 ```
 
-A failing test explains what went wrong in plain English. Read the message
-before changing anything.
+That prints a **scorecard** — the same one the Code-Togethers print, with your
+repository and name at the top and a running total at the bottom:
+
+```
+==============================================================
+                        WEEK 02 SCORE
+==============================================================
+  GitHub user   yourusername
+  Repository    block-builder-yourusername
+--------------------------------------------------------------
+  Title screen ................................  5/5   PASS
+  Asks for name and uses it ...................  5/5   PASS
+  All five resources reported .................  5/5   PASS
+  Arithmetic is used ..........................  0/5   FAIL
+        Nothing in the output looks like a calculated total.
+--------------------------------------------------------------
+  TOTAL                                            15 / 20
+==============================================================
+```
+
+**Screenshot the whole scorecard** — the header as well as the TOTAL — and
+upload it to the Canvas assignment. The header names your repository and your
+git identity, which is why it has to be in the picture.
+
+A failing test explains what went wrong in plain English, right there in the
+scorecard. Read the message before changing anything.
 
 **Personalising your game will not break the tests.** They check that things
 *happen* — a name gets used, difficulty changes the start, a night phase runs —
