@@ -65,6 +65,22 @@ Open **`weeks/week02_todo.py`**, then **File → Save As** and save it as
 
 That file is your starting skeleton. Fill in the TODOs and it becomes your game.
 
+### 4. Commit it straight away
+
+Do this **before** you run `sync.py` for the first time:
+
+```
+git add -A
+git commit -m "Week 02 start"
+git push
+```
+
+> **Why now?** `sync.py` refuses to pull while you have uncommitted work — it
+> will not risk your game to fetch a file. A brand-new `game.py` counts as
+> uncommitted, so if you skip this the very first sync stops with
+> *"Commit your work first"* and lists `game.py`. Nothing is broken; it is the
+> safety net doing its job. Commit, then sync.
+
 ---
 
 ## Every week
