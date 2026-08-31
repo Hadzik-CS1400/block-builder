@@ -27,5 +27,5 @@ Open `solutions/weekNN_game.py` beside your own `game.py` and compare. Copy
 across what you're missing.
 
 Don't replace your whole file unless you have nothing — you'd lose your own
-colours, numbers and story, and the solution is deliberately plain so that
+colors, numbers and story, and the solution is deliberately plain so that
 yours can be better than it.

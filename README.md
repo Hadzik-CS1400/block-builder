@@ -37,10 +37,25 @@ cd block-builder-YOUR-USERNAME
 ### 2. Install what you need
 
 ```
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-That's `rich` (colourful terminal output) and `pytest` (the tests that grade you).
+That's `rich` (colorful terminal output) and `pytest` (the tests that grade
+you). Your game will not start without `rich`, so this step is not optional.
+
+> **Type `python -m pip`, not plain `pip`.** They are not the same. Plain `pip`
+> can install into a *different* Python from the one that runs your game,
+> which is why people sometimes get "no module named rich" for a library they
+> just watched install. `python -m pip` always installs into the Python you
+> are actually using.
+>
+> **On a Mac, use `python3` everywhere** you see `python` below.
+
+Check it worked:
+
+```
+python -c "import rich, pytest; print('both installed')"
+```
 
 ### 3. Create your game file
 
@@ -99,10 +114,50 @@ It only ever asks for two things:
 
 You only ever edit `game.py`. Your instructor only ever *adds* new files to
 `weeks/` and `tests/`. **`game.py` doesn't exist in the class repo at all** —
-you made it — so a sync can't touch it. Your personalisations are never at risk.
+you made it — so a sync can't touch it. Your personalizations are never at risk.
 
 That only holds if you leave `README.md`, `sync.py`, `weeks/` and `tests/`
 alone. Edit those and you'll get conflicts every week.
+
+---
+
+## If the install won't work
+
+Every one of these is common and none of them is your fault. Work down the list.
+
+| What you see | What it means | Fix |
+|---|---|---|
+| `'pip' is not recognized` / `pip: command not found` | `pip` isn't on your PATH | Use `python -m pip install -r requirements.txt` |
+| `No module named rich` **after** installing it | pip installed into a different Python than the one running your game | `python -m pip install -r requirements.txt` — the `python -m` part is what ties them together |
+| `No module named pytest` | Same cause | Same fix, then run the tests with `python -m pytest` |
+| `error: externally-managed-environment` | A Mac/Linux Python that protects itself from stray installs | `python3 -m pip install --user -r requirements.txt` |
+| `Permission denied` / `Access is denied` | No admin rights — normal on a lab or work machine | Add `--user`: `python -m pip install --user -r requirements.txt` |
+| `python: command not found` (Mac) | macOS calls it `python3` | Use `python3` everywhere: `python3 -m pip install -r requirements.txt` |
+| Installs fine, game still fails | You have more than one Python | Run `python -c "import sys; print(sys.executable)"` and tell me what it prints |
+
+**The one command that fixes most of these:**
+
+```
+python -m pip install -r requirements.txt
+```
+
+On a Mac:
+
+```
+python3 -m pip install -r requirements.txt
+```
+
+Then confirm both libraries are visible to the *same* Python that runs your
+game:
+
+```
+python -c "import rich, pytest; print('both installed')"
+```
+
+If that prints `both installed`, you are set. If it doesn't, **bring it to me
+or post in Discord** — paste what you typed and what it said. Do not spend an
+evening on it; this is a five-minute fix in person and it is not part of what
+you are being graded on.
 
 ---
 
@@ -110,7 +165,7 @@ alone. Edit those and you'll get conflicts every week.
 
 | Path | Owner | Notes |
 |---|---|---|
-| `game.py` | **you** | Your game. Personalise it — colours, numbers, story. |
+| `game.py` | **you** | Your game. Personalize it — colors, numbers, story. |
 | `weeks/` | instructor | This week's instructions and skeleton. Read-only. |
 | `solutions/` | instructor | Last week's worked answer. Arrives one week behind. |
 | `tests/` | instructor | What you're graded on. **Read them** — they say exactly what's expected. |
@@ -124,7 +179,7 @@ alone. Edit those and you'll get conflicts every week.
 Four tests, 5 points each. Run them as often as you like:
 
 ```
-pytest tests/test_week02.py -v
+python -m pytest tests/test_week02.py -v
 ```
 
 That prints a **scorecard** — the same one the Code-Togethers print, with your
@@ -154,7 +209,7 @@ git identity, which is why it has to be in the picture.
 A failing test explains what went wrong in plain English, right there in the
 scorecard. Read the message before changing anything.
 
-**Personalising your game will not break the tests.** They check that things
+**Personalizing your game will not break the tests.** They check that things
 *happen* — a name gets used, difficulty changes the start, a night phase runs —
 not that you printed one exact sentence. Make the game yours.
 

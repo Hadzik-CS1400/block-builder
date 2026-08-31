@@ -23,8 +23,8 @@ GREEN, YELLOW, RED, DIM, BOLD, OFF = (
 )
 
 
-def say(msg="", colour=""):
-    print(f"{colour}{msg}{OFF}" if colour else msg)
+def say(msg="", color=""):
+    print(f"{color}{msg}{OFF}" if color else msg)
 
 
 def rule():

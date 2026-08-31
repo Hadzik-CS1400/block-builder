@@ -38,7 +38,7 @@
 from rich import print
 
 # --- Title screen ---
-# Written for you. Change the colours or wording if you like!
+# Written for you. Change the colors or wording if you like!
 
 print("=" * 50)
 print("[bold green]        BLOCK BUILDER[/bold green]")

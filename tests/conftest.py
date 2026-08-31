@@ -44,7 +44,7 @@ def _enable_windows_vt():
         return False
 
 
-def _use_colour():
+def _use_color():
     if os.environ.get("NO_COLOR"):
         return False
     if os.environ.get("FORCE_COLOR"):
@@ -100,6 +100,34 @@ def _week(nodeid):
     return m.group(1) if m else ""
 
 
+GAME_NEEDS = ("rich",)
+
+
+def _missing_for_game():
+    """Modules game.py imports that its own interpreter cannot find.
+
+    Probed by running `sys.executable -c "import rich"` rather than importing
+    here, and the distinction matters: pytest may be running on a different
+    Python from the one that launches game.py. That is the single most
+    confusing way a machine fails -- pip installed rich for one interpreter,
+    the game runs on the other, and the student is told a library they just
+    installed is missing.
+
+    Without this, a missing rich shows up as four unrelated test failures
+    about title screens and resources, and the actual cause never appears.
+    """
+    missing = []
+    for module in GAME_NEEDS:
+        try:
+            probe = subprocess.run([sys.executable, "-c", "import " + module],
+                                   capture_output=True, timeout=15)
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if probe.returncode:
+            missing.append(module)
+    return missing
+
+
 def pytest_configure(config):
     config._scorecard = {}
 
@@ -131,10 +159,10 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     if not rows:
         return
 
-    colour = _use_colour()
+    color = _use_color()
 
     def write(line, ok=None):
-        if colour and ok is not None:
+        if color and ok is not None:
             terminalreporter.write_line((GREEN if ok else RED) + line + RESET)
         else:
             terminalreporter.write_line(line)
@@ -181,7 +209,31 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     if round(earned) == WEEK_POINTS:
         write("  All tests pass. Screenshot this and submit it in Canvas.",
               ok=True)
-    else:
-        write("  Fix the FAIL lines above, then run the tests again.",
-              ok=False)
+        write("")
+        return
+
+    # Only worth probing when something failed, and only worth saying when it
+    # explains the failures rather than adding noise beside them.
+    missing = _missing_for_game()
+    if missing:
+        write("  THIS IS THE REAL PROBLEM, not your code:", ok=False)
+        write("")
+        write("  Python cannot find: %s" % ", ".join(missing))
+        write("  Your game cannot start without it, so every test above")
+        write("  failed for that one reason.")
+        write("")
+        write("  Install it into the SAME Python that runs your game:")
+        write("")
+        write("      python -m pip install -r requirements.txt")
+        write("")
+        write("  Use `python -m pip`, not plain `pip`. On a machine with more")
+        write("  than one Python, plain `pip` can install into a different one")
+        write("  -- which is why a library you just installed still shows as")
+        write("  missing. On a Mac, use python3 instead of python.")
+        write("")
+        write("  Still stuck? See Common Problems on the Canvas assignment.")
+        write("")
+        return
+
+    write("  Fix the FAIL lines above, then run the tests again.", ok=False)
     write("")
