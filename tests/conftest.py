@@ -167,10 +167,21 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         else:
             terminalreporter.write_line(line)
 
-    values = list(rows.values())
-    # Derived, so a week with a different number of tests still totals 20.
+    # Group by week FIRST. Every Block Builder week is worth 20 on its own, so
+    # once two week-files coexist -- which they do from Week 3 on -- treating
+    # the whole collection as one week splits 20 points across both and prints
+    # a single heading for the lower one. A student who had finished Week 2
+    # and not started Week 3 saw "WEEK 02 SCORE ... 10 / 20".
+    by_week = {}
+    for nodeid, passed, detail in rows.values():
+        by_week.setdefault(_week(nodeid), []).append((nodeid, passed, detail))
+
+    for week in sorted(by_week):
+        _write_week_scorecard(write, week, by_week[week], color)
+
+
+def _write_week_scorecard(write, week, values, color):
     per_test = WEEK_POINTS / len(values)
-    week = next((_week(n) for n, _, _ in values if _week(n)), "")
 
     who = _identity()
     write("")
