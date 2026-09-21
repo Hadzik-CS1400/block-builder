@@ -15,6 +15,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+# pytest imports this file as `tests.test_weekNN`, which does NOT put tests/ on
+# the path, so `import _norich` needs the folder naming itself first.
+sys.path.insert(0, str(Path(__file__).parent))
+import _norich  # noqa: E402
+
 GAME_FILE = Path(__file__).parent.parent / "game.py"
 
 MISSING = (
@@ -40,6 +45,7 @@ def run_game(stdin=FAKE_INPUT):
     result = subprocess.run(
         [sys.executable, str(GAME_FILE)],
         input=stdin, capture_output=True, text=True, timeout=15,
+        env=_norich.env_for_game(),
     )
     assert result.returncode == 0, (
         "game.py crashed before it finished. Python said:\n" + result.stderr

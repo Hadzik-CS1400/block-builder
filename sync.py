@@ -220,7 +220,7 @@ def main():
         if todo:
             say(f"  Start here:  {todo[0]}", BOLD)
         if test:
-            say(f"  Score it:    pytest {test[0]} -v")
+            say(f"  Score it:    python tests/check_week.py")
         if sols:
             say()
             say("  Last week's solution is now available:", YELLOW + BOLD)

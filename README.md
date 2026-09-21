@@ -40,8 +40,14 @@ cd block-builder-YOUR-USERNAME
 python -m pip install -r requirements.txt
 ```
 
-That's `rich` (colorful terminal output) and `pytest` (the tests that grade
-you). Your game will not start without `rich`, so this step is not optional.
+That's `rich` (colorful terminal output) and `pytest` (a test runner). Do
+this if you can — it is one command and it is how the game is meant to look.
+
+> **If it refuses, you are not stuck, and you are not behind.** Scoring never
+> needs an install: `python tests/check_week.py` uses only what Python already
+> ships with, and prints the same scorecard. `python play.py` runs your game
+> without `rich`, in plain text. Everything is gradeable either way — see
+> [If the install won't work](#if-the-install-wont-work).
 
 > **Type `python -m pip`, not plain `pip`.** They are not the same. Plain `pip`
 > can install into a *different* Python from the one that runs your game,
@@ -121,8 +127,8 @@ into the `game.py` you already have.
 Then, in the terminal:
 
 ```
-python game.py                              # run it
-python -m pytest tests/test_weekNN.py -v    # check your score
+python game.py                     # run it
+python tests/check_week.py         # check your score — nothing to install
 ```
 
 And to save your work to GitHub — **either** the terminal:
@@ -172,7 +178,8 @@ Every one of these is common and none of them is your fault. Work down the list.
 |---|---|---|
 | `'pip' is not recognized` / `pip: command not found` | `pip` isn't on your PATH | Use `python -m pip install -r requirements.txt` |
 | `No module named rich` **after** installing it | pip installed into a different Python than the one running your game | `python -m pip install -r requirements.txt` — the `python -m` part is what ties them together |
-| `No module named pytest` | Same cause | Same fix, then run the tests with `python -m pytest` |
+| `No module named pytest` | Same cause | You don't need pytest — score with `python tests/check_week.py` instead |
+| `No module named pip` / `ensurepip is disabled` — **Chromebook or Linux** | Debian's `python3` ships without pip, and blocks the usual repair | Nothing to fix: score with `python3 tests/check_week.py`, play with `python3 play.py`. For colour later, `sudo apt update && sudo apt install python3-pip` |
 | `error: externally-managed-environment` | A Mac/Linux Python that protects itself from stray installs | `python3 -m pip install --user -r requirements.txt` |
 | `Permission denied` / `Access is denied` | No admin rights — normal on a lab or work machine | Add `--user`: `python -m pip install --user -r requirements.txt` |
 | `python: command not found` (Mac) | macOS calls it `python3` | Use `python3` everywhere: `python3 -m pip install -r requirements.txt` |
@@ -196,6 +203,10 @@ game:
 ```
 python -c "import rich, pytest; print('both installed')"
 ```
+
+**None of this blocks your grade.** `python tests/check_week.py` and
+`python play.py` work with nothing installed, so submit your scorecard on time
+and we will sort the install out afterwards.
 
 If that prints `both installed`, you are set. If it doesn't, **bring it to me
 or post in Discord** — paste what you typed and what it said. Do not spend an
@@ -222,8 +233,12 @@ you are being graded on.
 Four tests, 5 points each. Run them as often as you like:
 
 ```
-python -m pytest tests/test_week02.py -v
+python tests/check_week.py
 ```
+
+> On a Mac, a Chromebook or Linux, use `python3 tests/check_week.py`.
+> 🧪 **`pytest` also works if you have it** — `python -m pytest tests/ -v`.
+> Both print the identical scorecard; they run the same four tests.
 
 That prints a **scorecard** — the same one the Code-Togethers print, with your
 repository and name at the top and a running total at the bottom:
