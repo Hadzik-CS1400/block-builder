@@ -155,7 +155,7 @@ if event == 1:
 
 elif event == 2:
     # Animal encounter
-    # BUG 6: something takes your health here and never says what it was.
+    # BUG 6: the encounter starts with nothing said about what turned up.
     # NEW Week 3: compound boolean — BOTH sides must be true
     if health > 70 and wood >= 3:
         print("You have a stick to defend yourself.")
