@@ -8,9 +8,8 @@
 #
 # INSTRUCTIONS: this file has 8 bugs in it. Each one is marked with a
 # "# BUG N:" comment describing the symptom, not the fix. Find and repair
-# all 8. TWO of them raise an error; the other SIX run fine and quietly
-# produce nonsense, which is the harder kind. Fix them in order — bug 1
-# stops the file from running at all.
+# all 8. Three of them raise an error; five are silent and need the
+# debugger. Fix them in order — bug 1 stops the file from running at all.
 # =============================================================================
 
 import random  # NEW Week 3: random events need this
@@ -51,7 +50,7 @@ if difficulty == "1":
     food = 15
     water = 15
     health = 100
-# BUG 1: the file will not run at all. The traceback names the line.
+# BUG 1: elif is missing its colon (SyntaxError — the file will not even run)
 elif difficulty == "2"
     mode = "Normal"
     wood = 5
@@ -139,7 +138,7 @@ if event == 1:
 
     if choice == "1":
         luck = random.randint(1, 10)
-        # BUG 5: the cave never pays out. It is a spider every single time.
+        # BUG 5: luck > 50 can never be true — randint(1, 10) never exceeds 10
         if luck > 50:
             iron_found = random.randint(2, 6)
             iron = iron + iron_found
@@ -149,13 +148,13 @@ if event == 1:
             health = health - damage
             print("[red]A bat attacked you! Health -" + str(damage) + "[/red]")
     else:
-        # BUG 2: gathering wood leaves you with less wood than you started with.
+        # BUG 2: gathering SUBTRACTS wood instead of adding it (silent logic bug)
         wood = wood - 3
         print("[green]Gathered 3 wood safely outside.[/green]")
 
 elif event == 2:
     # Animal encounter
-    # BUG 6: the encounter starts with nothing said about what turned up.
+    # BUG 6: the wolf arrives but nothing is printed (missing output)
     # NEW Week 3: compound boolean — BOTH sides must be true
     if health > 70 and wood >= 3:
         print("You have a stick to defend yourself.")
@@ -168,7 +167,7 @@ elif event == 2:
                 wood = wood - 1
                 print("[green]You defeated the wolf and got meat![/green]")
             else:
-                # BUG 7: the wolf bites, the message prints, and your health does not move.
+                # BUG 7: variable name typo — 'heatlh' is a NameError at runtime
                 heatlh = health - 20
                 print("[red]The wolf bit you! Health -20[/red]")
         else:
@@ -235,7 +234,7 @@ print("[bold]Crafting[/bold]")
 pickaxe_wood = 3
 pickaxe_stone = 2
 
-# BUG 4: the pickaxe gets crafted with only one of the two materials.
+# BUG 4: recipe check uses 'or' where it needs 'and' (crafts with no stone)
 if wood >= pickaxe_wood or stone >= pickaxe_stone:
     wood = wood - pickaxe_wood
     stone = stone - pickaxe_stone
@@ -250,7 +249,7 @@ else:
 # =============================================================================
 
 print()
-# BUG 3: one meal wipes out the entire food supply.
+# BUG 3: food_cost is off by a factor of 10 (silent — you starve on day 1)
 food_cost = 20
 water_cost = 2
 food = food - food_cost
@@ -293,7 +292,7 @@ else:
 print()
 print("-" * 50)
 print("[bold]End of Day " + str(day) + "[/bold]")
-# BUG 8: it crashes right at the end, after everything else worked.
+# BUG 8: forgot str() around a number in concatenation (TypeError)
 print("Health: " + health)
 print("Wood: " + str(wood) + "  Stone: " + str(stone) + "  Iron: " + str(iron))
 print("Food: " + str(food) + "  Water: " + str(water))
@@ -316,18 +315,19 @@ if health <= 0:
 # the shape of a program. Writing it first is what stops you from discovering
 # in week 6 that the whole thing needed restructuring.
 #
-# Write AT LEAST 5 steps. Keep the numbering: the test counts lines that
-# start with "# 1.", "# 2." and so on, so an unnumbered plan scores zero.
+# 1. Set up the world: ask for a name and difficulty, set starting resources
+# 2. REPEAT for each day until the player dies or reaches day 30:
+# 3.     REPEAT for each action the player has that day:
+# 4.         show a menu, read a choice, validate it, apply the result
+# 5.     consume food and water for the day, apply starvation damage
+# 6.     resolve the night: shelter protects, no shelter costs health
+# 7.     check whether the game has ended, then advance to the next day
+# 8. Print the ending: died on day N, or survived all 30 days
 #
-# 1. ...
-# 2. ...
-# 3. ...
-# 4. ...
-# 5. ...
-#
-# Questions your plan should answer:
-#   - What repeats every day?
-#   - What ends the game, the good way and the bad?
-#   - Which choices does the player make more than once?
-#   - Which values have to survive from one day to the next?
+# Things this plan already tells us:
+#   - What repeats each day?     gather, craft, eat, night  -> the inner loop
+#   - What ends the game?        health <= 0, or day > 30   -> the outer loop
+#   - What choices repeat?       the action menu            -> needs validation
+#   - What has to survive a day? health, resources, shelter -> variables, not
+#                                                              constants
 # =============================================================================
