@@ -170,10 +170,25 @@ def test_nested_loop_draws_shelter():
         "Nothing in the output mentions the shelter. Print "
         "`print(\"Shelter: \", end=\"\")` before the loops."
     )
-    assert ("/\\" in output) or ("[]" in output), (
-        "The shelter never draws any blocks. The inner loop should print one "
-        "block at a time with end=\"\" -- \"/\\\\\" for the roof row and "
-        "\"[]\" for the wall row -- and a bare print() ends each row.\n"
-        "If the shelter is empty, check shelter_level: with under 5 wood it "
-        "is 0, so there is nothing to draw."
+    # Checked in the source, not the output. shelter_level is wood // 5, and
+    # whether a run ends with 5 wood depends on the dice and on what the player
+    # spent -- a correct shelter legitimately draws nothing at level 0. What
+    # must be true is that the inner loop prints ACROSS the row.
+    inner_prints_inline = False
+    for outer in nested:
+        for inner in ast.walk(outer):
+            if not isinstance(inner, ast.For) or inner is outer:
+                continue
+            for node in ast.walk(inner):
+                if (isinstance(node, ast.Call)
+                        and isinstance(node.func, ast.Name)
+                        and node.func.id == "print"
+                        and any(kw.arg == "end" for kw in node.keywords)):
+                    inner_prints_inline = True
+    assert inner_prints_inline, (
+        "The inner loop never prints with end=\"\", so each block would start "
+        "a new line and the shelter would come out as a column.\n"
+        "Inside the inner loop: print(\"[]\", end=\"\") for the wall row and "
+        "print(\"/\\\\\", end=\"\") for the roof. A bare print() after the "
+        "inner loop ends the row."
     )
