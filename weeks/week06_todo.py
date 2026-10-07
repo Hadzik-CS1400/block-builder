@@ -49,10 +49,31 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
+# STEP 0: only if your game.py is missing Week 4's blocks
+# -----------------------------------------------------------------------------
+# Week 4 was spent repairing a SEPARATE file, week04_debug.py, so your own
+# game.py never got the three things that file had: the difficulty check,
+# crafting a pickaxe, and eating at the end of the day. Week 5's STEP 0 handed
+# them over; if you did that, skip this and go to STEP 1.
+#
+# If you did not, open solutions/week04_game.py -- it arrived with this week --
+# and copy those three blocks into your game.py before you start. They are:
+#
+#     the difficulty check     just under your difficulty = input(...) line
+#     the crafting block       after the day, before the night check
+#     the eat-and-drink block  straight after crafting
+#
+# Week 6 changes all three, so they have to be there first. Nothing below will
+# make sense without them.
+
+
+# -----------------------------------------------------------------------------
 # STEP 1: stop accepting bad difficulties
 # -----------------------------------------------------------------------------
-# Find your Week 4 validation -- the bit that prints "defaulting to Normal" --
-# and REPLACE it. Instead of giving up after one bad answer, keep asking.
+# Find your Week 4 difficulty check -- the bit that prints "defaulting to
+# Normal" -- and REPLACE it. Instead of giving up after one bad answer, keep
+# asking. (No such block? Do STEP 0 first, or just write the loop below fresh
+# where your difficulty = input(...) line is.)
 #
 # The shape, which you will use twice more this week:
 #
@@ -124,6 +145,10 @@
 # -----------------------------------------------------------------------------
 # Choice "6" opens a menu. A menu is three things you already know: a print
 # block, a validated input, and an if/elif chain.
+#
+# Your Week 4 crafting block made exactly one thing, a pickaxe, with no choice
+# about it. That block becomes recipe "a" below -- the check and the prices are
+# already written, they just move inside the menu.
 #
 # TODO 6: under `elif choice == "6":` print the bench:
 #
