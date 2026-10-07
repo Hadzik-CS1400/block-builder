@@ -123,6 +123,31 @@ def assigns_true(tree, name):
     return False
 
 
+def increments_day(tree):
+    """Does `day` actually get 1 added to it, as code?
+
+    Read from the tree, not the text. A substring search for "day = day + 1"
+    is satisfied by that same line COMMENTED OUT, which is exactly the state a
+    student is in when they have just realised the loop never ends -- so the
+    text check passed the one case it exists to catch.
+    """
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.AugAssign)
+                and isinstance(node.target, ast.Name)
+                and node.target.id == "day"
+                and isinstance(node.op, ast.Add)):
+            return True
+        if (isinstance(node, ast.Assign)
+                and any(isinstance(t, ast.Name) and t.id == "day"
+                        for t in node.targets)
+                and isinstance(node.value, ast.BinOp)
+                and isinstance(node.value.op, ast.Add)
+                and any(isinstance(side, ast.Name) and side.id == "day"
+                        for side in (node.value.left, node.value.right))):
+            return True
+    return False
+
+
 def string_constants(tree):
     return {n.value for n in ast.walk(tree)
             if isinstance(n, ast.Constant) and isinstance(n.value, str)}
@@ -228,15 +253,16 @@ def test_game_ends_and_says_how():
             "reached max_days, set game_over = True and tell the player which "
             "of the two happened."
         )
-    source = get_source_code()
-    if ("day = day + 1" not in source.replace("  ", " ")
-            and "day += 1" not in source):
+    if not increments_day(tree):
         fail(
-            "No `day = day + 1` (or `day += 1`) found.\n"
-            "This is the line that lets the loop finish: without it day stays "
-            "1, max_days is never reached, and the game replays day 1 until "
-            "you kill it."
+            "Nothing adds 1 to day. `day = day + 1` (or `day += 1`) has to be "
+            "the last line INSIDE the loop.\n"
+            "Without it day stays 1, max_days is never reached, and the only "
+            "way the game can ever end is by killing the player -- so a bad "
+            "run looks like it works.\n"
+            "If the line is there but commented out, uncomment it."
         )
+    source = get_source_code()
     output = run_game()
     if output == TIMED_OUT:
         fail(forever_message())
