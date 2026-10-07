@@ -28,7 +28,14 @@ def require_game_file():
 
 # Answers for every prompt the game might ask, plus padding so a game that
 # asks more questions than we expect can never hang waiting on stdin.
-FAKE_INPUT = "TestCrafter\n2\n" + "\n" * 100
+#
+# The padding is "1", not a blank line. From Week 6 the game validates what it
+# reads and asks AGAIN until the answer is one it accepts -- a blank is never
+# accepted, so blank padding made a week 6 game re-ask until stdin ran out and
+# then die of EOFError, failing week 2's tests for a week 6 bug that did not
+# exist. These tests sit in a student's repo all semester, so week 2's canned
+# input has to keep working against week 13's game.
+FAKE_INPUT = "TestCrafter\n2\n" + "1\n" * 200
 
 
 def run_game(stdin=FAKE_INPUT):
