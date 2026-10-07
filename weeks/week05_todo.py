@@ -21,6 +21,10 @@
 #   add the sections below. Do not start a new file, and do not copy this one
 #   over the top of yours: your colors, your numbers and your story stay.
 #
+#   Start with STEP 0. Week 4 was spent fixing a separate broken file, so your
+#   game.py is missing the three things Week 4 added. STEP 0 hands them to you
+#   as two blocks to paste, and tells you exactly where each one goes.
+#
 #   The one thing you MOVE is your Week 3 exploration event. It belongs inside
 #   the new for loop now. Select it, press Tab to indent it, and leave it
 #   otherwise alone.
@@ -43,6 +47,69 @@
 #   - Run it often. A loop that does the wrong thing five times is easier to
 #     spot than one that does it once.
 # =============================================================================
+
+# -----------------------------------------------------------------------------
+# STEP 0: catch up on Week 4 (two pastes, no typing)
+# -----------------------------------------------------------------------------
+# In Week 4 you fixed bugs in week04_debug.py. That file had three sections
+# your game.py does not: input validation, crafting a pickaxe, and eating at
+# the end of the day. Weeks 5 and 6 build on all three, so bring them in now.
+#
+# Both pastes go next to a line you already have. Find the line, paste, run.
+# (solutions/week04_game.py has the same blocks in place if you want to see
+# them in a whole file.)
+#
+# PASTE A -- find the line that reads the difficulty. It looks like:
+#
+#     difficulty = input("Enter 1, 2, or 3: ")
+#
+# Paste this directly UNDER that line, above your `if difficulty == "1":`.
+
+if difficulty != "1" and difficulty != "2" and difficulty != "3":
+    print("[red]That is not 1, 2, or 3. Defaulting to Normal.[/red]")
+    difficulty = "2"
+
+# PASTE B -- find your night check from Week 3. It starts with:
+#
+#     print("[bold]Night falls...[/bold]")
+#
+# Paste this directly ABOVE the whole night section -- above its comment line
+# and the print() and "-" * 50 lines just before it -- so crafting and eating
+# happen before night falls.
+
+print()
+print("-" * 50)
+print("[bold]Crafting[/bold]")
+
+pickaxe_wood = 3
+pickaxe_stone = 2
+
+if wood >= pickaxe_wood and stone >= pickaxe_stone:
+    wood = wood - pickaxe_wood
+    stone = stone - pickaxe_stone
+    has_pickaxe = True
+    print("[green]Crafted a wooden pickaxe! (-3 wood, -2 stone)[/green]")
+else:
+    has_pickaxe = False
+    print("[yellow]Not enough materials for a pickaxe (need 3 wood, 2 stone).[/yellow]")
+
+print()
+food_cost = 2
+water_cost = 2
+food = food - food_cost
+water = water - water_cost
+
+if food < 0:
+    food = 0
+if water < 0:
+    water = 0
+
+print("You consume " + str(food_cost) + " food and " + str(water_cost) + " water.")
+
+# Run game.py now. You should see "Crafting" and "You consume ..." before
+# "Night falls...". Type banana for the difficulty: it should say Defaulting
+# to Normal. If both work, commit, then start STEP 1.
+
 
 # -----------------------------------------------------------------------------
 # STEP 1: give each difficulty an actions_per_day
@@ -132,8 +199,8 @@ print("-" * 50)
 # -----------------------------------------------------------------------------
 # STEP 4: the rest of the day (you already have this)
 # -----------------------------------------------------------------------------
-# Your crafting, eating and night-check blocks from Week 4 go here, OUTSIDE the
-# for loop -- back at the left margin. They happen once per day, not once per
+# Your crafting and eating blocks (pasted in STEP 0) and your Week 3 night
+# check go here, OUTSIDE the for loop -- back at the left margin. They happen once per day, not once per
 # action, and the indentation is what says so.
 
 
