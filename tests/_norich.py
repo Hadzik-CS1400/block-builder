@@ -2,7 +2,7 @@
 
 If `rich` imports, nothing happens -- the game runs exactly as it does when
 the student plays it. If it does not, `_fallback/` is put on the game
-process's path so the colourless stand-in in `_fallback/rich/` is found
+process's path so the colorless stand-in in `_fallback/rich/` is found
 instead, and the tests can go on testing the student's logic.
 
 Kept in its own file because every test_weekNN.py needs it and those files are

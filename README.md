@@ -179,7 +179,7 @@ Every one of these is common and none of them is your fault. Work down the list.
 | `'pip' is not recognized` / `pip: command not found` | `pip` isn't on your PATH | Use `python -m pip install -r requirements.txt` |
 | `No module named rich` **after** installing it | pip installed into a different Python than the one running your game | `python -m pip install -r requirements.txt` — the `python -m` part is what ties them together |
 | `No module named pytest` | Same cause | You don't need pytest — score with `python tests/check_week.py` instead |
-| `No module named pip` / `ensurepip is disabled` — **Chromebook or Linux** | Debian's `python3` ships without pip, and blocks the usual repair | Nothing to fix: score with `python3 tests/check_week.py`, play with `python3 play.py`. For colour later, `sudo apt update && sudo apt install python3-pip` |
+| `No module named pip` / `ensurepip is disabled` — **Chromebook or Linux** | Debian's `python3` ships without pip, and blocks the usual repair | Nothing to fix: score with `python3 tests/check_week.py`, play with `python3 play.py`. For color later, `sudo apt update && sudo apt install python3-pip` |
 | `error: externally-managed-environment` | A Mac/Linux Python that protects itself from stray installs | `python3 -m pip install --user -r requirements.txt` |
 | `Permission denied` / `Access is denied` | No admin rights — normal on a lab or work machine | Add `--user`: `python -m pip install --user -r requirements.txt` |
 | `python: command not found` (Mac) | macOS calls it `python3` | Use `python3` everywhere: `python3 -m pip install -r requirements.txt` |

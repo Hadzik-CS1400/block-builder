@@ -11,7 +11,7 @@
 #   From Week 3 on you'll copy new sections INTO that game.py instead.
 #
 #   Run it:   python game.py
-#   Test it:  python -m pytest tests/test_week02.py -v
+#   Test it:  python tests/check_week.py     (no install needed)
 #
 # WHAT YOU'LL BUILD
 #   - A title screen for your world
