@@ -10,7 +10,7 @@
 #   and character creation.
 #
 #   Run it:   python game.py
-#   Test it:  python tests/check_week.py     (no install needed)
+#   Test it:  pytest tests/test_week03.py -v
 #
 # WHAT YOU'LL BUILD
 #   - Difficulty that finally DOES something: Peaceful, Normal and Hardcore

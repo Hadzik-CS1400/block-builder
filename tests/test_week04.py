@@ -9,11 +9,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-# pytest imports this file as `tests.test_weekNN`, which does NOT put tests/ on
-# the path, so `import _norich` needs the folder naming itself first.
-sys.path.insert(0, str(Path(__file__).parent))
-import _norich  # noqa: E402
-
 # Top level, NOT weeks/. sync.py treats weeks/ as instructor-owned and
 # resolves conflicts there with `checkout --theirs` -- so a student who
 # fixed all eight bugs would have the work silently thrown away on their
@@ -28,7 +23,6 @@ def run_debug_file():
     return subprocess.run(
         [sys.executable, str(DEBUG_FILE)],
         input=FAKE_INPUT, capture_output=True, text=True, timeout=5,
-        env=_norich.env_for_game(),
     )
 
 
