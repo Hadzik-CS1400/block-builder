@@ -138,18 +138,25 @@ def test_range_sets_the_action_count():
                    if isinstance(n, ast.Assign)
                    and any(isinstance(t, ast.Name) and t.id == "actions_per_day"
                            for t in n.targets)]
-    if not (len(assignments) >= 2):
+    # From Week 7 the difficulty choice moves into a function and the value
+    # comes back by return, usually tuple-unpacked:
+    #     name, mode, health, actions_per_day, ... = get_player_info()
+    # That is a correct refactor, so it counts. Without this a finished Week
+    # 7 scored 0/5 on a Week 5 row it had not broken.
+    unpacked = [n for n in ast.walk(tree)
+                if isinstance(n, ast.Assign)
+                for t in n.targets
+                if isinstance(t, (ast.Tuple, ast.List))
+                and any(isinstance(e, ast.Name) and e.id == "actions_per_day"
+                        for e in t.elts)]
+    if unpacked:
+        return
+    if len(assignments) < 2:
         fail(
-            "actions_per_day is only set once. Give it a value in each difficulty "
-            "branch -- Peaceful 6, Normal 5, Hardcore 4 -- so the difficulty "
-            "changes the length of the day. Found %d assignment(s)."
-            % len(assignments)
-        )
-    if not any(isinstance(n, ast.Name) and n.id == "actions_per_day"
-               for f in ranged for n in ast.walk(f.iter)):
-        fail(
-            "The for loop's range() does not use actions_per_day, so the "
-            "difficulty makes no difference to how long the day is."
+            "actions_per_day is only set once. Give it a value in each "
+            "difficulty branch -- Peaceful 6, Normal 5, Hardcore 4 -- so the "
+            "difficulty changes the length of the day. Found %d "
+            "assignment(s)." % len(assignments)
         )
 
 

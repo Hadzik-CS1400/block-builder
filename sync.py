@@ -220,7 +220,19 @@ def main():
         if todo:
             say(f"  Start here:  {todo[0]}", BOLD)
         if test:
-            say(f"  Score it:    python tests/check_week.py")
+            # Name the week. sync.py has just delivered a LATER week's test
+            # file, and check_week.py with no argument scores the newest week
+            # it can find -- so this line, which used to omit the number, sent
+            # students to grade their current work against a week they had not
+            # reached. That is how a pile of Week 5 submissions came back
+            # 0 / 20 with nothing wrong with the code.
+            weeks = sorted(f for f in test if "test_week" in f)
+            num = "".join(c for c in weeks[0] if c.isdigit()) if weeks else ""
+            suffix = (" " + str(int(num))) if num else ""
+            say(f"  Score it:    python tests/check_week.py{suffix}")
+            if suffix:
+                say(f"               (the {int(num)} matters - without it you "
+                    f"score the newest week you have)", DIM)
         if sols:
             say()
             say("  Last week's solution is now available:", YELLOW + BOLD)

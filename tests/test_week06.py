@@ -119,13 +119,35 @@ def calls_input(node):
 
 
 def assigns_true(tree, name):
+    """Does `name` ever become True -- directly, or from a function?
+
+    From Week 7 the ending test moves into a function that RETURNS True, and
+    the caller writes `game_over = check_game_over(...)`. That is the
+    refactor Week 7 asks for, so the pre-refactor shape cannot be the only
+    one accepted or a correct Week 7 answer fails Week 6.
+    """
     for node in ast.walk(tree):
-        if (isinstance(node, ast.Assign)
-                and isinstance(node.value, ast.Constant)
-                and node.value.value is True
-                and any(isinstance(t, ast.Name) and t.id == name
-                        for t in node.targets)):
+        if not isinstance(node, ast.Assign):
+            continue
+        if not any(isinstance(t, ast.Name) and t.id == name
+                   for t in node.targets):
+            continue
+        if isinstance(node.value, ast.Constant) and node.value.value is True:
             return True
+        # game_over = check_game_over(...) -- accepted when that function
+        # really can hand back True, so a call to something that never
+        # returns True still fails.
+        if isinstance(node.value, ast.Call) \
+                and isinstance(node.value.func, ast.Name):
+            for fn in ast.walk(tree):
+                if not isinstance(fn, ast.FunctionDef) \
+                        or fn.name != node.value.func.id:
+                    continue
+                for ret in ast.walk(fn):
+                    if isinstance(ret, ast.Return) \
+                            and isinstance(ret.value, ast.Constant) \
+                            and ret.value.value is True:
+                        return True
     return False
 
 
