@@ -3,7 +3,8 @@
 # =============================================================================
 # Module topic: function definitions, parameters, return values, defaults,
 #   scope, imports
-# NEW Python this week: def, parameters, return, default parameters, scope
+# NEW Python this week: def, parameters, return, default parameters, scope,
+#   docstrings
 # From before: print, variables, input, arithmetic, if/elif/else, for, while,
 #   random, math
 # NOT yet: lists, dicts, files, classes
@@ -57,6 +58,10 @@
 #   - Define every function ABOVE the code that calls it. Python reads the
 #     file top to bottom, so a call on line 10 to a def on line 200 is a
 #     NameError.
+#   - Every function gets a docstring: one line, in triple quotes, saying
+#     what it does and what it hands back. It is the Python standard, and
+#     VS Code shows it when you hover over a call. Not scored this week --
+#     write them anyway.
 #   - `solutions/week06_game.py` is your before-picture. If the game plays
 #     differently than it did last week, diff against it.
 # =============================================================================
@@ -76,8 +81,17 @@
 #         loop. Give it a parameter for which resource it is:
 #
 #         def gather(resource_name):
+#             """Gather a random amount of one resource and announce it."""
 #             amount = random.randint(1, 5)
 #             print("You gathered " + str(amount) + " " + resource_name)
+#
+#         The line in triple quotes is a DOCSTRING -- the Python standard way
+#         to describe a function. It goes on the FIRST line inside the def,
+#         indented with the body, and says what the function does in one
+#         sentence. A # comment explains a line; a docstring explains the
+#         whole function to whoever calls it, and VS Code shows it when you
+#         hover over gather( anywhere in your file. Every function you write
+#         from here on gets one.
 #
 #         Leave the `wood = wood + amount` line OUT of the function for now.
 #         STEP 2 is about getting that number back out.
@@ -93,6 +107,10 @@
 # TODO 2a: add a return as the LAST line of gather():
 #
 #              return amount
+#
+#          Then update the docstring to say so -- it now hands something back:
+#
+#              """Gather a random amount of one resource and return it."""
 #
 # TODO 2b: in your day, replace each gathering block with a call that KEEPS
 #          what comes back:
@@ -115,6 +133,7 @@
 # TODO 3a: add two defaulted parameters:
 #
 #              def gather(resource_name, min_amt=1, max_amt=5):
+#                  """Gather min_amt to max_amt of a resource; return it."""
 #                  amount = random.randint(min_amt, max_amt)
 #
 # TODO 3b: leave your wood and stone calls exactly as they are -- they use
@@ -137,6 +156,7 @@
 #         whether it worked:
 #
 #         def try_craft(item_name, wood, stone, wood_cost, stone_cost):
+#             """Return True if the materials cover the cost, else False."""
 #             if wood >= wood_cost and stone >= stone_cost:
 #                 print("Crafted a " + item_name + "!")
 #                 return True
@@ -164,6 +184,7 @@
 #         it prints:
 #
 #         def show_day_status(day, health, wood, stone, food, water):
+#             """Print the day's status panel. Returns nothing."""
 #             print("-" * 50)
 #             print("Day " + str(day) + "  Health: " + str(health))
 #             ...
@@ -185,6 +206,7 @@
 # TODO 6a: write a function that ANSWERS instead of assigning:
 #
 #          def check_game_over(health, day, max_days):
+#              """Return True when the game should end, else False."""
 #              if health <= 0:
 #                  print("You did not survive.")
 #                  return True
