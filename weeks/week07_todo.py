@@ -22,13 +22,13 @@
 #
 #   This is called refactoring, and it is most of what a working programmer
 #   does. You will not see it from the outside, which is exactly why you run
-#   the game after every step -- if the behaviour changed, you broke it.
+#   the game after every step -- if the behavior changed, you broke it.
 #
 # HOW TO WORK THIS WEEK
 #   Open YOUR game.py and change it. Do not start a new file.
 #
 #   MOVE code, do not retype it. Cut the block, paste it inside the def, put
-#   a call where the block used to be. Retyping is how behaviour changes by
+#   a call where the block used to be. Retyping is how behavior changes by
 #   accident, and you will not notice until the numbers drift.
 #
 #   One step at a time, and play the game after each one. Six functions
