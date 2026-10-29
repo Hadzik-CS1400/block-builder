@@ -176,6 +176,7 @@ Every one of these is common and none of them is your fault. Work down the list.
 
 | What you see | What it means | Fix |
 |---|---|---|
+| `Python was not found; run without arguments to install from the Microsoft Store` &mdash; **Windows** | Windows ships a *fake* `python` that opens the Store. Your real Python is not on PATH | Use **`py`** instead of `python`: `py tests/check_week.py 5`. If `py` fails too, Python is not installed &mdash; get it from python.org and tick **Add python.exe to PATH** in the installer. You can also switch the fake one off: Settings &rarr; Apps &rarr; Advanced app settings &rarr; App execution aliases &rarr; turn off `python.exe` and `python3.exe` |
 | `'pip' is not recognized` / `pip: command not found` | `pip` isn't on your PATH | Use `python -m pip install -r requirements.txt` |
 | `No module named rich` **after** installing it | pip installed into a different Python than the one running your game | `python -m pip install -r requirements.txt` — the `python -m` part is what ties them together |
 | `No module named pytest` | Same cause | You don't need pytest — score with `python tests/check_week.py` instead |
