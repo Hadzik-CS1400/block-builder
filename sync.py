@@ -120,6 +120,9 @@ def main():
             "instructor - it may be a GitHub sign-in problem.")
 
     before = set(git("ls-files").stdout.split())
+    # The commit we are on now, so an UPDATED file can be told from an
+    # untouched one afterwards. ls-files alone only finds new paths.
+    before_sha = git("rev-parse", "HEAD").stdout.strip()
     before_tree = git("rev-parse", "HEAD^{tree}").stdout.strip()
 
     # --- 4. Already up to date? ------------------------------------------
@@ -191,6 +194,15 @@ def main():
     # --- 6. Report what arrived ------------------------------------------
     after = set(git("ls-files").stdout.split())
     new = sorted(after - before)
+    # Files that already existed and have moved on. Instructor files
+    # only: a student's own work showing up here would be alarming,
+    # and sync never edits it anyway.
+    changed = []
+    if before_sha:
+        diffed = git("diff", "--name-only", before_sha, "HEAD")
+        changed = sorted(
+            f for f in diffed.stdout.split()
+            if f not in new and not owned_by_student(f))
 
     # The first sync merges the class repo's whole history into a repo that
     # started with a single commit, so VS Code's Source Control suddenly shows
@@ -205,6 +217,14 @@ def main():
         say("  time - most of them are the class repo's own history, not", DIM)
         say("  anything you did. Push once and it stops:", DIM)
         say("    git push", BOLD)
+
+    if changed:
+        say()
+        say("  Updated -- worth another look:", BOLD)
+        for f in changed:
+            say(f"    {f}", BOLD)
+        say("  These are files you already have. Something was added to", DIM)
+        say("  them, so open them again even if you finished that week.", DIM)
 
     say()
     if new:
