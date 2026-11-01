@@ -248,3 +248,97 @@
 #   git add game.py
 #   git commit -m "refactor: give each part of the day a name"
 #   git push
+
+# =============================================================================
+# PART B -- OPTIONAL. NOT SCORED. The assignment ends at STEP 7.
+# =============================================================================
+# Everything above is the whole assignment: four functions, twenty points,
+# done. Stop there and you have finished Week 7.
+#
+# This part exists because the worked answer goes further than the TODOs
+# asked. It refactors the WHOLE file -- fourteen functions rather than four
+# -- and when that answer is published you will notice the difference. You
+# did not miss anything. The four were the ones worth grading; these are the
+# same move repeated, and repeating it is how it stops feeling clever and
+# starts feeling obvious.
+#
+# Take them in any order. Run the game after each one. If a change makes the
+# game behave differently, undo it -- a refactor that changes behaviour is
+# just a bug with good intentions.
+
+
+# -----------------------------------------------------------------------------
+# STEP 8 (optional): the blocks that only print
+# -----------------------------------------------------------------------------
+# The easiest ones to move, because they read values and print them and do
+# nothing else. Nothing has to be handed back.
+#
+# TODO 8 (optional): wrap each of these in a function that takes what it
+#         prints. Suggested names, but call them whatever you like:
+#
+#             def title_screen():
+#             def show_starting_status(name, day, health, wood, stone, ...):
+#             def draw_shelter(wood):
+#             def draw_progress(day, max_days):
+#
+#         title_screen() takes no parameters at all, which is allowed and
+#         normal: it needs nothing from the rest of the program.
+
+
+# -----------------------------------------------------------------------------
+# STEP 9 (optional): two more defaults
+# -----------------------------------------------------------------------------
+# STEP 3 gave gather() defaults. These two want them for the same reason --
+# the numbers are nearly always the same, and spelling them out at every
+# call is noise.
+#
+# TODO 9 (optional): give these defaulted parameters:
+#
+#             def shelter_plan(wood, walls_needed=4, wood_per_wall=5):
+#             def eat_and_drink(food, water, health, food_cost=2, water_cost=2):
+#
+#         Then call each one BOTH ways -- once plainly, and once overriding a
+#         default -- and watch the same function do two jobs.
+
+
+# -----------------------------------------------------------------------------
+# STEP 10 (optional): the event blocks
+# -----------------------------------------------------------------------------
+# These are the hard ones, and they are hard for a reason worth meeting: they
+# change several values at once. A function cannot change your wood from the
+# inside, so it has to hand everything back.
+#
+# TODO 10 (optional): move the exploring and the night into functions:
+#
+#             def explore(health, wood, stone, iron, food, water):
+#                 ...
+#                 return health, wood, stone, iron, food, water
+#
+#         and at the call site, take them all back in one line:
+#
+#             health, wood, stone, iron, food, water = explore(
+#                 health, wood, stone, iron, food, water)
+#
+#         That is a lot of names on both sides. Notice it, and remember it --
+#         Week 10 replaces every one of them with a single list, and this is
+#         the mess it is fixing.
+
+
+# -----------------------------------------------------------------------------
+# STEP 11 (optional): the menus
+# -----------------------------------------------------------------------------
+# TODO 11 (optional): move the crafting menu and the opening questions into
+#          functions of their own:
+#
+#             def craft_menu(wood, stone, iron, has_pickaxe, has_shelter, ...):
+#             def get_player_info():
+#
+#          get_player_info() is the interesting one: it asks for a name and a
+#          difficulty and hands back SEVERAL values at once, exactly the way
+#          explore() does. One function, one job, several answers.
+
+
+# ---- COMMIT (only if you did any of Part B) ---------------------------------
+#   git add game.py
+#   git commit -m "refactor: carry the function split through the rest of the file"
+#   git push
