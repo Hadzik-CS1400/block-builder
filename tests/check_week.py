@@ -2,6 +2,7 @@
 
     python tests/check_week.py        # the newest week you have
     python tests/check_week.py 3      # a specific week
+    python tests/check_week.py 7b     # a lettered part of a week
 
 Every other assignment in this course can be scored with nothing installed --
 `python tests/check_main.py` uses only the standard library. Block Builder
@@ -29,18 +30,37 @@ sys.path.insert(0, HERE)
 import conftest                                          # noqa: E402
 
 
+def normalise(week):
+    """"7", 7, "07", "7b", "7B" -> "07" / "07b".
+
+    A week is a STRING here, not an int. Week 7B is its own session with its
+    own score, and it cannot be an integer -- telling students to type `8`
+    for it would be a worse answer than this.
+    """
+    text = str(week).strip().lower()
+    m = re.match(r"^(\d{1,2})([a-z]?)$", text)
+    if not m:
+        return None
+    return "%02d%s" % (int(m.group(1)), m.group(2))
+
+
 def weeks_available():
-    return sorted(int(m.group(1))
-                  for f in os.listdir(HERE)
-                  for m in [re.match(r"test_week(\d+)\.py$", f)] if m)
+    """Every week present, in order, with lettered parts after their number."""
+    found = []
+    for f in os.listdir(HERE):
+        m = re.match(r"test_week(\d{2}[a-z]?)\.py$", f)
+        if m:
+            found.append(m.group(1))
+    # "07b" sorts after "07" and before "09" on this key.
+    return sorted(found, key=lambda w: (int(w[:2]), w[2:]))
 
 
 def load_week(week):
-    path = os.path.join(HERE, "test_week%02d.py" % week)
+    path = os.path.join(HERE, "test_week%s.py" % week)
     if not os.path.exists(path):
-        raise SystemExit("No tests/test_week%02d.py. Run `python sync.py` first."
+        raise SystemExit("No tests/test_week%s.py. Run `python sync.py` first."
                          % week)
-    spec = importlib.util.spec_from_file_location("_week%02d" % week, path)
+    spec = importlib.util.spec_from_file_location("_week%s" % week, path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
@@ -55,7 +75,7 @@ def run(week):
     names = re.findall(r"^def (test_\w+)", src, re.MULTILINE)
     rows = []
     for name in names:
-        nodeid = "tests/test_week%02d.py::%s" % (week, name)
+        nodeid = "tests/test_week%s.py::%s" % (week, name)
         try:
             getattr(mod, name)()
             rows.append((nodeid, True, ""))
@@ -71,10 +91,12 @@ def main():
     if not available:
         raise SystemExit("No week tests found in tests/. Run `python sync.py`.")
     if len(sys.argv) > 1:
-        try:
-            week = int(sys.argv[1])
-        except ValueError:
-            raise SystemExit("Usage: python tests/check_week.py [week number]")
+        week = normalise(sys.argv[1])
+        if week is None:
+            raise SystemExit(
+                "Usage: python tests/check_week.py [week]\n"
+                "  e.g.  python tests/check_week.py 7\n"
+                "        python tests/check_week.py 7b")
     else:
         week = available[-1]
 
@@ -87,7 +109,7 @@ def main():
         else:
             print(line)
 
-    conftest._write_week_scorecard(write, "%02d" % week, rows, color)
+    conftest._write_week_scorecard(write, week, rows, color)
     return 0 if all(passed for _, passed, _ in rows) else 1
 
 

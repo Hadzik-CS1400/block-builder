@@ -250,17 +250,27 @@
 #   git push
 
 # =============================================================================
-# PART B -- OPTIONAL. NOT SCORED. The assignment ends at STEP 7.
+# PART B -- WEEK 7B. A SEPARATE 20 POINTS.
 # =============================================================================
-# Everything above is the whole assignment: four functions, twenty points,
-# done. Stop there and you have finished Week 7.
+# Everything above was Week 7: four functions, twenty points, already scored.
+# Nothing below takes that away.
 #
-# This part exists because the worked answer goes further than the TODOs
-# asked. It refactors the WHOLE file -- fourteen functions rather than four
-# -- and when that answer is published you will notice the difference. You
-# did not miss anything. The four were the ones worth grading; these are the
-# same move repeated, and repeating it is how it stops feeling clever and
-# starts feeling obvious.
+# This is a second assignment worth its own twenty, for carrying the refactor
+# through the rest of the file. The worked answer has FOURTEEN functions, not
+# four -- these are the other ten, and they are the same move repeated.
+# Repeating it is how it stops feeling clever and starts feeling obvious.
+#
+# WHAT'S TESTED (20 points)
+#   5 pts  The refactor reaches the whole file   -- ten or more functions
+#   5 pts  Several functions only print          -- three or more
+#   5 pts  A function hands back several values  -- two or more, and kept
+#   5 pts  The game still plays                  -- same behaviour as before
+#
+# Score it with the 7b on the end:
+#
+#     python tests/check_week.py 7b
+#
+# Nothing checks your function NAMES. The tests look at the shape.
 #
 # Take them in any order. Run the game after each one. If a change makes the
 # game behave differently, undo it -- a refactor that changes behaviour is
@@ -268,12 +278,12 @@
 
 
 # -----------------------------------------------------------------------------
-# STEP 8 (optional): the blocks that only print
+# STEP 8: the blocks that only print
 # -----------------------------------------------------------------------------
 # The easiest ones to move, because they read values and print them and do
 # nothing else. Nothing has to be handed back.
 #
-# TODO 8 (optional): wrap each of these in a function that takes what it
+# TODO 8: wrap each of these in a function that takes what it
 #         prints. Suggested names, but call them whatever you like:
 #
 #             def title_screen():
@@ -286,13 +296,13 @@
 
 
 # -----------------------------------------------------------------------------
-# STEP 9 (optional): two more defaults
+# STEP 9: two more defaults
 # -----------------------------------------------------------------------------
 # STEP 3 gave gather() defaults. These two want them for the same reason --
 # the numbers are nearly always the same, and spelling them out at every
 # call is noise.
 #
-# TODO 9 (optional): give these defaulted parameters:
+# TODO 9: give these defaulted parameters:
 #
 #             def shelter_plan(wood, walls_needed=4, wood_per_wall=5):
 #             def eat_and_drink(food, water, health, food_cost=2, water_cost=2):
@@ -302,13 +312,13 @@
 
 
 # -----------------------------------------------------------------------------
-# STEP 10 (optional): the event blocks
+# STEP 10: the event blocks
 # -----------------------------------------------------------------------------
 # These are the hard ones, and they are hard for a reason worth meeting: they
 # change several values at once. A function cannot change your wood from the
 # inside, so it has to hand everything back.
 #
-# TODO 10 (optional): move the exploring and the night into functions:
+# TODO 10: move the exploring and the night into functions:
 #
 #             def explore(health, wood, stone, iron, food, water):
 #                 ...
@@ -325,9 +335,9 @@
 
 
 # -----------------------------------------------------------------------------
-# STEP 11 (optional): the menus
+# STEP 11: the menus
 # -----------------------------------------------------------------------------
-# TODO 11 (optional): move the crafting menu and the opening questions into
+# TODO 11: move the crafting menu and the opening questions into
 #          functions of their own:
 #
 #             def craft_menu(wood, stone, iron, has_pickaxe, has_shelter, ...):
@@ -338,7 +348,7 @@
 #          explore() does. One function, one job, several answers.
 
 
-# ---- COMMIT (only if you did any of Part B) ---------------------------------
+# ---- COMMIT -----------------------------------------------------------------
 #   git add game.py
 #   git commit -m "refactor: carry the function split through the rest of the file"
 #   git push
