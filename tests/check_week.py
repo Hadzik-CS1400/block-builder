@@ -55,11 +55,22 @@ def weeks_available():
     return sorted(found, key=lambda w: (int(w[:2]), w[2:]))
 
 
+def spell(weeks):
+    """07, 07b -> "7, 7b" -- the way a student would type them."""
+    return ", ".join("%d%s" % (int(w[:2]), w[2:]) for w in weeks)
+
+
 def load_week(week):
     path = os.path.join(HERE, "test_week%s.py" % week)
     if not os.path.exists(path):
-        raise SystemExit("No tests/test_week%s.py. Run `python sync.py` first."
-                         % week)
+        # Naming an earlier week is the whole reason this takes an argument,
+        # so a student who mistypes one needs to be told what the right
+        # answers were -- not just which file is absent.
+        raise SystemExit(
+            "You do not have tests/test_week%s.py.\n"
+            "Weeks you can score right now: %s\n"
+            "If the week you want is missing, run `python sync.py` first."
+            % (week, spell(weeks_available())))
     spec = importlib.util.spec_from_file_location("_week%s" % week, path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
@@ -95,8 +106,13 @@ def main():
         if week is None:
             raise SystemExit(
                 "Usage: python tests/check_week.py [week]\n"
-                "  e.g.  python tests/check_week.py 7\n"
-                "        python tests/check_week.py 7b")
+                "  no week given   scores the week you are on now\n"
+                "  a week given    scores that one, so you can go back\n"
+                "\n"
+                "  e.g.  python tests/check_week.py 5\n"
+                "        python tests/check_week.py 7b\n"
+                "\n"
+                "Weeks you can score right now: %s" % spell(available))
     else:
         # A lettered part is an EXTRA assignment that happens to sort last; it
         # is not the natural "latest week". Defaulting to it handed the online
