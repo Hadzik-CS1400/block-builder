@@ -337,8 +337,8 @@
 #         Then call each one BOTH ways -- once plainly, and once overriding a
 #         default -- and watch the same function do two jobs.
 #
-#         Docstring each one, and name the default in it: """Draw the
-#         shelter, up to max_level blocks tall."""
+#         Docstring each one, and name the default in it:
+#             """Report the wood the shelter needs; 4 walls unless told otherwise."""
 
 
 # -----------------------------------------------------------------------------
