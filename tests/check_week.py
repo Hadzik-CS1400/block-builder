@@ -110,6 +110,25 @@ def main():
             print(line)
 
     conftest._write_week_scorecard(write, week, rows, color)
+
+    # A lettered part is a separate assignment with its own points, and a
+    # student scoring the plain week has no reason to suspect one exists.
+    #
+    # This line has to live HERE rather than in sync.py, even though sync.py
+    # is where "Score it:" is printed. sync.py updates ITSELF during the run
+    # that delivers a new week -- so the message a student reads on release
+    # morning comes from the copy they already had, and a fix to it lands a
+    # week late. check_week.py is updated by that same sync and then run
+    # fresh, so what it prints is current.
+    parts = [w for w in available
+             if w[:2] == week[:2] and w[2:] and w != week]
+    if parts:
+        label = "%d%s" % (int(parts[0][:2]), parts[0][2:])
+        print()
+        write("  Week %d has a Part B, scored separately:" % int(week[:2]))
+        write("      python tests/check_week.py %s" % label)
+        write("  This scorecard does not include it.")
+
     return 0 if all(passed for _, passed, _ in rows) else 1
 
 

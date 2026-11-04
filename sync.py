@@ -11,6 +11,7 @@ what to do if something needs your attention.
 
 You do not need to understand this file. Do not edit it.
 """
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -246,12 +247,17 @@ def main():
             # students to grade their current work against a week they had not
             # reached. That is how a pile of Week 5 submissions came back
             # 0 / 20 with nothing wrong with the code.
+            # A lettered week has to keep its letter. Pulling out the digits
+            # turned test_week07b.py into "7", so the line told students to
+            # score Week 7 -- Part A, which they had already passed -- and a
+            # 20 / 20 on work they had not started yet reads as "done".
             weeks = sorted(f for f in test if "test_week" in f)
-            num = "".join(c for c in weeks[0] if c.isdigit()) if weeks else ""
-            suffix = (" " + str(int(num))) if num else ""
+            m = re.search(r"test_week(\d+)([a-z]?)", weeks[0]) if weeks else None
+            label = (str(int(m.group(1))) + m.group(2)) if m else ""
+            suffix = (" " + label) if label else ""
             say(f"  Score it:    python tests/check_week.py{suffix}")
             if suffix:
-                say(f"               (the {int(num)} matters - without it you "
+                say(f"               (the {label} matters - without it you "
                     f"score the newest week you have)", DIM)
         if sols:
             say()
