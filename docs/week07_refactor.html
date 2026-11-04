@@ -95,6 +95,12 @@
   .tag.m { background: #b9b2e8; color: #241d4d; }
   .tag.n { background: #a6e3a1; color: #0d3b11; }
   .tag.c { background: #89dceb; color: #0b3550; }
+  .tag.d { background: #f9e2af; color: #4a3600; }
+  /* The docstring is inside the new def, so it keeps that background and is
+     separated by a left rule rather than a second colour -- two greens would
+     read as two different things. */
+  .ln.doc { box-shadow: inset 4px 0 0 #f9e2af; }
+  .ln.doc .src { color: #f0e0b0; font-style: italic; }
   .gap { color: var(--code-dim); font-style: italic; padding: .15rem .7rem .15rem 4.3rem; }
   .kw { color: #cba6f7; } .fn { color: #89dceb; }
   .st { color: #a6e3a1; } .nm { color: #fab387; } .cm { color: var(--code-dim); font-style: italic; }
@@ -171,6 +177,9 @@
   <span class="sw" style="background:#1f3d24"></span>the function it became
   &nbsp;&middot;&nbsp;
   <span class="sw" style="background:#16365c"></span>the call left behind in its place
+  &nbsp;&middot;&nbsp;
+  <span class="sw" style="background:#f9e2af"></span>its docstring &mdash; how you find a
+  function later without reading it
   &nbsp;&middot;&nbsp; Line numbers are the real ones in each file.
 </p>
 
@@ -210,7 +219,8 @@ var DEMOS = [
    },
    {
     "n": 62,
-    "t": "    \"\"\"Display the game title. No parameters, no return \u2014 it just prints.\"\"\""
+    "t": "    \"\"\"Display the game title. No parameters, no return \u2014 it just prints.\"\"\"",
+    "doc": true
    },
    {
     "n": 63,
@@ -289,7 +299,8 @@ var DEMOS = [
    },
    {
     "n": 370,
-    "t": "    \"\"\"Week 6 progress bar. width defaults to 20 but is now adjustable.\"\"\""
+    "t": "    \"\"\"Week 6 progress bar. width defaults to 20 but is now adjustable.\"\"\"",
+    "doc": true
    },
    {
     "n": 371,
@@ -373,27 +384,33 @@ var DEMOS = [
    },
    {
     "n": 149,
-    "t": "    \"\"\"Gather one resource and return how much was found."
+    "t": "    \"\"\"Gather one resource and return how much was found.",
+    "doc": true
    },
    {
     "n": 150,
-    "t": ""
+    "t": "",
+    "doc": true
    },
    {
     "n": 151,
-    "t": "    This one function replaces the four near-identical Week 5 branches for"
+    "t": "    This one function replaces the four near-identical Week 5 branches for",
+    "doc": true
    },
    {
     "n": 152,
-    "t": "    wood, stone, food and water. Same code, called with different arguments \u2014"
+    "t": "    wood, stone, food and water. Same code, called with different arguments \u2014",
+    "doc": true
    },
    {
     "n": 153,
-    "t": "    that is the whole point of a parameter."
+    "t": "    that is the whole point of a parameter.",
+    "doc": true
    },
    {
     "n": 154,
-    "t": "    \"\"\""
+    "t": "    \"\"\"",
+    "doc": true
    },
    {
     "n": 155,
@@ -502,27 +519,33 @@ var DEMOS = [
    },
    {
     "n": 128,
-    "t": "    \"\"\"Week 2 shelter maths."
+    "t": "    \"\"\"Week 2 shelter maths.",
+    "doc": true
    },
    {
     "n": 129,
-    "t": ""
+    "t": "",
+    "doc": true
    },
    {
     "n": 130,
-    "t": "    NEW Week 7: DEFAULT PARAMETERS. Call shelter_plan(wood) and you get the"
+    "t": "    NEW Week 7: DEFAULT PARAMETERS. Call shelter_plan(wood) and you get the",
+    "doc": true
    },
    {
     "n": 131,
-    "t": "    standard 4-wall hut. Call shelter_plan(wood, 6, 5) for a bigger one. The"
+    "t": "    standard 4-wall hut. Call shelter_plan(wood, 6, 5) for a bigger one. The",
+    "doc": true
    },
    {
     "n": 132,
-    "t": "    defaults mean the common case stays a one-argument call."
+    "t": "    defaults mean the common case stays a one-argument call.",
+    "doc": true
    },
    {
     "n": 133,
-    "t": "    \"\"\""
+    "t": "    \"\"\"",
+    "doc": true
    },
    {
     "n": 134,
@@ -641,7 +664,8 @@ var DEMOS = [
    },
    {
     "n": 310,
-    "t": "    \"\"\"Week 4 eating, with the daily costs as default parameters.\"\"\""
+    "t": "    \"\"\"Week 4 eating, with the daily costs as default parameters.\"\"\"",
+    "doc": true
    },
    {
     "n": 311,
@@ -817,27 +841,33 @@ var DEMOS = [
    },
    {
     "n": 161,
-    "t": "    \"\"\"The Week 3 exploration event, all six outcomes, moved into a function."
+    "t": "    \"\"\"The Week 3 exploration event, all six outcomes, moved into a function.",
+    "doc": true
    },
    {
     "n": 162,
-    "t": ""
+    "t": "",
+    "doc": true
    },
    {
     "n": 163,
-    "t": "    Note how long this parameter list is: an event can change ANY resource, so"
+    "t": "    Note how long this parameter list is: an event can change ANY resource, so",
+    "doc": true
    },
    {
     "n": 164,
-    "t": "    every resource has to be passed in and handed back. That is annoying, and"
+    "t": "    every resource has to be passed in and handed back. That is annoying, and",
+    "doc": true
    },
    {
     "n": 165,
-    "t": "    it is meant to be \u2014 Week 11 replaces all six with a single dictionary."
+    "t": "    it is meant to be \u2014 Week 11 replaces all six with a single dictionary.",
+    "doc": true
    },
    {
     "n": 166,
-    "t": "    \"\"\""
+    "t": "    \"\"\"",
+    "doc": true
    },
    {
     "n": 167,
@@ -922,6 +952,7 @@ function render() {
      used to be. Showing the call is the half students skip -- a function
      that is never called is dead code, and the file looks finished. */
   var html = d.after.map(function (ln, i) {
+    if (ln.doc) { return lineHTML(ln, "newdef doc", null); }
     return lineHTML(ln, "newdef", i === 0 ? ["n", "the function it became"] : null);
   }).join("");
   html += '<div class="gap">&#8942;  (the rest of the program)</div>';

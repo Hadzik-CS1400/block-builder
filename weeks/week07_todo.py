@@ -280,6 +280,22 @@
 #
 # Nothing checks your function NAMES. The tests look at the shape.
 #
+# EVERY ONE OF THESE TEN GETS A DOCSTRING, same as the four in Part A.
+# One line, in triple quotes, directly under the def, saying what the
+# function DOES -- not how it works:
+#
+#     def draw_progress(day, max_days):
+#         """Print the survival bar for the current day."""
+#
+# With ten more functions in the file, the docstrings are how you find the
+# one you want without reading its body. Say what it hands back, too, if it
+# hands anything back -- that is the thing you will forget first:
+#
+#     def explore(health, wood, stone, iron, food, water):
+#         """Run one random exploration event; return all six resources."""
+#
+# A # comment explains a line. A docstring explains the function.
+#
 # Take them in any order. Run the game after each one. If a change makes the
 # game behave differently, undo it -- a refactor that changes behaviour is
 # just a bug with good intentions.
@@ -299,6 +315,9 @@
 #             def draw_shelter(wood):
 #             def draw_progress(day, max_days):
 #
+#         Docstring on each one. These are the easy ones to write:
+#         """Print the title screen.""" and you are done.
+#
 #         title_screen() takes no parameters at all, which is allowed and
 #         normal: it needs nothing from the rest of the program.
 
@@ -317,6 +336,9 @@
 #
 #         Then call each one BOTH ways -- once plainly, and once overriding a
 #         default -- and watch the same function do two jobs.
+#
+#         Docstring each one, and name the default in it: """Draw the
+#         shelter, up to max_level blocks tall."""
 
 
 # -----------------------------------------------------------------------------
@@ -340,6 +362,10 @@
 #         That is a lot of names on both sides. Notice it, and remember it --
 #         Week 10 replaces every one of them with a single list, and this is
 #         the mess it is fixing.
+#
+#         Docstring each one, and SAY WHAT COMES BACK -- these are the
+#         functions whose returns you will forget: """...; return all six
+#         resources."""
 
 
 # -----------------------------------------------------------------------------
@@ -354,6 +380,9 @@
 #          get_player_info() is the interesting one: it asks for a name and a
 #          difficulty and hands back SEVERAL values at once, exactly the way
 #          explore() does. One function, one job, several answers.
+#
+#         Docstring each one. If you cannot write the sentence, the function
+#         is probably doing two things and wants splitting in half.
 
 
 # ---- COMMIT -----------------------------------------------------------------
