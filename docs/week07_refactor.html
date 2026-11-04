@@ -123,6 +123,16 @@
           border-left: 4px solid var(--teal); padding-left: .8rem; }
   .note code { font-family: Consolas, monospace; background: #eef2f6;
                padding: .05rem .3rem; border-radius: 3px; }
+  /* The one instruction that works in a file this page cannot see. */
+  .findbar {
+    margin: 0 0 .7rem; padding: .55rem .9rem; border-radius: 8px;
+    background: #fff8e1; border: 2px solid #8f6a00; font-size: .95rem;
+  }
+  .findbar code {
+    font-family: Consolas, monospace; background: #fff; border: 1px solid #d9c38a;
+    border-radius: 4px; padding: .1rem .45rem; font-size: .95em;
+  }
+  .findbar b { color: #6b4e00; }
   .legend { font-size: .82rem; color: var(--muted); margin-top: 1rem; }
   .sw { display: inline-block; width: .85em; height: .85em; border-radius: 3px;
         vertical-align: -.1em; margin-right: .25em; }
@@ -144,6 +154,8 @@
   <button id="bigger" type="button">A+</button>
   <span class="spacer" id="which"></span>
 </div>
+
+<p class="findbar" id="findbar"></p>
 
 <div class="cols">
   <div class="col before">
@@ -189,6 +201,7 @@ var DEMOS = [
   "key": "title",
   "label": "The title screen",
   "step": "STEP 8",
+  "find": "print(\"[bold green]        BLOCK BUILDER[/bold green]\")",
   "fn": "title_screen",
   "before": [
    {
@@ -257,6 +270,7 @@ var DEMOS = [
   "key": "progress",
   "label": "The progress bar",
   "step": "STEP 8",
+  "find": "progress = day * 20 // max_days",
   "fn": "draw_progress",
   "before": [
    {
@@ -362,6 +376,7 @@ var DEMOS = [
   "key": "gather",
   "label": "Three blocks, one function",
   "step": "STEP 1 (Week 7)",
+  "find": "gained = random.randint(2, 5)",
   "fn": "gather",
   "before": [
    {
@@ -465,6 +480,7 @@ var DEMOS = [
   "key": "shelter",
   "label": "Numbers become defaults",
   "step": "STEP 9",
+  "find": "total_wood_needed = walls_needed * wood_per_wall",
   "fn": "shelter_plan",
   "before": [
    {
@@ -594,6 +610,7 @@ var DEMOS = [
   "key": "eat",
   "label": "Three in, three out",
   "step": "STEP 10",
+  "find": "food = food - food_cost",
   "fn": "eat_and_drink",
   "before": [
    {
@@ -753,9 +770,574 @@ var DEMOS = [
   "note": "The first one that has to hand several things back. A function <strong>cannot reach out and change your variables</strong> &mdash; it only gets copies. So everything it changed has to come back out, and the caller has to catch all of it:<br><code>food, water, health = eat_and_drink(food, water, health)</code><br>Call it on a line of its own and the answers are thrown away and nothing moves."
  },
  {
+  "key": "ask",
+  "label": "The opening questions",
+  "step": "STEP 11",
+  "find": "name = input(\"What is your name, crafter? \")",
+  "fn": "get_player_info",
+  "before": [
+   {
+    "n": 26,
+    "t": "name = input(\"What is your name, crafter? \")"
+   },
+   {
+    "n": 27,
+    "t": "print()"
+   },
+   {
+    "n": 28,
+    "t": ""
+   },
+   {
+    "n": 29,
+    "t": "# Difficulty determines starting resources"
+   },
+   {
+    "n": 30,
+    "t": "print(\"Choose your difficulty:\")"
+   },
+   {
+    "n": 31,
+    "t": "print(\"  1 - Peaceful  (extra resources, no monsters)\")"
+   },
+   {
+    "n": 32,
+    "t": "print(\"  2 - Normal    (balanced start)\")"
+   },
+   {
+    "n": 33,
+    "t": "print(\"  3 - Hardcore  (minimal resources, tough nights)\")"
+   },
+   {
+    "gap": true
+   },
+   {
+    "n": 37,
+    "t": "difficulty = \"\""
+   },
+   {
+    "n": 38,
+    "t": "while difficulty != \"1\" and difficulty != \"2\" and difficulty != \"3\":"
+   },
+   {
+    "n": 39,
+    "t": "    difficulty = input(\"Enter 1, 2, or 3: \")"
+   },
+   {
+    "n": 40,
+    "t": "    if difficulty != \"1\" and difficulty != \"2\" and difficulty != \"3\":"
+   },
+   {
+    "n": 41,
+    "t": "        print(\"[red]That is not 1, 2, or 3. Try again.[/red]\")"
+   }
+  ],
+  "after": [
+   {
+    "n": 70,
+    "t": "def get_player_info():"
+   },
+   {
+    "n": 71,
+    "t": "    \"\"\"Ask for name and difficulty (Weeks 2, 3 and 6).",
+    "doc": true
+   },
+   {
+    "n": 72,
+    "t": "",
+    "doc": true
+   },
+   {
+    "n": 73,
+    "t": "    NEW Week 7: a function can return MORE THAN ONE value. The main program",
+    "doc": true
+   },
+   {
+    "n": 74,
+    "t": "    unpacks them in the same order they are listed here.",
+    "doc": true
+   },
+   {
+    "n": 75,
+    "t": "    \"\"\"",
+    "doc": true
+   },
+   {
+    "n": 76,
+    "t": "    name = input(\"What is your name, crafter? \")"
+   },
+   {
+    "n": 77,
+    "t": "    print()"
+   },
+   {
+    "n": 78,
+    "t": ""
+   },
+   {
+    "n": 79,
+    "t": "    print(\"Choose your difficulty:\")"
+   },
+   {
+    "n": 80,
+    "t": "    print(\"  1 - Peaceful  (extra resources, no monsters)\")"
+   },
+   {
+    "n": 81,
+    "t": "    print(\"  2 - Normal    (balanced start)\")"
+   },
+   {
+    "gap": true
+   },
+   {
+    "n": 97,
+    "t": "        return name, \"Hardcore\", 80, 4, 2, 1, 5, 5"
+   }
+  ],
+  "calls": [
+   {
+    "n": 429,
+    "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()"
+   }
+  ],
+  "takes": [],
+  "gives": [
+   {
+    "name": "name, mode, health, actions_per_day, wood, stone, food, water",
+    "why": "everything the rest of the game starts from &mdash; and note there is no iron in it, because you start with none"
+   }
+  ],
+  "note": "Nothing goes in &mdash; it asks the player, it does not need telling. <strong>Eight things come out</strong>, which is the most any of these hands back, and they arrive in the order the <code>return</code> lists them. The call line unpacks all eight at once. This is the one to do last."
+ },
+ {
+  "key": "status",
+  "label": "The starting status block",
+  "step": "STEP 8",
+  "find": "print(\"[bold]Starting Status[/bold]\")",
+  "fn": "show_starting_status",
+  "before": [
+   {
+    "n": 88,
+    "t": "print()"
+   },
+   {
+    "n": 89,
+    "t": "print(\"-\" * 40)"
+   },
+   {
+    "n": 90,
+    "t": "print(\"[bold]Starting Status[/bold]\")"
+   },
+   {
+    "n": 91,
+    "t": "print(\"-\" * 40)"
+   },
+   {
+    "n": 92,
+    "t": "print(\"Name:    \" + name)"
+   },
+   {
+    "n": 93,
+    "t": "print(\"Day:     \" + str(day))"
+   },
+   {
+    "n": 94,
+    "t": "print(\"Health:  \" + str(health))"
+   },
+   {
+    "n": 95,
+    "t": "print(\"-\" * 40)"
+   },
+   {
+    "n": 96,
+    "t": "print(\"[bold cyan]Resources:[/bold cyan]\")"
+   },
+   {
+    "n": 97,
+    "t": "print(\"  Wood:  \" + str(wood) + \" blocks\")"
+   },
+   {
+    "n": 98,
+    "t": "print(\"  Stone: \" + str(stone) + \" blocks\")"
+   },
+   {
+    "n": 99,
+    "t": "print(\"  Iron:  \" + str(iron) + \" ore\")"
+   },
+   {
+    "n": 100,
+    "t": "print(\"  Food:  \" + str(food) + \" items\")"
+   },
+   {
+    "n": 101,
+    "t": "print(\"  Water: \" + str(water) + \" units\")"
+   },
+   {
+    "n": 102,
+    "t": "print(\"-\" * 40)"
+   },
+   {
+    "n": 103,
+    "t": "print(\"Total resources: \" + str(total_resources))"
+   }
+  ],
+  "after": [
+   {
+    "n": 100,
+    "t": "def show_starting_status(name, day, health, wood, stone, iron, food, water):"
+   },
+   {
+    "n": 101,
+    "t": "    \"\"\"The Week 2 starting status block, unchanged \u2014 just wrapped in a def.\"\"\"",
+    "doc": true
+   },
+   {
+    "n": 102,
+    "t": "    total_resources = wood + stone + food + water + iron"
+   },
+   {
+    "n": 103,
+    "t": ""
+   },
+   {
+    "n": 104,
+    "t": "    print()"
+   },
+   {
+    "n": 105,
+    "t": "    print(\"-\" * 40)"
+   },
+   {
+    "n": 106,
+    "t": "    print(\"[bold]Starting Status[/bold]\")"
+   },
+   {
+    "n": 107,
+    "t": "    print(\"-\" * 40)"
+   },
+   {
+    "n": 108,
+    "t": "    print(\"Name:    \" + name)"
+   },
+   {
+    "n": 109,
+    "t": "    print(\"Day:     \" + str(day))"
+   },
+   {
+    "n": 110,
+    "t": "    print(\"Health:  \" + str(health))"
+   },
+   {
+    "n": 111,
+    "t": "    print(\"-\" * 40)"
+   },
+   {
+    "gap": true
+   },
+   {
+    "n": 124,
+    "t": "        print(\"Food will last ~\" + str(math.ceil(food / 2)) + \" days (2 food/day)\")"
+   }
+  ],
+  "calls": [
+   {
+    "n": 441,
+    "t": "show_starting_status(name, day, health, wood, stone, iron, food, water)"
+   }
+  ],
+  "takes": [
+   {
+    "name": "name, day, health, wood, stone, iron, food, water",
+    "why": "it prints all eight, so it has to be told all eight"
+   }
+  ],
+  "gives": [],
+  "note": "Eight parameters and no return. That looks like a lot, and it is &mdash; but every one of them is <em>read</em> and none is changed, so nothing has to come back. <strong>Long parameter list, empty return</strong> is the normal shape for a display block."
+ },
+ {
+  "key": "shelterart",
+  "label": "The shelter drawing",
+  "step": "STEP 8",
+  "find": "print(\"Shelter: \", end=\"\")",
+  "fn": "draw_shelter",
+  "before": [
+   {
+    "n": 382,
+    "t": "    shelter_level = wood // 5"
+   },
+   {
+    "n": 383,
+    "t": "    if shelter_level > 4:"
+   },
+   {
+    "n": 384,
+    "t": "        shelter_level = 4"
+   },
+   {
+    "n": 385,
+    "t": ""
+   },
+   {
+    "n": 386,
+    "t": "    print()"
+   },
+   {
+    "n": 387,
+    "t": "    print(\"Shelter: \", end=\"\")"
+   },
+   {
+    "n": 388,
+    "t": "    for row in range(2):"
+   },
+   {
+    "n": 389,
+    "t": "        if row == 0:"
+   },
+   {
+    "n": 390,
+    "t": "            for col in range(shelter_level):"
+   },
+   {
+    "n": 391,
+    "t": "                print(\"/\\\\\", end=\"\")"
+   },
+   {
+    "n": 392,
+    "t": "            print()"
+   },
+   {
+    "n": 393,
+    "t": "            print(\"         \", end=\"\")"
+   },
+   {
+    "n": 394,
+    "t": "        else:"
+   },
+   {
+    "n": 395,
+    "t": "            for col in range(shelter_level):"
+   },
+   {
+    "n": 396,
+    "t": "                print(\"[]\", end=\"\")"
+   },
+   {
+    "n": 397,
+    "t": "            print()"
+   }
+  ],
+  "after": [
+   {
+    "n": 349,
+    "t": "def draw_shelter(wood, max_level=4):"
+   },
+   {
+    "n": 350,
+    "t": "    \"\"\"Week 5 nested-loop shelter art, with the cap as a default parameter.\"\"\"",
+    "doc": true
+   },
+   {
+    "n": 351,
+    "t": "    shelter_level = wood // 5"
+   },
+   {
+    "n": 352,
+    "t": "    if shelter_level > max_level:"
+   },
+   {
+    "n": 353,
+    "t": "        shelter_level = max_level"
+   },
+   {
+    "n": 354,
+    "t": ""
+   },
+   {
+    "n": 355,
+    "t": "    print()"
+   },
+   {
+    "n": 356,
+    "t": "    print(\"Shelter: \", end=\"\")"
+   },
+   {
+    "n": 357,
+    "t": "    for row in range(2):"
+   },
+   {
+    "n": 358,
+    "t": "        if row == 0:"
+   },
+   {
+    "n": 359,
+    "t": "            for col in range(shelter_level):"
+   },
+   {
+    "n": 360,
+    "t": "                print(\"/\\\\\", end=\"\")"
+   },
+   {
+    "gap": true
+   },
+   {
+    "n": 366,
+    "t": "            print()"
+   }
+  ],
+  "calls": [
+   {
+    "n": 506,
+    "t": "    draw_shelter(wood)"
+   }
+  ],
+  "takes": [
+   {
+    "name": "wood",
+    "why": "the only thing it reads"
+   },
+   {
+    "name": "max_level=4",
+    "why": "the cap that was written into the <code>if</code> below it"
+   }
+  ],
+  "gives": [],
+  "note": "The nested loops come across <strong>exactly as they are</strong> &mdash; do not rewrite them, just indent them one more level. <code>shelter_level</code> is worked out inside and never needed outside, so it stays inside."
+ },
+ {
+  "key": "craft",
+  "label": "The crafting menu",
+  "step": "STEP 11",
+  "find": "print(\"  [bold]Crafting bench:[/bold]\")",
+  "fn": "craft_menu",
+  "before": [
+   {
+    "n": 299,
+    "t": "            print()"
+   },
+   {
+    "n": 300,
+    "t": "            print(\"  [bold]Crafting bench:[/bold]\")"
+   },
+   {
+    "n": 301,
+    "t": "            print(\"    a - Wooden pickaxe  (3 wood, 2 stone)\")"
+   },
+   {
+    "n": 302,
+    "t": "            print(\"    b - Shelter         (20 wood, 10 stone)\")"
+   },
+   {
+    "n": 303,
+    "t": "            print(\"    c - Crafting bench  (10 wood, 5 stone, 2 iron)\")"
+   },
+   {
+    "n": 304,
+    "t": "            print(\"    d - Cancel\")"
+   },
+   {
+    "n": 305,
+    "t": ""
+   },
+   {
+    "n": 306,
+    "t": "            craft = \"\""
+   },
+   {
+    "n": 307,
+    "t": "            while craft != \"a\" and craft != \"b\" and craft != \"c\" and craft != \"d\":"
+   },
+   {
+    "n": 308,
+    "t": "                craft = input(\"    Craft what? \")"
+   },
+   {
+    "n": 309,
+    "t": "                if craft != \"a\" and craft != \"b\" and craft != \"c\" and craft != \"d\":"
+   },
+   {
+    "n": 310,
+    "t": "                    print(\"[red]    Enter a, b, c, or d.[/red]\")"
+   }
+  ],
+  "after": [
+   {
+    "n": 278,
+    "t": "def craft_menu(wood, stone, iron, has_pickaxe, has_shelter, has_bench):"
+   },
+   {
+    "n": 279,
+    "t": "    \"\"\"The Week 6 crafting menu. The three recipes now share try_craft().\"\"\"",
+    "doc": true
+   },
+   {
+    "n": 280,
+    "t": "    print()"
+   },
+   {
+    "n": 281,
+    "t": "    print(\"  [bold]Crafting bench:[/bold]\")"
+   },
+   {
+    "n": 282,
+    "t": "    print(\"    a - Wooden pickaxe  (3 wood, 2 stone)\")"
+   },
+   {
+    "n": 283,
+    "t": "    print(\"    b - Shelter         (20 wood, 10 stone)\")"
+   },
+   {
+    "n": 284,
+    "t": "    print(\"    c - Crafting bench  (10 wood, 5 stone, 2 iron)\")"
+   },
+   {
+    "n": 285,
+    "t": "    print(\"    d - Cancel\")"
+   },
+   {
+    "n": 286,
+    "t": ""
+   },
+   {
+    "n": 287,
+    "t": "    craft = \"\""
+   },
+   {
+    "gap": true
+   },
+   {
+    "n": 306,
+    "t": "    return wood, stone, iron, has_pickaxe, has_shelter, has_bench"
+   }
+  ],
+  "calls": [
+   {
+    "n": 501,
+    "t": "            wood, stone, iron, has_pickaxe, has_shelter, has_bench = craft_menu("
+   }
+  ],
+  "takes": [
+   {
+    "name": "wood, stone, iron",
+    "why": "the recipes spend them"
+   },
+   {
+    "name": "has_pickaxe, has_shelter, has_bench",
+    "why": "it needs to know what you already own"
+   }
+  ],
+  "gives": [
+   {
+    "name": "wood, stone, iron, has_pickaxe, has_shelter, has_bench",
+    "why": "crafting changes all six"
+   }
+  ],
+  "note": "Six in and the <strong>same six</strong> out, because crafting spends resources and sets flags. A menu is only a print block, a validated input and an <code>if</code>/<code>elif</code> chain &mdash; all of which you already wrote. Moving it changes none of that."
+ },
+ {
   "key": "explore",
   "label": "Six in, six out",
   "step": "STEP 10",
+  "find": "event = random.randint(1, 6)",
   "fn": "explore",
   "before": [
    {
@@ -929,9 +1511,10 @@ function hi(src) {
   });
 }
 
-function lineHTML(ln, cls, tag) {
+function lineHTML(ln, cls, tag, gapText) {
   if (ln.gap) {
-    return '<div class="gap">&#8942;  (the other events, unchanged)</div>';
+    return '<div class="gap">&#8942;  ' +
+           (gapText || "(more of the same block)") + "</div>";
   }
   return '<div class="ln ' + (cls || "") + '">' +
          '<span class="num">' + ln.n + "</span>" +
@@ -945,7 +1528,8 @@ function render() {
 
   document.getElementById("beforeCode").innerHTML =
     d.before.map(function (ln, i) {
-      return lineHTML(ln, "move", i === 0 ? ["m", "this block moves"] : null);
+      return lineHTML(ln, "move", i === 0 ? ["m", "this block moves"] : null,
+                      "(more of this block, unchanged)");
     }).join("");
 
   /* The def, then a gap, then the single line left behind where the block
@@ -953,7 +1537,8 @@ function render() {
      that is never called is dead code, and the file looks finished. */
   var html = d.after.map(function (ln, i) {
     if (ln.doc) { return lineHTML(ln, "newdef doc", null); }
-    return lineHTML(ln, "newdef", i === 0 ? ["n", "the function it became"] : null);
+    return lineHTML(ln, "newdef", i === 0 ? ["n", "the function it became"] : null,
+                    "(the middle of the function &mdash; your own code, moved as it was)");
   }).join("");
   html += '<div class="gap">&#8942;  (the rest of the program)</div>';
   /* Every call site, not just the first. gather() is called four times, and
@@ -979,6 +1564,10 @@ function render() {
   document.getElementById("gives").innerHTML =
     list(d.gives, "Nothing. It does its work on the screen, not in a value — so there is no return at all.");
 
+  document.getElementById("findbar").innerHTML =
+    "<b>Find it in your own game.py:</b> press Ctrl&#8209;F (Cmd&#8209;F on a " +
+    "Mac) and search for <code>" + esc(d.find) + "</code> &mdash; the line " +
+    "numbers on the left are from my copy, and yours will be different.";
   document.getElementById("note").innerHTML = d.note;
   document.getElementById("which").textContent =
     "Block " + (at + 1) + " of " + DEMOS.length + "  ·  def " + d.fn + "()";
