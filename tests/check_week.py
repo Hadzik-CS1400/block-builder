@@ -98,7 +98,17 @@ def main():
                 "  e.g.  python tests/check_week.py 7\n"
                 "        python tests/check_week.py 7b")
     else:
-        week = available[-1]
+        # A lettered part is an EXTRA assignment that happens to sort last; it
+        # is not the natural "latest week". Defaulting to it handed the online
+        # section -- still on week 7 -- a WEEK 07b scorecard reading 0 / 20 for
+        # work it has not been set yet, on a game.py that scores 20 / 20 for
+        # the week it is actually doing.
+        #
+        # So the bare command always lands on a whole week. Anyone who wants
+        # the lettered part asks for it by name, and the nudge at the bottom of
+        # the whole week's scorecard tells them it exists.
+        plain = [w for w in available if not w[2:]]
+        week = (plain or available)[-1]
 
     rows = run(week)
     color = conftest._use_color()
