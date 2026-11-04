@@ -270,6 +270,14 @@
 #
 #     python tests/check_week.py 7b
 #
+# STUCK ON WHAT "MOVE IT INTO A FUNCTION" ACTUALLY MEANS?
+#   Open docs/week07_refactor.html in a browser -- double-click it. It shows
+#   six blocks of THIS game before and after, side by side, with the block
+#   lit in both places: where it used to be, and the one line left behind
+#   where it was. It also names, for each one, what had to go IN and what had
+#   to come OUT, and why. Nothing in it runs; it is about the shape of your
+#   file.
+#
 # Nothing checks your function NAMES. The tests look at the shape.
 #
 # Take them in any order. Run the game after each one. If a change makes the
