@@ -106,36 +106,76 @@
 
 
 # -----------------------------------------------------------------------------
-# STEP 3: a survival bar
+# STEP 3: rewrite the survival bar
 # -----------------------------------------------------------------------------
-# A progress bar is two repeated strings next to each other: the filled part
-# and the empty part.
+# YOU ARE NOT WRITING A NEW FUNCTION HERE. You already have one -- you wrote
+# draw_progress() back in Week 6 and gave it a width parameter in Week 7. Find
+# it in your game.py. It looks like this:
 #
-# TODO 3: work out how far through the thirty days the player is, and draw it:
+#     def draw_progress(day, max_days, width=20):
+#         progress = day * width // max_days
+#         bar = ""
+#         for i in range(width):
+#             if i < progress:
+#                 bar = bar + "#"
+#             else:
+#                 bar = bar + "-"
+#         print("Survival: [" + bar + "] Day " + str(day) + "/" + str(max_days))
 #
-#             pct = day / max_days
-#             if pct > 1:
-#                 pct = 1
-#             filled = int(30 * pct)
-#             print(f"  Survival: [{'#' * filled}{'-' * (30 - filled)}] {pct:.0%}")
+# It works. It is also eight lines doing what two can do, now that you have
+# f-strings and string repetition.
 #
-#         :.0% turns 0.4 into 40%. The int() matters -- you cannot repeat a
-#         string a fractional number of times.
+# TODO 3: replace the BODY of your draw_progress with this:
 #
-#         THE `if` MATTERS TOO, and the reason is worth a minute. Survive past
-#         day 30 and pct goes over 1, so filled goes over 30 -- and then
+#     def draw_progress(day, max_days, width=30):
+#         pct = day / max_days
+#         if pct > 1:
+#             pct = 1
+#         filled = int(width * pct)
+#         print(f"  Survival: [{'#' * filled}{'-' * (width - filled)}] {pct:.0%}")
 #
-#             '-' * (30 - 31)
+#         Four things changed, and each is worth knowing:
 #
-#         is NOT an error. Python hands back an empty string for a negative
-#         count, quite happily. So the bar grows a character, the empty half
-#         disappears, and every line under it stops lining up -- with nothing
-#         to tell you why. Capping pct at 1 is the whole fix.
+#         1. THE LOOP IS GONE. The old one grew the bar a character at a
+#            time, going round thirty times to build thirty characters.
+#            '#' * filled builds the whole run in one go. Same output --
+#            check it against your old version if you want to be sure.
 #
-#         Thirty is the bar's WIDTH in characters, and it has nothing to do
-#         with max_days being thirty -- the two being equal here is a
-#         coincidence. Change max_days to 45 and the bar should still be
-#         thirty characters wide.
+#         2. THE DEFAULT WIDTH IS NOW 30. At 20 the bar line came out at 38
+#            characters under a 50-wide panel and looked stranded. Note it is
+#            `width` doing the work in both places, not a hardcoded 30 --
+#            thirty is the bar's WIDTH and has nothing to do with max_days
+#            being thirty. They are equal by coincidence. Change max_days to
+#            45 and the bar should still be thirty wide.
+#
+#         3. IT SHOWS A PERCENTAGE, not "Day 8/30" -- the day is already in
+#            the header you built in STEP 2, so printing it twice is noise.
+#            :.0% turns 0.27 into 27% and does the x100 for you.
+#
+#         4. THE `if` IS NEW, and it is the one to understand -- because it
+#            is the price of the shorter code, not a bug you had.
+#
+#            The old loop could NEVER draw the wrong number of characters.
+#            `for i in range(width)` runs exactly width times whatever the
+#            day is, so even on day 40 of 30 it drew a full bar of 20. The
+#            loop was its own guard.
+#
+#            Repetition has no such guard. Past day 30 pct goes over 1, so
+#            filled goes over width, and then
+#
+#                '-' * (30 - 31)
+#
+#            is NOT an error. Python hands back an empty string for a
+#            negative count, quite happily. The bar grows a character, the
+#            empty half disappears, and every line under it stops lining up
+#            -- with nothing to tell you why.
+#
+#            So: you traded eight lines for two, and bought one `if` with the
+#            change. That is a trade worth making, and worth noticing you
+#            made. Shorter code is not automatically safer code.
+#
+#         int() still matters for the same reason it always did: you cannot
+#         repeat a string a fractional number of times.
 
 
 # -----------------------------------------------------------------------------
