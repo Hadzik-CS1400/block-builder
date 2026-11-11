@@ -233,10 +233,44 @@
 
 
 # -----------------------------------------------------------------------------
-# STEP 7: play it and score it
+# STEP 7: try to break the layout
 # -----------------------------------------------------------------------------
-# TODO 7: run `python game.py` and play a full game. The rules should behave
-#         exactly as they did last week -- only the display has changed.
+# Everything you changed this week is display, so looking at it IS the test.
+# And a layout only breaks at the edges -- a game played normally will look
+# fine and tell you nothing.
+#
+# TODO 7: run `python game.py` five times and feed it each of these on
+#         purpose. Each one attacks a different thing you just built:
+#
+#         a) Type your name with spaces either side:  "   Ada   "
+#            The header should look exactly as if you had typed it clean.
+#            If the = padding shifts, STEP 6's .strip() is missing.
+#
+#         b) Type a silly long name -- hold a key down and give it FORTY
+#            characters. Thirty will not do it: the rest of the header is
+#            eighteen characters ("'s World - Day 1 " plus the spaces), so
+#            the line only bursts fifty once the name passes thirty-two.
+#            Work that out before you try it, then check you were right.
+#
+#            Past that, the header runs long and stops centering. That is
+#            FORMAT NOT TRUNCATING: a width is a minimum, never a maximum.
+#            Nothing to fix; everything to know. Decide for yourself whether
+#            you want to cut it with name[:20].
+#
+#         c) Play until a resource goes from 9 to 10, or 99 to 100.
+#            The right-hand edge of the numbers must not move. If it does,
+#            a line in STEP 1 is missing its width.
+#
+#         d) Find max_days where the game sets up, below your functions and
+#            above the while loop. Change it to 3 and play to the end.
+#            The bar should fill completely and read 100%, and the panel
+#            should still be thirty characters wide on the last day. PUT IT
+#            BACK TO 30 WHEN YOU ARE DONE -- and notice that changing it did
+#            not change the bar's width, which is the point of STEP 3.
+#
+#         e) Look at day 1, before anything has happened.
+#            An empty journal should print nothing, not an empty heading
+#            with a blank underneath it.
 #
 #         Then score it:
 #
@@ -244,6 +278,11 @@
 #
 #         Type the 9. sync.py brings later weeks' files down too, and with no
 #         number the scorecard grades the NEWEST week it can find.
+#
+#         The rules should play exactly as they did last week -- you changed
+#         no mechanic this week. If something behaves differently, you
+#         altered it by accident while moving lines around; open
+#         solutions/week07_game.py beside yours and find it.
 
 
 # ---- COMMIT -----------------------------------------------------------------
