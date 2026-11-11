@@ -1,27 +1,37 @@
 # =============================================================================
-# WHY THIS FILE HAS FOURTEEN FUNCTIONS AND YOUR GAME MAY HAVE FOUR
+# Block Builder - Week 7 solution: Refactor into Functions
 # =============================================================================
-# The assignment asked for four, and four is what was graded:
+# One correct answer. Not the only one -- any version that does the same work
+# scores the same, because the tests read what your code DOES, not how you
+# spelled it.
+#
+# Week 7 asked for four functions, and four is what was graded:
 #
 #     gather()            STEP 1-3    the repeated gathering block
 #     try_craft()         STEP 4      the repeated craft check
 #     show_day_status()   STEP 5      the status panel
 #     check_game_over()   STEP 6      the ending, asked as a question
 #
-# If you wrote those four and the game still plays, you scored 20/20 and you
-# did the assignment correctly.
+# If you wrote those four and your game still plays, you scored 20/20 and you
+# did the assignment correctly. Compare yours against this one -- differences
+# are not necessarily mistakes.
 #
-# The other ten are the same move carried through the rest of the file. They
-# are WEEK 7B, a separate twenty points, listed as PART B at the bottom of
-# weeks/week07_todo.py and scored with:
+# BEHIND? This is the file to start from. Open it beside your own game.py and
+# bring across whatever you are missing, then carry on.
 #
-#     python tests/check_week.py 7b
+# -----------------------------------------------------------------------------
+# WEEK 7B's ANSWER IS NOT IN HERE, ON PURPOSE
+# -----------------------------------------------------------------------------
+# Week 7B asks you to carry the same move through the rest of this file: ten
+# more functions, a separate twenty points. Everything it asks you to wrap is
+# sitting right here, still inline, exactly as it is in your own game.py.
+# Which is the point -- the work is the moving, and nobody can do that for you.
 #
-# Two of them are worth reading even if you never write them. explore() and
-# get_player_info() both hand back SEVERAL values at once, because a function
-# cannot reach out and change your wood from the inside. Look at how long
-# those lines get. Week 10 replaces all of it with one list, and this file is
-# the argument for why.
+#     weeks/week07b_todo.py             what to do
+#     docs/week07_refactor.html         ten of them shown before and after
+#     python tests/check_week.py 7b     your score
+#
+# That answer ships after 7B closes, the same way this one did.
 # =============================================================================
 
 # =============================================================================
@@ -58,93 +68,6 @@ from rich import print
 # =============================================================================
 
 
-def title_screen():
-    """Display the game title. No parameters, no return — it just prints."""
-    print("=" * 50)
-    print("[bold green]        BLOCK BUILDER[/bold green]")
-    print("     A Survival Craft Adventure")
-    print("=" * 50)
-    print()
-
-
-def get_player_info():
-    """Ask for name and difficulty (Weeks 2, 3 and 6).
-
-    NEW Week 7: a function can return MORE THAN ONE value. The main program
-    unpacks them in the same order they are listed here.
-    """
-    name = input("What is your name, crafter? ")
-    print()
-
-    print("Choose your difficulty:")
-    print("  1 - Peaceful  (extra resources, no monsters)")
-    print("  2 - Normal    (balanced start)")
-    print("  3 - Hardcore  (minimal resources, tough nights)")
-
-    # Week 6: keep asking until the answer is valid
-    difficulty = ""
-    while difficulty != "1" and difficulty != "2" and difficulty != "3":
-        difficulty = input("Enter 1, 2, or 3: ")
-        if difficulty != "1" and difficulty != "2" and difficulty != "3":
-            print("[red]That is not 1, 2, or 3. Try again.[/red]")
-
-    # Week 3: if/elif/else sets up the world. Week 5 added actions_per_day.
-    if difficulty == "1":
-        return name, "Peaceful", 100, 6, 10, 5, 15, 15
-    elif difficulty == "2":
-        return name, "Normal", 100, 5, 5, 3, 10, 10
-    else:
-        return name, "Hardcore", 80, 4, 2, 1, 5, 5
-
-
-def show_starting_status(name, day, health, wood, stone, iron, food, water):
-    """The Week 2 starting status block, unchanged — just wrapped in a def."""
-    total_resources = wood + stone + food + water + iron
-
-    print()
-    print("-" * 40)
-    print("[bold]Starting Status[/bold]")
-    print("-" * 40)
-    print("Name:    " + name)
-    print("Day:     " + str(day))
-    print("Health:  " + str(health))
-    print("-" * 40)
-    print("[bold cyan]Resources:[/bold cyan]")
-    print("  Wood:  " + str(wood) + " blocks")
-    print("  Stone: " + str(stone) + " blocks")
-    print("  Iron:  " + str(iron) + " ore")
-    print("  Food:  " + str(food) + " items")
-    print("  Water: " + str(water) + " units")
-    print("-" * 40)
-    print("Total resources: " + str(total_resources))
-
-    # NEW Week 7: math.ceil rounds UP. 9 food is 5 days of eating, not 4 —
-    # integer division ( // ) was quietly rounding the last half-day away.
-    if food > 0:
-        print("Food will last ~" + str(math.ceil(food / 2)) + " days (2 food/day)")
-
-
-def shelter_plan(wood, walls_needed=4, wood_per_wall=5):
-    """Week 2 shelter maths.
-
-    NEW Week 7: DEFAULT PARAMETERS. Call shelter_plan(wood) and you get the
-    standard 4-wall hut. Call shelter_plan(wood, 6, 5) for a bigger one. The
-    defaults mean the common case stays a one-argument call.
-    """
-    total_wood_needed = walls_needed * wood_per_wall
-    wood_shortage = total_wood_needed - wood
-
-    print()
-    print("[yellow]To build basic shelter you need " + str(total_wood_needed)
-          + " wood.[/yellow]")
-
-    # Week 3: a relational operator lets the program tell the truth
-    if wood_shortage > 0:
-        print("[yellow]You still need " + str(wood_shortage) + " more wood.[/yellow]")
-    else:
-        print("[green]You already have enough wood to build![/green]")
-
-
 def gather(resource_name, min_amt=1, max_amt=5):
     """Gather one resource and return how much was found.
 
@@ -155,104 +78,6 @@ def gather(resource_name, min_amt=1, max_amt=5):
     gained = random.randint(min_amt, max_amt)
     print("[green]  +" + str(gained) + " " + resource_name + "[/green]")
     return gained
-
-
-def explore(health, wood, stone, iron, food, water):
-    """The Week 3 exploration event, all six outcomes, moved into a function.
-
-    Note how long this parameter list is: an event can change ANY resource, so
-    every resource has to be passed in and handed back. That is annoying, and
-    it is meant to be — Week 11 replaces all six with a single dictionary.
-    """
-    event = random.randint(1, 6)
-
-    if event == 1:
-        # Found a cave
-        print("[cyan]  You discover a dark cave entrance![/cyan]")
-        print("    1 - Enter the cave (risky but might find iron)")
-        print("    2 - Stay outside (safe, gather wood)")
-        cave_choice = input("  Choose 1 or 2: ")
-
-        if cave_choice == "1":
-            if random.randint(1, 10) > 5:
-                iron_found = random.randint(2, 6)
-                iron = iron + iron_found
-                print("[green]  You found " + str(iron_found) + " iron ore![/green]")
-            else:
-                damage = random.randint(5, 15)
-                health = health - damage
-                print("[red]  A bat attacked you! Health -" + str(damage) + "[/red]")
-        else:
-            wood = wood + 3
-            print("[green]  Gathered 3 wood safely outside.[/green]")
-
-    elif event == 2:
-        # Animal encounter
-        print("[yellow]  A wolf appears from the bushes![/yellow]")
-        if health > 70 and wood >= 3:
-            print("  You have a stick to defend yourself.")
-            print("    1 - Fight (use a wood stick)")
-            print("    2 - Run")
-            wolf_choice = input("  Choose 1 or 2: ")
-            if wolf_choice == "1":
-                if random.randint(1, 10) > 4:
-                    food = food + random.randint(3, 8)
-                    wood = wood - 1
-                    print("[green]  You defeated the wolf and got meat![/green]")
-                else:
-                    health = health - 20
-                    print("[red]  The wolf bit you! Health -20[/red]")
-            else:
-                print("  You ran away safely.")
-        else:
-            health = health - 10
-            print("[red]  Too weak to fight. The wolf scratched you! -10 health[/red]")
-
-    elif event == 3:
-        # Bad weather
-        print("[blue]  Dark clouds roll in...[/blue]")
-        severity = random.randint(1, 10)
-        if severity > 7:
-            health = health - 10
-            water = water + 5
-            print("[yellow]  Heavy rain! Health -10, but collected 5 water.[/yellow]")
-        elif severity > 3:
-            water = water + 3
-            print("[green]  Light rain. Collected 3 water.[/green]")
-        else:
-            print("[green]  The clouds pass. Nothing happens.[/green]")
-
-    elif event == 4:
-        # Found berry bush
-        print("[magenta]  You find a bush full of berries![/magenta]")
-        food = food + random.randint(3, 8)
-        print("[green]  Gathered berries![/green]")
-
-    elif event == 5:
-        # River crossing
-        print("[blue]  You reach a wide river.[/blue]")
-        print("    1 - Wade across (might lose resources)")
-        print("    2 - Follow the bank (find a bridge)")
-        river_choice = input("  Choose 1 or 2: ")
-        if river_choice == "1":
-            if random.randint(1, 10) > 5:
-                stone = stone + 2
-                print("[green]  Crossed safely! Found smooth stones. +2 stone[/green]")
-            else:
-                lost = random.randint(2, 5)
-                food = food - lost
-                print("[red]  Slipped! Lost " + str(lost) + " food in the current.[/red]")
-        else:
-            wood = wood + 2
-            print("[green]  Found a fallen tree by the bank. +2 wood[/green]")
-
-    else:
-        # Peaceful gathering
-        wood = wood + random.randint(2, 5)
-        stone = stone + random.randint(1, 3)
-        print("[green]  A quiet day. Gathered some wood and stone.[/green]")
-
-    return health, wood, stone, iron, food, water
 
 
 def try_craft(item_name, wood, stone, iron, wood_cost, stone_cost, iron_cost=0):
@@ -273,109 +98,6 @@ def try_craft(item_name, wood, stone, iron, wood_cost, stone_cost, iron_cost=0):
     print("[red]    Need " + str(wood_cost) + " wood, " + str(stone_cost)
           + " stone, " + str(iron_cost) + " iron.[/red]")
     return wood, stone, iron, False
-
-
-def craft_menu(wood, stone, iron, has_pickaxe, has_shelter, has_bench):
-    """The Week 6 crafting menu. The three recipes now share try_craft()."""
-    print()
-    print("  [bold]Crafting bench:[/bold]")
-    print("    a - Wooden pickaxe  (3 wood, 2 stone)")
-    print("    b - Shelter         (20 wood, 10 stone)")
-    print("    c - Crafting bench  (10 wood, 5 stone, 2 iron)")
-    print("    d - Cancel")
-
-    craft = ""
-    while craft != "a" and craft != "b" and craft != "c" and craft != "d":
-        craft = input("    Craft what? ")
-        if craft != "a" and craft != "b" and craft != "c" and craft != "d":
-            print("[red]    Enter a, b, c, or d.[/red]")
-
-    if craft == "a":
-        wood, stone, iron, ok = try_craft("a wooden pickaxe", wood, stone, iron, 3, 2)
-        if ok:
-            has_pickaxe = True
-    elif craft == "b":
-        wood, stone, iron, ok = try_craft("a shelter", wood, stone, iron, 20, 10)
-        if ok:
-            has_shelter = True
-    elif craft == "c":
-        wood, stone, iron, ok = try_craft("a crafting bench", wood, stone, iron, 10, 5, 2)
-        if ok:
-            has_bench = True
-
-    return wood, stone, iron, has_pickaxe, has_shelter, has_bench
-
-
-def eat_and_drink(food, water, health, food_cost=2, water_cost=2):
-    """Week 4 eating, with the daily costs as default parameters."""
-    print()
-    food = food - food_cost
-    water = water - water_cost
-
-    if food < 0:
-        food = 0
-        health = health - 5
-        print("[red]Starving! -5 health[/red]")
-    if water < 0:
-        water = 0
-        health = health - 5
-        print("[red]Dehydrated! -5 health[/red]")
-
-    print("You consume " + str(food_cost) + " food and " + str(water_cost) + " water.")
-    return food, water, health
-
-
-def night_phase(day, health, has_shelter, wood):
-    """Week 3 night check. Returns the health left after the night."""
-    print()
-    print("-" * 50)
-    print("[bold]Night " + str(day) + " falls...[/bold]")
-
-    if has_shelter:
-        print("[green]Safe inside the shelter you built.[/green]")
-    elif wood >= 5:
-        damage = random.randint(5, 10)
-        health = health - damage
-        print("[yellow]Makeshift shelter. Cold night. Health -" + str(damage) + "[/yellow]")
-    else:
-        damage = random.randint(10, 25)
-        health = health - damage
-        print("[red]No shelter! Exposed to cold and creatures. Health -"
-              + str(damage) + "[/red]")
-
-    return health
-
-
-def draw_shelter(wood, max_level=4):
-    """Week 5 nested-loop shelter art, with the cap as a default parameter."""
-    shelter_level = wood // 5
-    if shelter_level > max_level:
-        shelter_level = max_level
-
-    print()
-    print("Shelter: ", end="")
-    for row in range(2):
-        if row == 0:
-            for col in range(shelter_level):
-                print("/\\", end="")
-            print()
-            print("         ", end="")
-        else:
-            for col in range(shelter_level):
-                print("[]", end="")
-            print()
-
-
-def draw_progress(day, max_days, width=20):
-    """Week 6 progress bar. width defaults to 20 but is now adjustable."""
-    progress = day * width // max_days
-    bar = ""
-    for i in range(width):
-        if i < progress:
-            bar = bar + "="
-        else:
-            bar = bar + "-"
-    print("Survival: [" + bar + "] Day " + str(day) + "/" + str(max_days))
 
 
 def show_day_status(day, health, wood, stone, iron, food, water):
@@ -424,9 +146,34 @@ def check_game_over(name, health, day, max_days, has_shelter, has_bench):
 # the main loop no longer contains any of them: it says WHAT happens, and each
 # function says HOW.
 
-title_screen()
+print("=" * 50)
+print("[bold green]        BLOCK BUILDER[/bold green]")
+print("     A Survival Craft Adventure")
+print("=" * 50)
+print()
 
-name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()
+name = input("What is your name, crafter? ")
+print()
+
+print("Choose your difficulty:")
+print("  1 - Peaceful  (extra resources, no monsters)")
+print("  2 - Normal    (balanced start)")
+print("  3 - Hardcore  (minimal resources, tough nights)")
+
+# Week 6: keep asking until the answer is valid
+difficulty = ""
+while difficulty != "1" and difficulty != "2" and difficulty != "3":
+    difficulty = input("Enter 1, 2, or 3: ")
+    if difficulty != "1" and difficulty != "2" and difficulty != "3":
+        print("[red]That is not 1, 2, or 3. Try again.[/red]")
+
+# Week 3: if/elif/else sets up the world. Week 5 added actions_per_day.
+if difficulty == "1":
+    name, mode, health, actions_per_day, wood, stone, food, water = name, "Peaceful", 100, 6, 10, 5, 15, 15
+elif difficulty == "2":
+    name, mode, health, actions_per_day, wood, stone, food, water = name, "Normal", 100, 5, 5, 3, 10, 10
+else:
+    name, mode, health, actions_per_day, wood, stone, food, water = name, "Hardcore", 80, 4, 2, 1, 5, 5
 
 iron = 0
 day = 1
@@ -438,8 +185,43 @@ has_pickaxe = False
 
 print()
 print("You chose " + mode + " mode.")
-show_starting_status(name, day, health, wood, stone, iron, food, water)
-shelter_plan(wood)
+total_resources = wood + stone + food + water + iron
+
+print()
+print("-" * 40)
+print("[bold]Starting Status[/bold]")
+print("-" * 40)
+print("Name:    " + name)
+print("Day:     " + str(day))
+print("Health:  " + str(health))
+print("-" * 40)
+print("[bold cyan]Resources:[/bold cyan]")
+print("  Wood:  " + str(wood) + " blocks")
+print("  Stone: " + str(stone) + " blocks")
+print("  Iron:  " + str(iron) + " ore")
+print("  Food:  " + str(food) + " items")
+print("  Water: " + str(water) + " units")
+print("-" * 40)
+print("Total resources: " + str(total_resources))
+
+# NEW Week 7: math.ceil rounds UP. 9 food is 5 days of eating, not 4 —
+# integer division ( // ) was quietly rounding the last half-day away.
+if food > 0:
+    print("Food will last ~" + str(math.ceil(food / 2)) + " days (2 food/day)")
+walls_needed = 4
+wood_per_wall = 5
+total_wood_needed = walls_needed * wood_per_wall
+wood_shortage = total_wood_needed - wood
+
+print()
+print("[yellow]To build basic shelter you need " + str(total_wood_needed)
+      + " wood.[/yellow]")
+
+# Week 3: a relational operator lets the program tell the truth
+if wood_shortage > 0:
+    print("[yellow]You still need " + str(wood_shortage) + " more wood.[/yellow]")
+else:
+    print("[green]You already have enough wood to build![/green]")
 
 print()
 print("[bold green]" + name + " enters the world. Survive " + str(max_days)
@@ -495,16 +277,177 @@ while not game_over:
         elif choice == "4":
             water = water + gather("water", 3, 7)
         elif choice == "5":
-            health, wood, stone, iron, food, water = explore(
-                health, wood, stone, iron, food, water)
-        elif choice == "6":
-            wood, stone, iron, has_pickaxe, has_shelter, has_bench = craft_menu(
-                wood, stone, iron, has_pickaxe, has_shelter, has_bench)
+            event = random.randint(1, 6)
 
-    food, water, health = eat_and_drink(food, water, health)
-    health = night_phase(day, health, has_shelter, wood)
-    draw_shelter(wood)
-    draw_progress(day, max_days)
+            if event == 1:
+                # Found a cave
+                print("[cyan]  You discover a dark cave entrance![/cyan]")
+                print("    1 - Enter the cave (risky but might find iron)")
+                print("    2 - Stay outside (safe, gather wood)")
+                cave_choice = input("  Choose 1 or 2: ")
+
+                if cave_choice == "1":
+                    if random.randint(1, 10) > 5:
+                        iron_found = random.randint(2, 6)
+                        iron = iron + iron_found
+                        print("[green]  You found " + str(iron_found) + " iron ore![/green]")
+                    else:
+                        damage = random.randint(5, 15)
+                        health = health - damage
+                        print("[red]  A bat attacked you! Health -" + str(damage) + "[/red]")
+                else:
+                    wood = wood + 3
+                    print("[green]  Gathered 3 wood safely outside.[/green]")
+
+            elif event == 2:
+                # Animal encounter
+                print("[yellow]  A wolf appears from the bushes![/yellow]")
+                if health > 70 and wood >= 3:
+                    print("  You have a stick to defend yourself.")
+                    print("    1 - Fight (use a wood stick)")
+                    print("    2 - Run")
+                    wolf_choice = input("  Choose 1 or 2: ")
+                    if wolf_choice == "1":
+                        if random.randint(1, 10) > 4:
+                            food = food + random.randint(3, 8)
+                            wood = wood - 1
+                            print("[green]  You defeated the wolf and got meat![/green]")
+                        else:
+                            health = health - 20
+                            print("[red]  The wolf bit you! Health -20[/red]")
+                    else:
+                        print("  You ran away safely.")
+                else:
+                    health = health - 10
+                    print("[red]  Too weak to fight. The wolf scratched you! -10 health[/red]")
+
+            elif event == 3:
+                # Bad weather
+                print("[blue]  Dark clouds roll in...[/blue]")
+                severity = random.randint(1, 10)
+                if severity > 7:
+                    health = health - 10
+                    water = water + 5
+                    print("[yellow]  Heavy rain! Health -10, but collected 5 water.[/yellow]")
+                elif severity > 3:
+                    water = water + 3
+                    print("[green]  Light rain. Collected 3 water.[/green]")
+                else:
+                    print("[green]  The clouds pass. Nothing happens.[/green]")
+
+            elif event == 4:
+                # Found berry bush
+                print("[magenta]  You find a bush full of berries![/magenta]")
+                food = food + random.randint(3, 8)
+                print("[green]  Gathered berries![/green]")
+
+            elif event == 5:
+                # River crossing
+                print("[blue]  You reach a wide river.[/blue]")
+                print("    1 - Wade across (might lose resources)")
+                print("    2 - Follow the bank (find a bridge)")
+                river_choice = input("  Choose 1 or 2: ")
+                if river_choice == "1":
+                    if random.randint(1, 10) > 5:
+                        stone = stone + 2
+                        print("[green]  Crossed safely! Found smooth stones. +2 stone[/green]")
+                    else:
+                        lost = random.randint(2, 5)
+                        food = food - lost
+                        print("[red]  Slipped! Lost " + str(lost) + " food in the current.[/red]")
+                else:
+                    wood = wood + 2
+                    print("[green]  Found a fallen tree by the bank. +2 wood[/green]")
+
+            else:
+                # Peaceful gathering
+                wood = wood + random.randint(2, 5)
+                stone = stone + random.randint(1, 3)
+                print("[green]  A quiet day. Gathered some wood and stone.[/green]")
+        elif choice == "6":
+            print()
+            print("  [bold]Crafting bench:[/bold]")
+            print("    a - Wooden pickaxe  (3 wood, 2 stone)")
+            print("    b - Shelter         (20 wood, 10 stone)")
+            print("    c - Crafting bench  (10 wood, 5 stone, 2 iron)")
+            print("    d - Cancel")
+
+            craft = ""
+            while craft != "a" and craft != "b" and craft != "c" and craft != "d":
+                craft = input("    Craft what? ")
+                if craft != "a" and craft != "b" and craft != "c" and craft != "d":
+                    print("[red]    Enter a, b, c, or d.[/red]")
+
+            if craft == "a":
+                wood, stone, iron, ok = try_craft("a wooden pickaxe", wood, stone, iron, 3, 2)
+                if ok:
+                    has_pickaxe = True
+            elif craft == "b":
+                wood, stone, iron, ok = try_craft("a shelter", wood, stone, iron, 20, 10)
+                if ok:
+                    has_shelter = True
+            elif craft == "c":
+                wood, stone, iron, ok = try_craft("a crafting bench", wood, stone, iron, 10, 5, 2)
+                if ok:
+                    has_bench = True
+
+    food_cost = 2
+    water_cost = 2
+    print()
+    food = food - food_cost
+    water = water - water_cost
+
+    if food < 0:
+        food = 0
+        health = health - 5
+        print("[red]Starving! -5 health[/red]")
+    if water < 0:
+        water = 0
+        health = health - 5
+        print("[red]Dehydrated! -5 health[/red]")
+
+    print("You consume " + str(food_cost) + " food and " + str(water_cost) + " water.")
+    print()
+    print("-" * 50)
+    print("[bold]Night " + str(day) + " falls...[/bold]")
+
+    if has_shelter:
+        print("[green]Safe inside the shelter you built.[/green]")
+    elif wood >= 5:
+        damage = random.randint(5, 10)
+        health = health - damage
+        print("[yellow]Makeshift shelter. Cold night. Health -" + str(damage) + "[/yellow]")
+    else:
+        damage = random.randint(10, 25)
+        health = health - damage
+        print("[red]No shelter! Exposed to cold and creatures. Health -"
+              + str(damage) + "[/red]")
+    max_level = 4
+    shelter_level = wood // 5
+    if shelter_level > max_level:
+        shelter_level = max_level
+
+    print()
+    print("Shelter: ", end="")
+    for row in range(2):
+        if row == 0:
+            for col in range(shelter_level):
+                print("/\\", end="")
+            print()
+            print("         ", end="")
+        else:
+            for col in range(shelter_level):
+                print("[]", end="")
+            print()
+    width = 20
+    progress = day * width // max_days
+    bar = ""
+    for i in range(width):
+        if i < progress:
+            bar = bar + "="
+        else:
+            bar = bar + "-"
+    print("Survival: [" + bar + "] Day " + str(day) + "/" + str(max_days))
     show_day_status(day, health, wood, stone, iron, food, water)
 
     game_over = check_game_over(name, health, day, max_days, has_shelter, has_bench)
