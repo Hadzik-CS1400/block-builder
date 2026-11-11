@@ -289,7 +289,28 @@ def test_the_game_still_plays():
             "Nothing repeats a string. The panel's rules and the survival bar "
             "are both built that way:\n"
             '    print("=" * 50)\n'
-            "    print(f\"[{'#' * filled}{'-' * (30 - filled)}]\")"
+            "    print(f\"[{'=' * filled}{'-' * (30 - filled)}]\")"
+        )
+    # The bar has to SHOW, and that is not the same question as whether the
+    # code that builds it is there. It is drawn inside square brackets, and
+    # rich reads [#...] as a hex colour -- so a bar filled with "#" is
+    # swallowed whole, printing "Survival:  23%" with no bar and no error.
+    # No other row here would notice: the bar line ends in "%", so the
+    # column check in the first test skips it. This is the only row that looks
+    # at the bar, which is how a "#" bar stayed invisible through a release.
+    if not [ln for ln in lines if re.search(r"\[[-=*+#o ]{6,}\]", ln)]:
+        # The scorecard shows only the first three wrapped lines of this, so
+        # the fix has to come first and the reason second -- not the other way
+        # round, which is how it read until a student would have lost it.
+        fail(
+            "The survival bar never shows. Change its fill from '#' to '=': "
+            "rich reads [#...] as a colour and swallows the whole bar.\n"
+            "    [{'#' * filled}...]   <- vanishes\n"
+            "    [{'=' * filled}...]   <- prints\n"
+            "Your game prints through rich, which reads [...] as a style tag "
+            "and [#ff0000] as a hex colour. A bar starting [### looks like a "
+            "colour to it, so it prints nothing at all and reports no error. "
+            "* and + work too; a block character crashes on Windows."
         )
 
 

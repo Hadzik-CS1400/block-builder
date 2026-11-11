@@ -118,7 +118,7 @@
 #         bar = ""
 #         for i in range(width):
 #             if i < progress:
-#                 bar = bar + "#"
+#                 bar = bar + "="
 #             else:
 #                 bar = bar + "-"
 #         print("Survival: [" + bar + "] Day " + str(day) + "/" + str(max_days))
@@ -126,20 +126,21 @@
 # It works. It is also eight lines doing what two can do, now that you have
 # f-strings and string repetition.
 #
-# TODO 3: replace the BODY of your draw_progress with this:
+# TODO 3: replace your draw_progress with this. The `def` line too, not just
+#         the body -- the default width changes from 20 to 30:
 #
 #     def draw_progress(day, max_days, width=30):
 #         ratio = day / max_days
 #         if ratio > 1:
 #             ratio = 1
 #         filled = int(width * ratio)
-#         print(f"  Survival: [{'#' * filled}{'-' * (width - filled)}] {ratio:.0%}")
+#         print(f"  Survival: [{'=' * filled}{'-' * (width - filled)}] {ratio:.0%}")
 #
-#         Four things changed, and each is worth knowing:
+#         Five things changed, and each is worth knowing:
 #
 #         1. THE LOOP IS GONE. The old one grew the bar a character at a
 #            time, going round thirty times to build thirty characters.
-#            '#' * filled builds the whole run in one go. Same output --
+#            '=' * filled builds the whole run in one go. Same picture --
 #            check it against your old version if you want to be sure.
 #
 #         2. THE DEFAULT WIDTH IS NOW 30. At 20 the bar line came out at 38
@@ -174,6 +175,22 @@
 #            So: you traded eight lines for two, and bought one `if` with the
 #            change. That is a trade worth making, and worth noticing you
 #            made. Shorter code is not automatically safer code.
+#
+#         5. THE BAR IS BUILT FROM = AND NOT #. That one is not cosmetic.
+#
+#            Your game prints through rich, and rich reads square brackets as
+#            style tags: [bold], [green] -- and [#ff0000] for a colour, which
+#            is the problem. A bar built from # starts [###, rich takes the
+#            whole bracket for a colour it does not know, prints nothing, and
+#            leaves you with
+#
+#                Survival:  23%
+#
+#            No bar. No error either -- it just quietly vanishes, and only
+#            once some of the bar is filled, so day 1 looks fine. = has no
+#            such meaning to rich and comes out as typed. * and + also work.
+#            Avoid a block character like the full block: it reads nicely on
+#            a Mac and crashes outright in a Windows terminal.
 #
 #         int() still matters for the same reason it always did: you cannot
 #         repeat a string a fractional number of times.

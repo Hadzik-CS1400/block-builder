@@ -187,7 +187,7 @@
     bar = ""
     for i in range(20):
         if i < progress:
-            bar = bar + "#"
+            bar = bar + "="
         else:
             bar = bar + "-"
     print("Survival: [" + bar + "] Day " + str(day) + "/" + str(max_days))

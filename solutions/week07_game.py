@@ -372,7 +372,7 @@ def draw_progress(day, max_days, width=20):
     bar = ""
     for i in range(width):
         if i < progress:
-            bar = bar + "#"
+            bar = bar + "="
         else:
             bar = bar + "-"
     print("Survival: [" + bar + "] Day " + str(day) + "/" + str(max_days))
