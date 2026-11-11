@@ -2,8 +2,13 @@
 Block Builder - Week 9 Tests
 Formatted Displays & Journal (20 points)
 
-Four tests, five points each. The names below become the scorecard rows, so
+Five tests, four points each. The names below become the scorecard rows, so
 they match the grading table in weeks/week09_todo.py word for word.
+
+The fifth is STEP 7's `# FOUND:` note. It is the odd one out: the other four
+check what the program does, and that one checks that the student wrote down
+what they saw when they tried to break it. STEP 7 changes no code, so there
+would otherwise be nothing to grade and the step would be marked on trust.
 
 There is no Week 8. Week 8 of the course is midterm week and carries no game
 session, so the sequence runs Week 7 -> Week 9. That is deliberate.
@@ -138,7 +143,7 @@ def specs(tree):
 
 
 def test_the_status_panel_lines_up():
-    """The status numbers form a column, not a ragged edge (5 pts)."""
+    """The status numbers form a column, not a ragged edge (4 pts)."""
     tree = get_tree()
     aligned = [s for s in specs(tree) if any(c in s for c in "<>^")]
     if not aligned:
@@ -176,7 +181,7 @@ def test_the_status_panel_lines_up():
 
 
 def test_a_header_is_shouted_and_centered():
-    """A header uses .upper() and is centered in the panel (5 pts)."""
+    """A header uses .upper() and is centered in the panel (4 pts)."""
     tree = get_tree()
     source = get_source_code()
     if ".upper()" not in source:
@@ -205,7 +210,7 @@ def test_a_header_is_shouted_and_centered():
 
 
 def test_the_journal_records_the_day():
-    """Events are recorded against a day number and can be shown (5 pts)."""
+    """Events are recorded against a day number and can be shown (4 pts)."""
     tree = get_tree()
     source = get_source_code()
     if "journal" not in source.lower():
@@ -242,7 +247,7 @@ def test_the_journal_records_the_day():
 
 
 def test_the_game_still_plays():
-    """A full game runs and ends, with the new display in it (5 pts)."""
+    """A full game runs and ends, with the new display in it (4 pts)."""
     source = get_source_code()
     # Require this week's work to exist before checking it did not break the
     # game. Scored alone the row paid 5/20 for changing nothing at all, since
@@ -286,3 +291,34 @@ def test_the_game_still_plays():
             '    print("=" * 50)\n'
             "    print(f\"[{'#' * filled}{'-' * (30 - filled)}]\")"
         )
+
+
+def test_you_tried_to_break_it():
+    """STEP 7's note: one line recording what the layout did (4 pts).
+
+    STEP 7 is five deliberate inputs aimed at the formatting -- spaces round
+    the name, a 40-character name, a number crossing 9 to 10, max_days set to
+    3, an empty journal. None of them change the code, so nothing in game.py
+    would show they ever happened.
+
+    So the step asks for a sentence, and this looks for it. It cannot prove a
+    student ran anything, and does not pretend to: the same is true of CT08's
+    `# WHY:` note, which this copies. Writing down what you saw is most of the
+    value, and the alternative is marking the step on trust.
+    """
+    source = get_source_code()
+    for raw in source.split("\n"):
+        line = raw.strip()
+        if not line.startswith("#"):
+            continue
+        body = line.lstrip("#").strip()
+        if body.upper().startswith("FOUND:") and body.split(":", 1)[1].strip():
+            return
+    fail(
+        "No `# FOUND:` note. STEP 7 asks you to try five things that attack "
+        "the layout, then write ONE line in game.py saying what you found:\n"
+        "    # FOUND: a 40-character name runs the header past 50 and\n"
+        "    #        stops it centering\n"
+        "Anything after the colon counts. An empty `# FOUND:` does not -- "
+        "the sentence is the point, the same as the `# WHY:` note in CT08."
+    )

@@ -42,10 +42,11 @@
 #   feel like such a relief next week.
 #
 # WHAT'S TESTED (20 points)
-#   5 pts  The status panel lines up
-#   5 pts  A header is shouted and centered
-#   5 pts  The journal records the day
-#   5 pts  The game still plays
+#   4 pts  The status panel lines up
+#   4 pts  A header is shouted and centered
+#   4 pts  The journal records the day
+#   4 pts  The game still plays
+#   4 pts  You tried to break it        <- STEP 7's `# FOUND:` note
 #
 #   Nothing checks your wording. Call the panel what you like.
 #
@@ -271,6 +272,21 @@
 #         e) Look at day 1, before anything has happened.
 #            An empty journal should print nothing, not an empty heading
 #            with a blank underneath it.
+#
+#         f) Write ONE line in game.py saying what you found. Not an essay:
+#
+#                # FOUND: a 40-character name runs the header past 50 and
+#                #        stops it centering
+#
+#            Put it wherever it makes sense -- near the code it is about is
+#            best. This is the same habit as the `# WHY:` note you wrote in
+#            CT08, and it is scored: the checker looks for a `# FOUND:` with
+#            something after the colon.
+#
+#            It cannot tell whether you really ran the five. Nothing could.
+#            But writing the sentence is most of the value -- "it broke" is
+#            a shrug, and "a 40-character name runs the header past 50" is
+#            something you will still know in March.
 #
 #         Then score it:
 #
