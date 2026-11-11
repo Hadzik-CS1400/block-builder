@@ -284,5 +284,5 @@ def test_the_game_still_plays():
             "Nothing repeats a string. The panel's rules and the survival bar "
             "are both built that way:\n"
             '    print("=" * 50)\n'
-            "    print(f\"[{'#' * filled}{'-' * (20 - filled)}]\")"
+            "    print(f\"[{'#' * filled}{'-' * (30 - filled)}]\")"
         )

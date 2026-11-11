@@ -114,11 +114,28 @@
 # TODO 3: work out how far through the thirty days the player is, and draw it:
 #
 #             pct = day / max_days
-#             filled = int(20 * pct)
-#             print(f"  Survival: [{'#' * filled}{'-' * (20 - filled)}] {pct:.0%}")
+#             if pct > 1:
+#                 pct = 1
+#             filled = int(30 * pct)
+#             print(f"  Survival: [{'#' * filled}{'-' * (30 - filled)}] {pct:.0%}")
 #
 #         :.0% turns 0.4 into 40%. The int() matters -- you cannot repeat a
 #         string a fractional number of times.
+#
+#         THE `if` MATTERS TOO, and the reason is worth a minute. Survive past
+#         day 30 and pct goes over 1, so filled goes over 30 -- and then
+#
+#             '-' * (30 - 31)
+#
+#         is NOT an error. Python hands back an empty string for a negative
+#         count, quite happily. So the bar grows a character, the empty half
+#         disappears, and every line under it stops lining up -- with nothing
+#         to tell you why. Capping pct at 1 is the whole fix.
+#
+#         Thirty is the bar's WIDTH in characters, and it has nothing to do
+#         with max_days being thirty -- the two being equal here is a
+#         coincidence. Change max_days to 45 and the bar should still be
+#         thirty characters wide.
 
 
 # -----------------------------------------------------------------------------
