@@ -128,11 +128,11 @@
 # TODO 3: replace the BODY of your draw_progress with this:
 #
 #     def draw_progress(day, max_days, width=30):
-#         pct = day / max_days
-#         if pct > 1:
-#             pct = 1
-#         filled = int(width * pct)
-#         print(f"  Survival: [{'#' * filled}{'-' * (width - filled)}] {pct:.0%}")
+#         ratio = day / max_days
+#         if ratio > 1:
+#             ratio = 1
+#         filled = int(width * ratio)
+#         print(f"  Survival: [{'#' * filled}{'-' * (width - filled)}] {ratio:.0%}")
 #
 #         Four things changed, and each is worth knowing:
 #
@@ -160,7 +160,7 @@
 #            day is, so even on day 40 of 30 it drew a full bar of 20. The
 #            loop was its own guard.
 #
-#            Repetition has no such guard. Past day 30 pct goes over 1, so
+#            Repetition has no such guard. Past day 30 ratio goes over 1, so
 #            filled goes over width, and then
 #
 #                '-' * (30 - 31)
