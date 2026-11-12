@@ -205,7 +205,19 @@ def test_a_function_hands_back_several_values():
     # it already hands back several values, so `if not multi` would pay this
     # row out for work done last week. Part B adds explore(), night_phase(),
     # craft_menu() and get_player_info() -- any two of those clears it.
-    if len(multi) < 2:
+    # Week 10 supersedes this. Once the resources live in a dictionary,
+    # explore() takes one argument and returns NOTHING -- a dict is mutable,
+    # so changing it inside the function changes the one everybody shares.
+    # This row's own message says so: "a list fixes it in a couple of weeks."
+    # A file that has gone on to do that has learned MORE, not less, so an
+    # in-place change to a dict or list counts in place of the second return.
+    supersedes = any(
+        (isinstance(n, ast.Assign)
+         and any(isinstance(t, ast.Subscript) for t in n.targets))
+        or (isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+            and n.func.attr == "append")
+        for n in ast.walk(tree))
+    if len(multi) < 2 and not (multi and supersedes):
         fail(
             "No function hands back several values at once. STEP 10 is the "
             "one that needs it: explore() changes health AND wood AND stone "

@@ -252,8 +252,18 @@ def test_crafting_menu_has_choices_and_a_way_out():
             "player who opened it by accident."
             % (sorted(menu) if menu else "none")
         )
-    if not any(assigns_true(tree, flag)
-               for flag in ("has_shelter", "has_crafting_bench")):
+    # Week 10 replaces the three has_* flags with one list of what has been
+    # built -- crafted.append("shelter") instead of has_shelter = True, and
+    # `"shelter" in crafted` instead of `if has_shelter`. The row is about
+    # whether the game REMEMBERS what you built; a list remembers it better.
+    remembers = any(assigns_true(tree, flag)
+                    for flag in ("has_shelter", "has_crafting_bench"))
+    if not remembers:
+        remembers = any(
+            isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+            and n.func.attr == "append"
+            for n in ast.walk(tree))
+    if not remembers:
         fail(
             "No recipe sets has_shelter or has_crafting_bench to True.\n"
             "Each recipe checks it can afford every ingredient (`and`), takes "
