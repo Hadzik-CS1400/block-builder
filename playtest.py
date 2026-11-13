@@ -2,6 +2,8 @@
 Block Builder - play the game for you, many times, and report what broke
 
     python playtest.py              list the scripts you can run
+    python playtest.py all          EVERY script -- the one to run before you
+                                    hand anything in
     python playtest.py explore      play 20 games, exploring every turn
     python playtest.py mixed 50     play 50 games, trying every choice
     python playtest.py mixed --show play ONE game and explain what happened
@@ -49,6 +51,7 @@ GREEN, YELLOW, RED, DIM, BOLD, OFF = (
 )
 
 DEFAULT_RUNS = 20
+ALL_RUNS = 6         # per script when running them all
 OURS = {}            # prompts playtest.py answers itself
 MAX_ANSWERS = 4000          # a game that wants more than this is stuck
 TIMEOUT = 30                # seconds for one game
@@ -386,6 +389,61 @@ def coverage(asked, runs):
         say()
 
 
+def run_all(runs, player, levels):
+    """Every script in turn, with ONE combined coverage report at the end.
+
+    Combined on purpose. Each script is deliberately narrow -- chop only
+    chops, craft only crafts -- so no single one covers the game and no
+    single report should claim to. What matters is whether the SUITE leaves
+    a menu untried, and that is only visible added up.
+    """
+    asked, rows, trouble = {}, [], 0
+    for script in available():
+        tally = {"crashed": 0, "stuck": 0, "jammed": 0, "ok": 0}
+        detail = None
+        sys.stdout.write(f"  {DIM}{script:<10}{OFF}")
+        for i in range(runs):
+            stdin = build_answers(PLAYS / f"{script}.txt", player,
+                                  levels[i % len(levels)])
+            state, err = play_once(stdin, asked)
+            tally[state] += 1
+            if state in ("crashed", "jammed") and detail is None:
+                detail = (state, err)
+            sys.stdout.write({"ok": GREEN + "." + OFF,
+                              "crashed": RED + "x" + OFF,
+                              "stuck": YELLOW + "?" + OFF,
+                              "jammed": YELLOW + "!" + OFF}[state])
+            sys.stdout.flush()
+        bad = tally["crashed"] + tally["stuck"] + tally["jammed"]
+        trouble += bad
+        say(f"   {RED + 'needs a look' + OFF if bad else GREEN + 'ok' + OFF}")
+        rows.append((script, tally, detail))
+
+    say()
+    rule()
+    for script, tally, detail in rows:
+        if not detail:
+            continue
+        state, err = detail
+        if state == "crashed":
+            say(f"  {script}: {err[0]}", RED)
+            if err[1]:
+                say(f"    {err[1]}", DIM)
+        else:
+            say(f"  {script}: never got going -- the game kept asking "
+                f"{err[0][:36]!r}", YELLOW)
+    if trouble:
+        say()
+    say(f"  {len(rows)} scripts, {len(rows) * runs} games.",
+        (RED if trouble else GREEN) + BOLD)
+    say()
+    coverage(asked, len(rows) * runs)
+    say("  This is what the WHOLE suite covers. A menu listed with only one", DIM)
+    say("  answer is untried by every script you have, not just by one.", DIM)
+    say()
+    sys.exit(1 if trouble else 0)
+
+
 def play_once(stdin, asked_so_far):
     try:
         done = subprocess.run(
@@ -435,14 +493,17 @@ def main():
         # puts "chop" first, and chop is the one that tries a single choice
         # over and over -- the least likely of the lot to turn anything up.
         pick = "mixed" if "mixed" in names else names[0]
-        say(f"  Try:  python playtest.py {pick}", BOLD)
+        say(f"  Run them all:  python playtest.py all", BOLD)
+        say(f"  {DIM}Or just one:   python playtest.py {pick}{OFF}")
         say()
         return
 
     name = sys.argv[1]
-    if name not in names:
+    if name not in names and name != "all":
         die(f"There is no plays/{name}.txt",
-            "Scripts you have: " + ", ".join(names))
+            "Scripts you have: " + ", ".join(names),
+            "",
+            "Or run every one of them:  python playtest.py all")
 
     # Flags and the run count are separated, so `mixed --show` is not read as
     # a request for "--show" games. That exact message was the first thing a
@@ -462,6 +523,16 @@ def main():
             f"  or: python playtest.py {name} --show")
 
     player, levels = read_player()
+    if name == "all":
+        if "--show" in flags or "-s" in flags:
+            die("--show takes one script, not all of them.",
+                f"Try:  python playtest.py {names[0]} --show")
+        runs = max(1, int(numbers[0])) if numbers else ALL_RUNS
+        say(f"  Every script, {runs} games each, as {player}, "
+            f"difficulty {', '.join(levels)}.")
+        say()
+        run_all(runs, player, levels)
+        return
     if "--show" in flags or "-s" in flags:
         with open(PLAYS / f"{name}.txt", encoding="utf-8") as answers_file:
             choices = [ln.strip() for ln in answers_file if ln.strip()]
