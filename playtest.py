@@ -4,6 +4,7 @@ Block Builder - play the game for you, many times, and report what broke
     python playtest.py              list the scripts you can run
     python playtest.py explore      play 20 games, exploring every turn
     python playtest.py mixed 50     play 50 games, trying every choice
+    python playtest.py mixed --show play ONE game and explain what happened
 
 WHY THIS EXISTS
     Clicking through your own game to find a bug is slow, and it is worse
@@ -117,6 +118,61 @@ def first_real_error(text):
     return (last, spot)
 
 
+def show_one(name, answers, choices):
+    """Explain one run: the file, the keystrokes it becomes, and the game.
+
+    An earlier version tried to print each question beside the answer it got,
+    by spotting prompts in the output. It under-reported badly and said
+    nothing about it: input() writes its prompt with no newline, so when the
+    game prints the RESULT of an action it lands on the same line and the
+    prompt stops looking like one. Three questions showed up out of a
+    hundred and fifty, which reads as "the game only asked three things".
+
+    So this shows what can be shown exactly -- the file, and the stream of
+    answers it turns into -- rather than a pairing that is quietly wrong.
+    """
+    given = answers.splitlines()
+    say()
+    say("  1. The file", BOLD)
+    say(f"     plays/{name}.txt holds "
+        + ("1 line: " if len(choices) == 1 else f"{len(choices)} lines: ")
+        + ", ".join(choices))
+    say()
+    say("  2. What it becomes", BOLD)
+    say("     Those lines are keystrokes. playtest.py types them for you, in")
+    say("     order, and goes back to the top when the game asks for more:")
+    say()
+    for i, answer in enumerate(given[:14]):
+        if i == 0:
+            note = "the player's name"
+        elif i == 1:
+            note = "the difficulty"
+        else:
+            note = "line %d of the file" % ((i - 2) % len(choices) + 1)
+        say(f"       {i + 1:>3}. {answer:<14}{DIM}{note}{OFF}")
+    say(f"       ... {len(given) - 14} more, cycling the same lines", DIM)
+    say()
+
+    say("  3. What the game did with them", BOLD)
+    done = subprocess.run([sys.executable, str(GAME)], input=answers,
+                          capture_output=True, text=True, timeout=TIMEOUT)
+    body = [ln for ln in done.stdout.splitlines() if ln.strip()]
+    for line in body[:12]:
+        say(f"     {DIM}{line[:66]}{OFF}")
+    say(f"     ... {max(0, len(body) - 12)} more lines{OFF}", DIM)
+    say()
+    err = first_real_error(done.stdout + done.stderr)
+    if err:
+        say(f"     This run crashed: {err[0]}", RED)
+    else:
+        say("     This run finished without crashing.", GREEN)
+    say()
+    say("  That is the whole trick: the file is a stack of keystrokes, so", DIM)
+    say("  nothing depends on a person being there to type them. Run it", DIM)
+    say("  twenty times and the answers stay the same while the dice do not.", DIM)
+    say()
+
+
 def play_once(stdin):
     try:
         done = subprocess.run(
@@ -165,15 +221,37 @@ def main():
         die(f"There is no plays/{name}.txt",
             "Scripts you have: " + ", ".join(names))
 
-    runs = DEFAULT_RUNS
-    if len(sys.argv) > 2:
-        if not sys.argv[2].isdigit():
-            die(f"'{sys.argv[2]}' is not a number.",
-                f"Try:  python playtest.py {name} 50")
-        runs = max(1, int(sys.argv[2]))
+    # Flags and the run count are separated, so `mixed --show` is not read as
+    # a request for "--show" games. That exact message was the first thing a
+    # reader hit when they went looking for what this does.
+    flags = [a for a in sys.argv[2:] if a.startswith("-")]
+    numbers = [a for a in sys.argv[2:] if not a.startswith("-")]
+    unknown = [f for f in flags if f not in ("--show", "-s")]
+    if unknown:
+        die(f"'{unknown[0]}' is not an option.",
+            "The only one is --show, which plays ONE game and walks through",
+            "what the file is, what it turns into, and what the game did.",
+            "",
+            f"Try:  python playtest.py {name} --show")
+    if numbers and not numbers[0].isdigit():
+        die(f"'{numbers[0]}' is not a number.",
+            f"Try:  python playtest.py {name} 50",
+            f"  or: python playtest.py {name} --show")
 
     stdin = build_answers(PLAYS / f"{name}.txt")
+    if "--show" in flags or "-s" in flags:
+        with open(PLAYS / f"{name}.txt", encoding="utf-8") as answers_file:
+            choices = [ln.strip() for ln in answers_file if ln.strip()]
+        show_one(name, stdin, choices)
+        return
+
+    runs = max(1, int(numbers[0])) if numbers else DEFAULT_RUNS
     say(f"  Playing {runs} games, answering from plays/{name}.txt ...")
+    say(f"  {DIM}Same answers every game -- but the dice are different, so the"
+        f"{OFF}")
+    say(f"  {DIM}games are not. That is why it is {runs} and not one.{OFF}")
+    say()
+    say(f"  {DIM}. = a game that finished    x = a game that crashed{OFF}")
     say()
 
     crashes, stuck, seen = [], 0, {}
