@@ -62,6 +62,14 @@ def find_program():
 
 GAME = find_program()
 
+# "game" is wrong on a final project and "program" reads oddly in Block
+# Builder, so the noun follows the file being tested. Cosmetic only -- nothing
+# below branches on it except the words it prints.
+IS_GAME = GAME is not None and GAME.name == "game.py"
+THING = "game" if IS_GAME else "program"
+THINGS = "games" if IS_GAME else "runs"
+TITLE = "Block Builder - playtest" if IS_GAME else "playtest"
+
 GREEN, YELLOW, RED, DIM, BOLD, OFF = (
     "\033[92m", "\033[93m", "\033[91m", "\033[2m", "\033[1m", "\033[0m"
 )
@@ -258,7 +266,7 @@ def show_one(name, answers, choices, player, difficulty):
     say()
     say("  2. What it becomes", BOLD)
     say("     Those lines are keystrokes, typed in order, starting again at")
-    say("     the top when the game asks for more.")
+    say(f"     the top when the {THING} asks for more.")
     say()
     if SETUP_COUNT[0]:
         say(f"     The first {SETUP_COUNT[0]} answer(s) come from "
@@ -282,7 +290,7 @@ def show_one(name, answers, choices, player, difficulty):
     say()
 
     say("  3. The program running, with those answers typed in", BOLD)
-    say("     The game is run normally. The only difference is that each", DIM)
+    say(f"     The {THING} is run normally. The only difference is that each", DIM)
     say("     answer is echoed where it was read, the way it would appear", DIM)
     say("     if somebody were sitting there typing it.", DIM)
     say()
@@ -313,7 +321,7 @@ def show_one(name, answers, choices, player, difficulty):
                 say(f"     {DIM}{text[:66]}{OFF}")
         else:
             say(f"     {DIM}{run[0][:66]}{OFF}")
-            say(f"     {DIM}... {len(run) - 2} lines of the game's own "
+            say(f"     {DIM}... {len(run) - 2} lines of the {THING}'s own "
                 f"output ...{OFF}")
             say(f"     {DIM}{run[-1][:66]}{OFF}")
         run.clear()
@@ -388,7 +396,7 @@ def coverage(asked, runs):
     """
     if not asked:
         return
-    say("  What the game asked, and what your script answered:", BOLD)
+    say(f"  What the {THING} asked, and what your script answered:", BOLD)
     say()
     for prompt in sorted(asked, key=lambda k: -len(asked[k])):
         answers = sorted(asked[prompt])
@@ -452,11 +460,11 @@ def run_all(runs, player, levels):
             if err[1]:
                 say(f"    {err[1]}", DIM)
         else:
-            say(f"  {script}: never got going -- the game kept asking "
+            say(f"  {script}: never got going -- the {THING} kept asking "
                 f"{err[0][:36]!r}", YELLOW)
     if trouble:
         say()
-    say(f"  {len(rows)} scripts, {len(rows) * runs} games.",
+    say(f"  {len(rows)} scripts, {len(rows) * runs} {THINGS}.",
         (RED if trouble else GREEN) + BOLD)
     say()
     coverage(asked, len(rows) * runs)
@@ -492,7 +500,7 @@ def play_once(stdin, asked_so_far):
 
 def main():
     say()
-    say("  Block Builder - playtest", BOLD)
+    say(f"  {TITLE}", BOLD)
     rule()
 
     if GAME is None or not GAME.exists():
@@ -579,7 +587,7 @@ def main():
         runs = max(1, int(numbers[0])) if numbers else ALL_RUNS
         who = (f" as {player}" if player else "")
         how = (f", difficulty {', '.join(levels)}" if levels[0] else "")
-        say(f"  Every script, {runs} games each{who}{how}.")
+        say(f"  Every script, {runs} {THINGS} each{who}{how}.")
         say()
         run_all(runs, player, levels)
         return
@@ -591,15 +599,15 @@ def main():
         return
 
     runs = max(1, int(numbers[0])) if numbers else DEFAULT_RUNS
-    say(f"  Playing {runs} games, answering from plays/{name}.txt ...")
+    say(f"  Playing {runs} {THINGS}, answering from plays/{name}.txt ...")
     if player or levels[0]:
         where = ("from plays/_player.txt" if (PLAYS / "_player.txt").exists()
                  else "built-in defaults -- make plays/_player.txt to change them")
         say(f"  {DIM}Playing as {player}, rotating difficulty "
             f"{', '.join(levels)} -- {where}{OFF}")
-    say(f"  {DIM}Same answers every game -- but the dice are different, so the"
+    say(f"  {DIM}Same answers every run -- but the dice are different, so the"
         f"{OFF}")
-    say(f"  {DIM}games are not. That is why it is {runs} and not one.{OFF}")
+    say(f"  {DIM}{THINGS} are not. That is why it is {runs} and not one.{OFF}")
     say()
     say(f"  {DIM}. = finished   x = crashed   ! = never got going{OFF}")
     say()

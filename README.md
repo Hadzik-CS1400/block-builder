@@ -131,6 +131,34 @@ python game.py                     # run it
 python tests/check_week.py         # check your score — nothing to install
 ```
 
+### From Week 10: let something else play it
+
+Clicking through your own game to find a bug is slow, and worse than slow —
+you press the same keys every time. If you always chop wood, you have only
+ever tested chopping wood, and a bug in the crafting menu can sit there for a
+month looking like nothing is wrong.
+
+```
+python playtest.py all --show      see what it does — the first time only
+python playtest.py all             every script, and what you never tried
+```
+
+`playtest.py` plays the game for you with the answers read from a text file,
+over and over. Many times, not once: the game uses random numbers, so the
+same answers do not give the same game twice, and a bug that needs an unlucky
+roll turns up in one run out of five.
+
+It finishes by listing every question the game asked and every answer your
+scripts gave it. **A question that only ever heard one answer has not been
+tested — it has been visited.**
+
+`plays/` holds the scripts, and they are ordinary text files with one answer
+per line. Open `plays/explore.txt`; it is a single character. Write your own:
+save `plays/myplan.txt` and run `python playtest.py myplan`.
+
+`plays/_player.txt` is the odd one out — it is settings, not a script. First
+line your name, the lines after it the difficulties to rotate through.
+
 And to save your work to GitHub — **either** the terminal:
 
 ```
@@ -230,9 +258,15 @@ you are being graded on.
 
 ---
 
+**`playtest.py` and `plays/`** arrive in Week 10. `playtest.py` is ours —
+don't edit it. The files in `plays/` are **yours**: add, change and delete them
+freely, and write as many as you like.
+
 ## Grading — 20 points per week
 
-Four tests, 5 points each. Run them as often as you like:
+A handful of tests, and they always add up to 20. Most weeks it is four at
+5 points; Weeks 9 and 10 are five at 4. The week's todo file lists them.
+Run them as often as you like:
 
 ```
 python tests/check_week.py
@@ -240,7 +274,7 @@ python tests/check_week.py
 
 > On a Mac, a Chromebook or Linux, use `python3 tests/check_week.py`.
 > 🧪 **`pytest` also works if you have it** — `python -m pytest tests/ -v`.
-> Both print the identical scorecard; they run the same four tests.
+> Both print the identical scorecard; they run the same tests.
 
 That prints a **scorecard** — the same one the Code-Togethers print, with your
 repository and name at the top and a running total at the bottom:
