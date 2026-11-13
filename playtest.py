@@ -33,6 +33,7 @@ You do not need to understand this file. Do not edit it.
 import re
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -133,6 +134,10 @@ def first_real_error(text):
     the game was still asking - that is this script hitting its own limit,
     not a bug in the game. Reporting it would send students hunting for a
     problem that is not theirs, which is worse than reporting nothing.
+
+    That silence had a cost, though, and jam_line() now pays it back: a
+    script that answers a menu with something it rejects loops until the
+    answers run out, dies of EOFError, and was reported as a clean game.
     """
     if "Traceback" not in text:
         return None
@@ -260,6 +265,32 @@ def show_one(name, answers, choices):
     say()
 
 
+def jam_line(text):
+    """The question a run got stuck re-asking, if there is one.
+
+    A script that answers a menu with something the menu rejects does not
+    crash -- the game's own validation loop asks again, forever, until the
+    answers run out. The run then dies of EOFError, which is swallowed as
+    harmless, and the game is reported as fine while never having got past
+    day one.
+
+    Three of the five shipped scripts did exactly that and all showed green.
+    A question asked fifty times in one game is not a game being played.
+    """
+    # BOTH conditions, and the first one is what makes it sound. A thirty-day
+    # game prints the action menu about a hundred and fifty times, so
+    # repetition alone marks every healthy long game as jammed -- which it
+    # duly did, calling three good scripts broken. A jam is repetition that
+    # ran until the answers RAN OUT; a real game ends by winning or dying.
+    if "EOFError" not in text:
+        return None
+    counts = Counter(line.strip() for line in text.splitlines() if line.strip())
+    if not counts:
+        return None
+    line, seen = counts.most_common(1)[0]
+    return (line, seen) if seen >= 50 else None
+
+
 def play_once(stdin):
     try:
         done = subprocess.run(
@@ -271,6 +302,9 @@ def play_once(stdin):
     err = first_real_error(blob)
     if err:
         return "crashed", err
+    jam = jam_line(blob)
+    if jam:
+        return "jammed", jam
     return "ok", None
 
 
@@ -338,10 +372,10 @@ def main():
         f"{OFF}")
     say(f"  {DIM}games are not. That is why it is {runs} and not one.{OFF}")
     say()
-    say(f"  {DIM}. = a game that finished    x = a game that crashed{OFF}")
+    say(f"  {DIM}. = finished   x = crashed   ! = never got going{OFF}")
     say()
 
-    crashes, stuck, seen = [], 0, {}
+    crashes, stuck, jams, seen = [], 0, [], {}
     for i in range(runs):
         state, err = play_once(stdin)
         if state == "crashed":
@@ -351,6 +385,9 @@ def main():
         elif state == "stuck":
             stuck += 1
             sys.stdout.write(YELLOW + "?" + OFF)
+        elif state == "jammed":
+            jams.append(err)
+            sys.stdout.write(YELLOW + "!" + OFF)
         else:
             sys.stdout.write(GREEN + "." + OFF)
         sys.stdout.flush()
@@ -358,7 +395,7 @@ def main():
     say()
     rule()
 
-    if not crashes and not stuck:
+    if not crashes and not stuck and not jams:
         say(f"  {runs} games, none of them broke.", GREEN + BOLD)
         say()
         say("  That is a real result for THESE answers. A different script", DIM)
@@ -381,6 +418,20 @@ def main():
         say("  If it says a variable is not associated with a value, the", DIM)
         say("  function is changing something it was never given - it needs", DIM)
         say("  that value as a parameter, and needs to return it.", DIM)
+        say()
+
+    if jams:
+        line, seen_count = jams[0]
+        say(f"  {len(jams)} of {runs} games never got going.", YELLOW + BOLD)
+        say()
+        say(f"  The game asked this {seen_count} times in a single game:", YELLOW)
+        say(f"    {line[:62]}", BOLD)
+        say()
+        say("  That is not a crash. The game rejected the answer and asked")
+        say(f"  again, and plays/{name}.txt kept giving the same one until the")
+        say("  answers ran out -- so the game never got past the first day.")
+        say()
+        say("  Fix the script: it needs an answer this question will accept.")
         say()
 
     if stuck:
