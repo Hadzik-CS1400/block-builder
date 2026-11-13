@@ -43,8 +43,24 @@ from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-GAME = HERE / "game.py"
 PLAYS = HERE / "plays"
+
+
+def find_program():
+    """The program to test: game.py, or the only other .py beside this one.
+
+    Hardcoding game.py meant the first step of reusing this on any other
+    project was editing it -- and students are told not to. Auto-detecting
+    costs nothing when there is one obvious answer and says so when there
+    is not.
+    """
+    if (HERE / "game.py").exists():
+        return HERE / "game.py"
+    others = [p for p in sorted(HERE.glob("*.py")) if p.name != Path(__file__).name]
+    return others[0] if len(others) == 1 else None
+
+
+GAME = find_program()
 
 GREEN, YELLOW, RED, DIM, BOLD, OFF = (
     "\033[92m", "\033[93m", "\033[91m", "\033[2m", "\033[1m", "\033[0m"
@@ -52,7 +68,8 @@ GREEN, YELLOW, RED, DIM, BOLD, OFF = (
 
 DEFAULT_RUNS = 20
 ALL_RUNS = 6         # per script when running them all
-OURS = {}            # prompts playtest.py answers itself
+OURS = {}            # prompts answered from plays/_player.txt
+SETUP_COUNT = [2]    # how many of those there are, set at run time
 MAX_ANSWERS = 4000          # a game that wants more than this is stuck
 TIMEOUT = 30                # seconds for one game
 
@@ -149,15 +166,16 @@ def read_player():
     tool that refuses to start because its settings file is absent has picked
     the wrong thing to be strict about.
     """
-    name, levels = "PlayTester", []
     setup = PLAYS / "_player.txt"
     if setup.exists():
         with open(setup, encoding="utf-8") as f:
             lines = [line.strip() for line in f if line.strip()]
-        if lines:
-            name = lines[0]
-            levels = lines[1:]
-    return name, levels or ["1", "2", "3"]
+        # An EMPTY file is an answer, not an absence: it means this program
+        # asks nothing before the script starts. Falling back to a name here
+        # fed "PlayTester" to a budget tracker's main menu, which rejected it
+        # forever. Only a MISSING file takes the defaults.
+        return (lines[0] if lines else ""), (lines[1:] or [""])
+    return "PlayTester", ["1", "2", "3"]
 
 
 def build_answers(script, player, difficulty):
@@ -183,7 +201,7 @@ def build_answers(script, player, difficulty):
     if not choices:
         die(f"{script.name} is empty.",
             "Put one answer per line in it - the numbers you would type.")
-    answers = [player, difficulty]
+    answers = [a for a in (player, difficulty) if a]
     while len(answers) < MAX_ANSWERS:
         answers.extend(choices)
     return "\n".join(answers[:MAX_ANSWERS]) + "\n"
@@ -456,7 +474,7 @@ def play_once(stdin, asked_so_far):
         # The first two answers of every game come from plays/_player.txt,
         # not from the play script. Counting them against the script means
         # scolding it for two questions it never had a say in.
-        bucket = OURS if i < 2 else asked_so_far
+        bucket = OURS if i < SETUP_COUNT[0] else asked_so_far
         bucket.setdefault(prompt, set()).add(answer)
     blob = done.stdout + errors
     err = first_real_error(blob)
@@ -473,10 +491,16 @@ def main():
     say("  Block Builder - playtest", BOLD)
     rule()
 
-    if not GAME.exists():
-        die("No game.py here.",
-            "Run this from inside your block-builder folder, the one with",
-            "README.md in it.")
+    if GAME is None or not GAME.exists():
+        here = [p.name for p in sorted(HERE.glob("*.py"))
+                if p.name != Path(__file__).name]
+        die("I cannot tell which program to test.",
+            "Looked for game.py and did not find it."
+            + (f" Found instead: {', '.join(here)}." if here else ""),
+            "",
+            "Run this from the folder your program is in. If there is more",
+            "than one .py file, name the one to test game.py.")
+    say(f"  {DIM}Testing {GAME.name}{OFF}")
 
     names = available()
     if not names:
@@ -523,6 +547,7 @@ def main():
             f"  or: python playtest.py {name} --show")
 
     player, levels = read_player()
+    SETUP_COUNT[0] = len([a for a in (player, levels[0]) if a])
     if name == "all":
         if "--show" in flags or "-s" in flags:
             # Every script, in full. It is long on purpose -- the point of
@@ -548,8 +573,9 @@ def main():
             say()
             return
         runs = max(1, int(numbers[0])) if numbers else ALL_RUNS
-        say(f"  Every script, {runs} games each, as {player}, "
-            f"difficulty {', '.join(levels)}.")
+        who = (f" as {player}" if player else "")
+        how = (f", difficulty {', '.join(levels)}" if levels[0] else "")
+        say(f"  Every script, {runs} games each{who}{how}.")
         say()
         run_all(runs, player, levels)
         return
@@ -562,10 +588,11 @@ def main():
 
     runs = max(1, int(numbers[0])) if numbers else DEFAULT_RUNS
     say(f"  Playing {runs} games, answering from plays/{name}.txt ...")
-    where = ("from plays/_player.txt" if (PLAYS / "_player.txt").exists()
-             else "built-in defaults -- make plays/_player.txt to change them")
-    say(f"  {DIM}Playing as {player}, rotating difficulty "
-        f"{', '.join(levels)} -- {where}{OFF}")
+    if player or levels[0]:
+        where = ("from plays/_player.txt" if (PLAYS / "_player.txt").exists()
+                 else "built-in defaults -- make plays/_player.txt to change them")
+        say(f"  {DIM}Playing as {player}, rotating difficulty "
+            f"{', '.join(levels)} -- {where}{OFF}")
     say(f"  {DIM}Same answers every game -- but the dice are different, so the"
         f"{OFF}")
     say(f"  {DIM}games are not. That is why it is {runs} and not one.{OFF}")
