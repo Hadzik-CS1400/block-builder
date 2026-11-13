@@ -126,12 +126,38 @@ def die(*lines):
 
 
 def available():
+    """The play scripts. A leading _ means "not a script" -- see _player.txt."""
     if not PLAYS.is_dir():
         return []
-    return sorted(p.stem for p in PLAYS.glob("*.txt"))
+    return sorted(p.stem for p in PLAYS.glob("*.txt")
+                  if not p.name.startswith("_"))
 
 
-def build_answers(script):
+def read_player():
+    """Who plays, and on which difficulties, from plays/_player.txt.
+
+    First line is the name. Every line after it is a difficulty, and the runs
+    rotate through them -- so twenty games cover all three rather than
+    hammering one. Both used to be written into this file, which meant
+    changing either one meant editing a program students are told not to
+    touch.
+
+    Missing or half-filled, it falls back to something that works. A testing
+    tool that refuses to start because its settings file is absent has picked
+    the wrong thing to be strict about.
+    """
+    name, levels = "PlayTester", []
+    setup = PLAYS / "_player.txt"
+    if setup.exists():
+        with open(setup, encoding="utf-8") as f:
+            lines = [line.strip() for line in f if line.strip()]
+        if lines:
+            name = lines[0]
+            levels = lines[1:]
+    return name, levels or ["1", "2", "3"]
+
+
+def build_answers(script, player, difficulty):
     """name, difficulty, then the script's choices repeated until we run out.
 
     The name and the difficulty are supplied HERE rather than in the plays
@@ -154,7 +180,7 @@ def build_answers(script):
     if not choices:
         die(f"{script.name} is empty.",
             "Put one answer per line in it - the numbers you would type.")
-    answers = ["PlayTester", "2"]
+    answers = [player, difficulty]
     while len(answers) < MAX_ANSWERS:
         answers.extend(choices)
     return "\n".join(answers[:MAX_ANSWERS]) + "\n"
@@ -188,7 +214,7 @@ def first_real_error(text):
     return (last, spot)
 
 
-def show_one(name, answers, choices):
+def show_one(name, answers, choices, player, difficulty):
     """Explain one run: the file, the keystrokes it becomes, and the game.
 
     Part 3 plays a real day with the answers echoed where they were read, so
@@ -213,17 +239,17 @@ def show_one(name, answers, choices):
     say("     Those lines are keystrokes, typed in order, starting again at")
     say("     the top when the game asks for more.")
     say()
-    say("     The first TWO answers are not from the file. Every game opens by")
-    say("     asking for a name and a difficulty, so playtest.py answers those")
-    say("     itself -- putting the same two lines at the top of every plays")
-    say("     file would be noise. The file takes over from answer 3.")
+    say("     The first TWO answers come from plays/_player.txt, not from")
+    say("     this script. Every game opens by asking for a name and a")
+    say("     difficulty, so they live in one place instead of at the top of")
+    say(f"     every play script. This script takes over from answer 3.")
     say()
     for i, answer in enumerate(given[:14]):
         if i == 0:
-            note = f"{YELLOW}playtest.py, not the file{OFF}{DIM} - the name"
+            note = f"{YELLOW}plays/_player.txt{OFF}{DIM} line 1 - the name"
         elif i == 1:
-            note = (f"{YELLOW}playtest.py, not the file{OFF}{DIM} - difficulty "
-                    f"{answer}")
+            note = (f"{YELLOW}plays/_player.txt{OFF}{DIM} - difficulty "
+                    f"{answer}; the runs rotate through them")
         else:
             note = "line %d of the file" % ((i - 2) % len(choices) + 1)
         say(f"       {i + 1:>3}. {answer:<14}{DIM}{note}{OFF}")
@@ -350,8 +376,7 @@ def coverage(asked, runs):
         if prompt in asked:
             continue
         shown = " ".join(sorted(OURS[prompt]))
-        say(f"    {DIM}{prompt[:34]:<34}{shown}   <- playtest.py, "
-            f"not your script{OFF}")
+        say(f"    {DIM}{prompt[:34]:<34}{shown}   <- plays/_player.txt{OFF}")
     say()
     lonely = [p for p in asked if len(asked[p]) == 1]
     if lonely:
@@ -370,9 +395,9 @@ def play_once(stdin, asked_so_far):
         return "stuck", None
     asked, errors = split_records(done.stderr)
     for i, (prompt, answer) in enumerate(asked):
-        # The first two answers of every game are playtest.py's own name and
-        # difficulty, not the script's. Counting them against the script
-        # means scolding it for two questions it never had a say in.
+        # The first two answers of every game come from plays/_player.txt,
+        # not from the play script. Counting them against the script means
+        # scolding it for two questions it never had a say in.
         bucket = OURS if i < 2 else asked_so_far
         bucket.setdefault(prompt, set()).add(answer)
     blob = done.stdout + errors
@@ -436,15 +461,20 @@ def main():
             f"Try:  python playtest.py {name} 50",
             f"  or: python playtest.py {name} --show")
 
-    stdin = build_answers(PLAYS / f"{name}.txt")
+    player, levels = read_player()
     if "--show" in flags or "-s" in flags:
         with open(PLAYS / f"{name}.txt", encoding="utf-8") as answers_file:
             choices = [ln.strip() for ln in answers_file if ln.strip()]
-        show_one(name, stdin, choices)
+        show_one(name, build_answers(PLAYS / f"{name}.txt", player, levels[0]),
+                 choices, player, levels[0])
         return
 
     runs = max(1, int(numbers[0])) if numbers else DEFAULT_RUNS
     say(f"  Playing {runs} games, answering from plays/{name}.txt ...")
+    where = ("from plays/_player.txt" if (PLAYS / "_player.txt").exists()
+             else "built-in defaults -- make plays/_player.txt to change them")
+    say(f"  {DIM}Playing as {player}, rotating difficulty "
+        f"{', '.join(levels)} -- {where}{OFF}")
     say(f"  {DIM}Same answers every game -- but the dice are different, so the"
         f"{OFF}")
     say(f"  {DIM}games are not. That is why it is {runs} and not one.{OFF}")
@@ -455,6 +485,8 @@ def main():
     crashes, stuck, jams, seen = [], 0, [], {}
     asked = {}
     for i in range(runs):
+        stdin = build_answers(PLAYS / f"{name}.txt", player,
+                              levels[i % len(levels)])
         state, err = play_once(stdin, asked)
         if state == "crashed":
             crashes.append(err)
