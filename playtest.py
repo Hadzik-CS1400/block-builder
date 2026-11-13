@@ -260,24 +260,28 @@ def show_one(name, answers, choices, player, difficulty):
     say("     Those lines are keystrokes, typed in order, starting again at")
     say("     the top when the game asks for more.")
     say()
-    say("     The first TWO answers come from plays/_player.txt, not from")
-    say("     this script. Every game opens by asking for a name and a")
-    say("     difficulty, so they live in one place instead of at the top of")
-    say(f"     every play script. This script takes over from answer 3.")
-    say()
+    if SETUP_COUNT[0]:
+        say(f"     The first {SETUP_COUNT[0]} answer(s) come from "
+            f"plays/_player.txt, not from this")
+        say("     script -- every run opens with the same ones, so they live in")
+        say("     one place instead of at the top of every play script.")
+        say()
+    setup = SETUP_COUNT[0]
     for i, answer in enumerate(given[:14]):
-        if i == 0:
-            note = f"{YELLOW}plays/_player.txt{OFF}{DIM} line 1 - the name"
-        elif i == 1:
-            note = (f"{YELLOW}plays/_player.txt{OFF}{DIM} - difficulty "
-                    f"{answer}; the runs rotate through them")
+        # Which answers are setup is a count, not the constant 2. A program
+        # that opens with no questions has none, and labelling its first two
+        # real answers as ours was wrong in both directions.
+        if i < setup:
+            note = (f"{YELLOW}plays/_player.txt{OFF}{DIM} - "
+                    + ("the name" if i == 0 else
+                       f"difficulty {answer}; the runs rotate through them"))
         else:
-            note = "line %d of the file" % ((i - 2) % len(choices) + 1)
+            note = "line %d of the file" % ((i - setup) % len(choices) + 1)
         say(f"       {i + 1:>3}. {answer:<14}{DIM}{note}{OFF}")
     say(f"       ... {len(given) - 14} more, cycling the same lines", DIM)
     say()
 
-    say("  3. One day of the game, with those answers typed in", BOLD)
+    say("  3. The program running, with those answers typed in", BOLD)
     say("     The game is run normally. The only difference is that each", DIM)
     say("     answer is echoed where it was read, the way it would appear", DIM)
     say("     if somebody were sitting there typing it.", DIM)
