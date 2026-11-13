@@ -100,9 +100,16 @@ def available():
 def build_answers(script):
     """name, difficulty, then the script's choices repeated until we run out.
 
-    Repeating is what lets plays/explore.txt be one line long instead of two
-    thousand. It also means a script can never "run out" partway through a
-    game for a boring reason.
+    The name and the difficulty are supplied HERE rather than in the plays
+    file. Every game opens by asking for both, so every file would otherwise
+    begin with the same two lines, and a reader comparing explore.txt against
+    what actually gets typed would find two answers they could not account
+    for. --show now says where they come from, because that is exactly the
+    question the first reader asked.
+
+    Repeating the rest is what lets plays/explore.txt be one line long instead
+    of two thousand. It also means a script can never "run out" partway
+    through a game for a boring reason.
     """
     # Module 10 teaches exactly these three lines: `with` closes the file
     # whatever happens, `for line in answers_file` reads it one line at a
@@ -165,14 +172,20 @@ def show_one(name, answers, choices):
         + ", ".join(choices))
     say()
     say("  2. What it becomes", BOLD)
-    say("     Those lines are keystrokes. playtest.py types them for you, in")
-    say("     order, and goes back to the top when the game asks for more:")
+    say("     Those lines are keystrokes, typed in order, starting again at")
+    say("     the top when the game asks for more.")
+    say()
+    say("     The first TWO answers are not from the file. Every game opens by")
+    say("     asking for a name and a difficulty, so playtest.py answers those")
+    say("     itself -- putting the same two lines at the top of every plays")
+    say("     file would be noise. The file takes over from answer 3.")
     say()
     for i, answer in enumerate(given[:14]):
         if i == 0:
-            note = "the player's name"
+            note = f"{YELLOW}playtest.py, not the file{OFF}{DIM} - the name"
         elif i == 1:
-            note = "the difficulty"
+            note = (f"{YELLOW}playtest.py, not the file{OFF}{DIM} - difficulty "
+                    f"{answer}")
         else:
             note = "line %d of the file" % ((i - 2) % len(choices) + 1)
         say(f"       {i + 1:>3}. {answer:<14}{DIM}{note}{OFF}")
@@ -216,12 +229,20 @@ def show_one(name, answers, choices):
             say(f"     {DIM}{run[-1][:66]}{OFF}")
         run.clear()
 
+    answered = 0
     for line in day_one:
         if MARK in line:
             flush()
             before, _, typed = line.partition(MARK)
+            # The first two came from playtest.py, not the file. Labelling
+            # them "from the file" was wrong, and it was the first thing a
+            # reader challenged -- those two answers appear nowhere in it.
+            source = ("playtest.py" if answered < 2
+                      else "line %d of the file"
+                           % ((answered - 2) % len(choices) + 1))
             say(f"     {DIM}{before[:52]}{OFF}{GREEN}{BOLD}{typed}{OFF}"
-                f"{DIM}   <- from the file{OFF}")
+                f"{DIM}   <- {source}{OFF}")
+            answered += 1
         else:
             run.append(line)
     flush()
