@@ -6,6 +6,10 @@ Block Builder - play the game for you, many times, and report what broke
     python playtest.py mixed 50     play 50 games, trying every choice
     python playtest.py mixed --show play ONE game and explain what happened
 
+    Every run ends with a list of the questions the game asked and the
+    answers your script gave it. A question that only ever heard one answer
+    has not been tested -- it has been visited.
+
 WHY THIS EXISTS
     Clicking through your own game to find a bug is slow, and it is worse
     than slow: you tend to press the same keys every time. If you always
@@ -45,6 +49,7 @@ GREEN, YELLOW, RED, DIM, BOLD, OFF = (
 )
 
 DEFAULT_RUNS = 20
+OURS = {}            # prompts playtest.py answers itself
 MAX_ANSWERS = 4000          # a game that wants more than this is stuck
 TIMEOUT = 30                # seconds for one game
 
@@ -61,16 +66,44 @@ TIMEOUT = 30                # seconds for one game
 # MARK is a character the game will never print, so the echo can be told from
 # whatever the prompt said and coloured separately.
 MARK = "\x01"
-ECHO_RUNNER = (
+
+# Every run goes through this. It replaces input() inside the game, so it sees
+# the prompt STRING -- which is what makes the coverage report possible without
+# knowing anything about this particular game's menus.
+#
+# The record goes to stderr so stdout stays exactly what the game printed.
+# The echo (MARK) is only added for --show.
+RECORD = "\x02"
+RUNNER = (
     "import builtins, runpy, sys\n"
+    "echo = len(sys.argv) > 2\n"
     "_read = builtins.input\n"
-    "def _echo(prompt=''):\n"
+    "def _ask(prompt=''):\n"
     "    value = _read(prompt)\n"
-    "    print('\\x01' + value)\n"
+    "    sys.stderr.write('\\x02' + str(prompt).strip() + '\\x02' + value + '\\n')\n"
+    "    if echo:\n"
+    "        print('\\x01' + value)\n"
     "    return value\n"
-    "builtins.input = _echo\n"
+    "builtins.input = _ask\n"
     "runpy.run_path(sys.argv[1], run_name='__main__')\n"
 )
+
+
+def split_records(stderr_text):
+    """Pull the prompt->answer records out, and hand back the rest.
+
+    The rest matters: it is where a traceback lives, and mixing the records
+    into it would have jam_line() counting our own bookkeeping as repetition.
+    """
+    asked, leftover = [], []
+    for line in stderr_text.splitlines():
+        if line.startswith(RECORD):
+            parts = line.split(RECORD)
+            if len(parts) >= 3:
+                asked.append((parts[1], parts[2]))
+                continue
+        leftover.append(line)
+    return asked, "\n".join(leftover)
 
 
 def say(msg="", color=""):
@@ -202,7 +235,7 @@ def show_one(name, answers, choices):
     say("     answer is echoed where it was read, the way it would appear", DIM)
     say("     if somebody were sitting there typing it.", DIM)
     say()
-    done = subprocess.run([sys.executable, "-c", ECHO_RUNNER, str(GAME)],
+    done = subprocess.run([sys.executable, "-c", RUNNER, str(GAME), "echo"],
                           input=answers, capture_output=True, text=True,
                           timeout=TIMEOUT)
 
@@ -291,14 +324,58 @@ def jam_line(text):
     return (line, seen) if seen >= 50 else None
 
 
-def play_once(stdin):
+def coverage(asked, runs):
+    """Every question the game asked, and the answers it received.
+
+    Needs no knowledge of this game's menus: the prompt strings come from
+    input() itself. That matters twice over -- it works on a student's own
+    game whatever they called things, and it answers "did my script test
+    everything?" with a list rather than a guess.
+
+    A menu that only ever heard ONE answer is the thing to look at. That is
+    how all-5s went a whole term without entering the cave.
+    """
+    if not asked:
+        return
+    say("  What the game asked, and what your script answered:", BOLD)
+    say()
+    for prompt in sorted(asked, key=lambda k: -len(asked[k])):
+        answers = sorted(asked[prompt])
+        shown = " ".join(answers[:8]) + (" ..." if len(answers) > 8 else "")
+        thin = len(answers) == 1
+        colour = YELLOW if thin else GREEN
+        note = f"{YELLOW}  <- only ever this one{OFF}" if thin else ""
+        say(f"    {DIM}{prompt[:34]:<34}{OFF}{colour}{shown}{OFF}{note}")
+    for prompt in sorted(OURS):
+        if prompt in asked:
+            continue
+        shown = " ".join(sorted(OURS[prompt]))
+        say(f"    {DIM}{prompt[:34]:<34}{shown}   <- playtest.py, "
+            f"not your script{OFF}")
+    say()
+    lonely = [p for p in asked if len(asked[p]) == 1]
+    if lonely:
+        say("  A question that only ever heard one answer has not been", DIM)
+        say("  tested -- it has been visited. Add the other options to the", DIM)
+        say("  script, or write a second script that gives them.", DIM)
+        say()
+
+
+def play_once(stdin, asked_so_far):
     try:
         done = subprocess.run(
-            [sys.executable, str(GAME)], input=stdin,
+            [sys.executable, "-c", RUNNER, str(GAME)], input=stdin,
             capture_output=True, text=True, timeout=TIMEOUT)
     except subprocess.TimeoutExpired:
         return "stuck", None
-    blob = done.stdout + done.stderr
+    asked, errors = split_records(done.stderr)
+    for i, (prompt, answer) in enumerate(asked):
+        # The first two answers of every game are playtest.py's own name and
+        # difficulty, not the script's. Counting them against the script
+        # means scolding it for two questions it never had a say in.
+        bucket = OURS if i < 2 else asked_so_far
+        bucket.setdefault(prompt, set()).add(answer)
+    blob = done.stdout + errors
     err = first_real_error(blob)
     if err:
         return "crashed", err
@@ -376,8 +453,9 @@ def main():
     say()
 
     crashes, stuck, jams, seen = [], 0, [], {}
+    asked = {}
     for i in range(runs):
-        state, err = play_once(stdin)
+        state, err = play_once(stdin, asked)
         if state == "crashed":
             crashes.append(err)
             seen[err[0]] = seen.get(err[0], 0) + 1
@@ -398,6 +476,7 @@ def main():
     if not crashes and not stuck and not jams:
         say(f"  {runs} games, none of them broke.", GREEN + BOLD)
         say()
+        coverage(asked, runs)
         say("  That is a real result for THESE answers. A different script", DIM)
         say("  may still find something - try another one.", DIM)
         say()
