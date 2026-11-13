@@ -525,8 +525,28 @@ def main():
     player, levels = read_player()
     if name == "all":
         if "--show" in flags or "-s" in flags:
-            die("--show takes one script, not all of them.",
-                f"Try:  python playtest.py {names[0]} --show")
+            # Every script, in full. It is long on purpose -- the point of
+            # --show is proving to somebody that the work is really being
+            # done, and a summary proves nothing. Each script gets the next
+            # difficulty in the rotation, so that is visible too.
+            for number, script in enumerate(names):
+                say()
+                rule()
+                say(f"  SCRIPT {number + 1} OF {len(names)}:  {script}", BOLD)
+                rule()
+                with open(PLAYS / f"{script}.txt", encoding="utf-8") as f:
+                    choices = [ln.strip() for ln in f if ln.strip()]
+                level = levels[number % len(levels)]
+                show_one(script,
+                         build_answers(PLAYS / f"{script}.txt", player, level),
+                         choices, player, level)
+            rule()
+            say(f"  That was all {len(names)} scripts, each played for real.",
+                GREEN + BOLD)
+            say(f"  {DIM}To score them instead of watching them: "
+                f"python playtest.py all{OFF}")
+            say()
+            return
         runs = max(1, int(numbers[0])) if numbers else ALL_RUNS
         say(f"  Every script, {runs} games each, as {player}, "
             f"difficulty {', '.join(levels)}.")
