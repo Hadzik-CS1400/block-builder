@@ -30,6 +30,7 @@ THE SCRIPTS
 
 You do not need to understand this file. Do not edit it.
 """
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -45,6 +46,30 @@ GREEN, YELLOW, RED, DIM, BOLD, OFF = (
 DEFAULT_RUNS = 20
 MAX_ANSWERS = 4000          # a game that wants more than this is stuck
 TIMEOUT = 30                # seconds for one game
+
+# --show runs the game through this instead of running it directly, so every
+# answer appears where it was read. input() writes its prompt without a
+# newline and a piped answer is never echoed, which is why a normal run shows
+# questions with nothing after them.
+#
+# Echoing beats trying to work the answers out from the output afterwards. An
+# earlier version did that by looking for lines that ended in a space, and
+# found 3 of roughly 150 -- because the game usually prints the RESULT of an
+# action onto the end of the prompt's own line.
+#
+# MARK is a character the game will never print, so the echo can be told from
+# whatever the prompt said and coloured separately.
+MARK = "\x01"
+ECHO_RUNNER = (
+    "import builtins, runpy, sys\n"
+    "_read = builtins.input\n"
+    "def _echo(prompt=''):\n"
+    "    value = _read(prompt)\n"
+    "    print('\\x01' + value)\n"
+    "    return value\n"
+    "builtins.input = _echo\n"
+    "runpy.run_path(sys.argv[1], run_name='__main__')\n"
+)
 
 
 def say(msg="", color=""):
@@ -121,15 +146,16 @@ def first_real_error(text):
 def show_one(name, answers, choices):
     """Explain one run: the file, the keystrokes it becomes, and the game.
 
-    An earlier version tried to print each question beside the answer it got,
-    by spotting prompts in the output. It under-reported badly and said
-    nothing about it: input() writes its prompt with no newline, so when the
-    game prints the RESULT of an action it lands on the same line and the
-    prompt stops looking like one. Three questions showed up out of a
-    hundred and fifty, which reads as "the game only asked three things".
+    Part 3 plays a real day with the answers echoed where they were read, so
+    the file's lines can be watched going in one at a time.
 
-    So this shows what can be shown exactly -- the file, and the stream of
-    answers it turns into -- rather than a pairing that is quietly wrong.
+    The first attempt worked the answers out AFTERWARDS, by looking for
+    prompts in the captured output, and was wrong in the worst way -- it
+    under-reported and said nothing about it. input() writes its prompt with
+    no newline, so when the game prints the RESULT of an action it lands on
+    the same line and the prompt stops looking like one. Three questions
+    showed up out of roughly a hundred and fifty, which reads as "the game
+    only asked three things". Echoing at the source cannot miss one.
     """
     given = answers.splitlines()
     say()
@@ -153,13 +179,53 @@ def show_one(name, answers, choices):
     say(f"       ... {len(given) - 14} more, cycling the same lines", DIM)
     say()
 
-    say("  3. What the game did with them", BOLD)
-    done = subprocess.run([sys.executable, str(GAME)], input=answers,
-                          capture_output=True, text=True, timeout=TIMEOUT)
-    body = [ln for ln in done.stdout.splitlines() if ln.strip()]
-    for line in body[:12]:
-        say(f"     {DIM}{line[:66]}{OFF}")
-    say(f"     ... {max(0, len(body) - 12)} more lines{OFF}", DIM)
+    say("  3. One day of the game, with those answers typed in", BOLD)
+    say("     The game is run normally. The only difference is that each", DIM)
+    say("     answer is echoed where it was read, the way it would appear", DIM)
+    say("     if somebody were sitting there typing it.", DIM)
+    say()
+    done = subprocess.run([sys.executable, "-c", ECHO_RUNNER, str(GAME)],
+                          input=answers, capture_output=True, text=True,
+                          timeout=TIMEOUT)
+
+    # One cycle means one day, so Day 2's banner is where to stop.
+    day_one, seen_any = [], False
+    for line in done.stdout.splitlines():
+        if not line.strip():
+            continue
+        if seen_any and re.search(r"\bday 2\b", line, re.I):
+            break
+        day_one.append(line)
+        seen_any = True
+
+    # A whole day is too tall for a projector, and most of it is the status
+    # panel. Long runs of ordinary output are collapsed so that every answer
+    # stays on screen -- the answers are the entire point of this section.
+    run = []
+
+    def flush():
+        if not run:
+            return
+        if len(run) <= 5:
+            for text in run:
+                say(f"     {DIM}{text[:66]}{OFF}")
+        else:
+            say(f"     {DIM}{run[0][:66]}{OFF}")
+            say(f"     {DIM}... {len(run) - 2} lines of the game's own "
+                f"output ...{OFF}")
+            say(f"     {DIM}{run[-1][:66]}{OFF}")
+        run.clear()
+
+    for line in day_one:
+        if MARK in line:
+            flush()
+            before, _, typed = line.partition(MARK)
+            say(f"     {DIM}{before[:52]}{OFF}{GREEN}{BOLD}{typed}{OFF}"
+                f"{DIM}   <- from the file{OFF}")
+        else:
+            run.append(line)
+    flush()
+    say(f"     ... then day 2 starts, and it carries on the same way{OFF}", DIM)
     say()
     err = first_real_error(done.stdout + done.stderr)
     if err:
