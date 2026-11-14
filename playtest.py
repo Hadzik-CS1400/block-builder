@@ -996,6 +996,10 @@ def main():
         say("  may still find something - try another one.", DIM)
         say()
         return
+    # Everything below is a failure path, and every one of them ends by
+    # printing coverage too. It used to print only when nothing broke, which
+    # is exactly backwards -- a run that crashed is when you most want to know
+    # which menus the script had actually reached before it died.
 
     if crashes:
         say(f"  {len(crashes)} of {runs} games crashed.", RED + BOLD)
@@ -1026,6 +1030,7 @@ def main():
         say("  Something is waiting for an answer it never accepts - look for")
         say("  a while loop around an input() that rejects what it is given.")
         say()
+    coverage(asked, runs)
     sys.exit(1)
 
 
