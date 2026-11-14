@@ -204,15 +204,13 @@ THING = "game" if IS_GAME else "program"
 THINGS = "games" if IS_GAME else "runs"
 TITLE = "Block Builder - playtest" if IS_GAME else "playtest"
 
-# Terminal colour codes. "\033[" starts a display instruction, the number
-# picks it, "m" ends it. Swap a number: 91 red, 92 green, 93 yellow, 94 blue,
-# 95 magenta, 96 cyan. Nothing below cares what you choose.
-GREEN  = "\033[92m"   # it worked - a game that ran, a script that came back
-YELLOW = "\033[93m"   # worth a look - a warning, or a draw never reached
-RED    = "\033[91m"   # it broke - the crash, and the line that caused it
-DIM    = "\033[2m"    # grey - asides, quoted source, the small print
-BOLD   = "\033[1m"    # headings and totals: the line to read first
-OFF    = "\033[0m"    # back to normal. Every colour above MUST end with this
+# Terminal color codes. Others you can swap in: 94 blue, 95 magenta, 96 cyan.
+GREEN  = "\033[92m"   # it worked
+YELLOW = "\033[93m"   # worth a look
+RED    = "\033[91m"   # it broke
+DIM    = "\033[2m"    # gray, for asides
+BOLD   = "\033[1m"    # headings and totals
+OFF    = "\033[0m"    # back to normal
 
 DEFAULT_RUNS = 20
 ALL_RUNS = 6         # per script when running them all
@@ -232,7 +230,7 @@ TIMEOUT = 30                # seconds for one game
 # action onto the end of the prompt's own line.
 #
 # MARK is a character the game will never print, so the echo can be told from
-# whatever the prompt said and coloured separately.
+# whatever the prompt said and colored separately.
 MARK = "\x01"
 
 # Every run goes through this. It replaces input() inside the game, so it sees
@@ -322,16 +320,16 @@ SWEEPABLE = 60
 
 
 def say(msg="", color=""):
-    """Print one line, optionally wrapped in a colour code.
+    """Print one line, optionally wrapped in a color code.
 
     Takes:
         msg    str -- the text. Default "", which prints a blank line
-        color  str -- an ANSI colour constant, or "" for no colour
+        color  str -- an ANSI color constant, or "" for no color
 
     Hands back:
         None -- it prints
 
-    The OFF code is always added when a colour was used, so a colour can
+    The OFF code is always added when a color was used, so a color can
     never leak onto the lines that follow.
     """
     print(f"{color}{msg}{OFF}" if color else msg)
@@ -801,9 +799,9 @@ def coverage(asked, runs):
         answers = sorted(asked[prompt])
         shown = " ".join(answers[:8]) + (" ..." if len(answers) > 8 else "")
         thin = len(answers) == 1
-        colour = YELLOW if thin else GREEN
+        color = YELLOW if thin else GREEN
         note = f"{YELLOW}  <- only ever this one{OFF}" if thin else ""
-        say(f"    {DIM}{prompt[:34]:<34}{OFF}{colour}{shown}{OFF}{note}")
+        say(f"    {DIM}{prompt[:34]:<34}{OFF}{color}{shown}{OFF}{note}")
     for prompt in sorted(OURS):
         if prompt in asked:
             continue
