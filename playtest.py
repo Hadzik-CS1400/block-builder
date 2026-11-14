@@ -592,12 +592,46 @@ def show_one(name, answers, choices, player, difficulty):
     flush()
     say(f"     ... then day 2 starts, and it carries on the same way{OFF}", DIM)
     say()
-    err = first_real_error(done.stdout + done.stderr)
-    if err:
-        report_crash(err)
-    else:
+
+    records, errors = split_records(done.stderr)
+    err = first_real_error(done.stdout + errors)
+    if not err:
         say("     This run finished without crashing.", GREEN)
-    say()
+        say()
+    else:
+        # Day one is the wrong window when the run died on day nine. Show the
+        # end instead, and name the answer it was holding when it stopped --
+        # that is the thing a reader wants and could not get from "it crashed
+        # somewhere after the part we showed you".
+        say("  4. Where it actually stopped", BOLD)
+        say("     The crash came later than the day above, so here is the end", DIM)
+        say("     of the run instead:", DIM)
+        say()
+        tail = [ln for ln in done.stdout.splitlines() if ln.strip()][-9:]
+        last_mark = max((i for i, ln in enumerate(tail) if MARK in ln), default=-1)
+        for i, line in enumerate(tail):
+            if MARK not in line:
+                say(f"     {DIM}{line[:66]}{OFF}")
+                continue
+            before, _, typed = line.partition(MARK)
+            if i == last_mark:
+                say(f"     {DIM}{before[:46]}{OFF}{RED}{BOLD}{typed}{OFF}"
+                    f"{RED}   <- reading this when it crashed{OFF}")
+            else:
+                say(f"     {DIM}{before[:52]}{OFF}{GREEN}{typed}{OFF}")
+        say()
+        if records:
+            prompt, answer = records[-1]
+            setup = SETUP_COUNT[0]
+            source = ("plays/_player.txt" if len(records) <= setup
+                      else "line %d of plays/%s.txt"
+                           % ((len(records) - 1 - setup) % len(choices) + 1, name))
+            say(f"     It had just answered {BOLD}{prompt.strip()[:40]}{OFF}"
+                f" with {RED}{BOLD}{answer}{OFF},")
+            say(f"     which is {source}.")
+            say()
+        report_crash(err)
+        say()
     say("  That is the whole trick: the file is a stack of keystrokes, so", DIM)
     say("  nothing depends on a person being there to type them. Run it", DIM)
     say("  twenty times and the answers stay the same while the dice do not.", DIM)
