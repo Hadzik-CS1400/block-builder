@@ -1,40 +1,130 @@
 """
-Block Builder - play the game for you, many times, and report what broke
+playtest.py - play your program for you, many times, and report what broke.
 
-    python playtest.py              list the scripts you can run
-    python playtest.py all          EVERY script -- the one to run before you
-                                    hand anything in
-    python playtest.py explore      play 20 games, exploring every turn
-    python playtest.py mixed 50     play 50 games, trying every choice
-    python playtest.py mixed --show play ONE game and explain what happened
+===========================================================================
+EVERY COMMAND
+===========================================================================
 
-    Every run ends with a list of the questions the game asked and the
-    answers your script gave it. A question that only ever heard one answer
-    has not been tested -- it has been visited.
+    python playtest.py
+        List the scripts you have, and suggest one to start with. Does not
+        run anything.
 
+    python playtest.py all
+        Run EVERY script, 6 runs each. This is the one to run before you
+        hand anything in. Ends with the coverage table for the whole suite.
+
+    python playtest.py all 20
+        Every script, but 20 runs each instead of 6.
+
+    python playtest.py all --show
+        Every script, played in full with every question and answer printed.
+        Long on purpose: it is how you prove to somebody (or to yourself)
+        that your program really is being driven.
+
+    python playtest.py normal
+        One script - plays/normal.txt - 20 runs.
+
+    python playtest.py normal 50
+        That script, 50 runs.
+
+    python playtest.py normal --show
+        ONE run of that script, printed line by line with the answers shown
+        where they were typed. The one to use when something is going wrong
+        and you want to see it happen.
+
+    -s        is the short form of --show.
+    EXIT CODE is 0 when everything passed and 1 when anything crashed,
+              stalled or jammed, so this can gate a commit or a hand-in.
+
+===========================================================================
+WHAT YOU SEE WHILE IT RUNS
+===========================================================================
+
+    .   the run finished              x   it crashed - you get the error,
+    !   it never got going                the file and the line number
+    ?   it ran out of time (30s)
+
+Every run ends with a table of the questions your program asked and the
+answers your scripts gave. A question that only ever heard ONE answer has
+not been tested - it has been visited.
+
+===========================================================================
 WHY THIS EXISTS
-    Clicking through your own game to find a bug is slow, and it is worse
-    than slow: you tend to press the same keys every time. If you always
-    chop wood, you only ever test chopping wood. A bug that lives in the
-    crafting menu will sit there for weeks and look like nothing is wrong.
+===========================================================================
 
-    This runs the game for you with the answers read from a file, so you can
-    say "explore every single turn" and watch what happens.
+Clicking through your own program to find a bug is slow, and it is worse
+than slow: you tend to press the same keys every time. If you always pick
+option 1, you only ever test option 1. A bug in option 4 will sit there for
+weeks looking like nothing is wrong.
 
-    It also runs it MANY times, which matters more than it sounds. The game
-    uses random numbers, so the same answers do not give the same game. A bug
-    that only shows up when you are low on wood might appear in one game out
-    of five. Playing once and seeing nothing proves very little.
+This runs the program for you with the answers read from a file, so you can
+say "try every menu option" and watch what happens.
 
-THE SCRIPTS
-    plays/explore.txt and the rest are just lists of answers, one per line.
-    Open one. There is nothing clever in it. If the game asks more questions
-    than the file has answers, it starts again from the top of the file.
+It also runs it MANY times, which matters more than it sounds. If your
+program uses random numbers, the same answers do not give the same run. A
+bug that needs an unlucky draw might appear once in five. Running once and
+seeing nothing proves very little.
 
-    Write your own: make plays/myplan.txt, put choices in it, and run
-    `python playtest.py myplan`.
+===========================================================================
+THE SCRIPTS - what you actually write
+===========================================================================
 
-You do not need to understand this file. Do not edit it.
+plays/normal.txt and the rest are lists of answers, one per line. Open one;
+there is nothing clever in it.
+
+    - Every line is typed at your program EXACTLY as written. There are no
+      comments, because a "#" line would be typed too.
+    - Blank lines are skipped.
+    - The file REPEATS. If your program asks more questions than the file
+      has answers, it starts again from the top. That is why a one-line file
+      is legal and useful - and why a file that never reaches your quit
+      option never ends.
+    - A file whose name starts with "_" is settings, not a script, and is
+      left out of the listing. plays/_player.txt is the only one.
+
+Write your own: make plays/myplan.txt, put the answers in it, and run
+    python playtest.py myplan
+
+===========================================================================
+plays/_player.txt - answers given BEFORE your script starts
+===========================================================================
+
+Some programs open by asking something every run has to answer the same way
+- Block Builder asks for a name and a difficulty. Those live here instead of
+at the top of every script, so the scripts stay readable.
+
+    line 1       the name
+    lines 2+     one difficulty per line, rotated across runs
+
+An EMPTY file means "this program asks nothing before the script starts",
+which is the normal case for a final project. A MISSING file falls back to
+built-in Block Builder defaults, which is wrong for anything else - so if
+your program does not open with fixed questions, create the file and leave
+it empty.
+
+===========================================================================
+READING THIS FILE
+===========================================================================
+
+You do not have to. Nothing here is on any test, and you should not edit it
+- a change here affects every script you run.
+
+But it is commented line by line in case you want to, because it is a real
+program doing a real job with the things you have been learning: lists,
+dictionaries, sets, file reading, string methods, try/except, and functions
+that hand things back to each other. If you ever wondered what your own code
+could grow into, this is roughly that size.
+
+The journey, start to finish:
+
+    your plays file
+        -> a list of answers            build_answers()
+        -> one long string of them      build_answers()
+        -> typed at your program        play_once() + RUNNER
+        -> a record of every Q and A    RUNNER, written to stderr
+        -> pulled apart from crashes    split_records()
+        -> one dictionary of answers    run_all()
+        -> the table you read           coverage()
 """
 import re
 import subprocess
@@ -47,15 +137,25 @@ PLAYS = HERE / "plays"
 
 
 def find_program():
-    """The program to test: game.py, or the only other .py beside this one.
+    """Work out which .py file we are supposed to be testing.
+
+    Takes:
+        nothing
+
+    Hands back:
+        a Path to the program, or None when it cannot tell
+
+    Prefers game.py if there is one. Otherwise, if there is exactly one
+    other .py file beside this one, that must be it. Two or more and it
+    gives up rather than guess, and main() prints what it found instead.
 
     Hardcoding game.py meant the first step of reusing this on any other
-    project was editing it -- and students are told not to. Auto-detecting
-    costs nothing when there is one obvious answer and says so when there
-    is not.
+    project was editing it -- and students are told not to edit it.
     """
     if (HERE / "game.py").exists():
         return HERE / "game.py"
+    # glob("*.py") finds every Python file in this folder. We drop
+    # playtest.py itself -- Path(__file__) is "the file I am written in".
     others = [p for p in sorted(HERE.glob("*.py")) if p.name != Path(__file__).name]
     return others[0] if len(others) == 1 else None
 
@@ -118,15 +218,29 @@ RUNNER = (
 
 
 def split_records(stderr_text):
-    """Pull the prompt->answer records out, and hand back the rest.
+    """Separate our own bookkeeping from whatever else landed on stderr.
 
-    The rest matters: it is where a traceback lives, and mixing the records
-    into it would have jam_line() counting our own bookkeeping as repetition.
+    Takes:
+        stderr_text  str -- everything the run wrote to stderr
+
+    Hands back:
+        a tuple of (asked, leftover)
+          asked     a list of (prompt, answer) pairs, in the order asked
+          leftover  str -- every other line, joined back together
+
+    The leftover is not rubbish: it is where a traceback lives. Throwing it
+    away would mean reporting a clean run on a program that died.
     """
+    # Two empty lists, filled as we walk the lines: one for our own
+    # records, one for everything else.
     asked, leftover = [], []
     for line in stderr_text.splitlines():
+        # RECORD is a character no program prints, so a line that starts
+        # with it can only be one we wrote ourselves.
         if line.startswith(RECORD):
             parts = line.split(RECORD)
+            # "\x02Choose:\x021" splits into ["", "Choose:", "1"] -- three
+            # pieces. Fewer means the line was cut short, so we leave it alone.
             if len(parts) >= 3:
                 asked.append((parts[1], parts[2]))
                 continue
@@ -135,14 +249,46 @@ def split_records(stderr_text):
 
 
 def say(msg="", color=""):
+    """Print one line, optionally wrapped in a colour code.
+
+    Takes:
+        msg    str -- the text. Default "", which prints a blank line
+        color  str -- an ANSI colour constant, or "" for no colour
+
+    Hands back:
+        None -- it prints
+
+    The OFF code is always added when a colour was used, so a colour can
+    never leak onto the lines that follow.
+    """
     print(f"{color}{msg}{OFF}" if color else msg)
 
 
 def rule():
+    """Print a dim horizontal line, to separate sections of the report.
+
+    Takes:
+        nothing
+
+    Hands back:
+        None -- it prints
+    """
     say("-" * 62, DIM)
 
 
 def die(*lines):
+    """Print an error the student can act on, then stop the program.
+
+    Takes:
+        *lines  any number of strings. The FIRST is the headline and is
+                printed in red; the rest are printed under it as advice
+
+    Hands back:
+        nothing -- it never returns, because it calls sys.exit(1)
+
+    Every exit from this script goes through here, so an error always looks
+    the same and always says what to do next.
+    """
     say()
     rule()
     say(f"  {lines[0]}", RED + BOLD)
@@ -154,25 +300,39 @@ def die(*lines):
 
 
 def available():
-    """The play scripts. A leading _ means "not a script" -- see _player.txt."""
+    """List the play scripts the student has written.
+
+    Takes:
+        nothing
+
+    Hands back:
+        a sorted list of names WITHOUT the .txt, e.g. ["badinput", "normal"]
+
+    A leading underscore means "not a script". That is how _player.txt stays
+    out of the listing while living in the same folder.
+    """
     if not PLAYS.is_dir():
         return []
+    # .stem is the filename without its extension, so normal.txt
+    # becomes "normal" -- which is what a student types.
     return sorted(p.stem for p in PLAYS.glob("*.txt")
                   if not p.name.startswith("_"))
 
 
 def read_player():
-    """Who plays, and on which difficulties, from plays/_player.txt.
+    """Read the answers that come before the script starts.
 
-    First line is the name. Every line after it is a difficulty, and the runs
-    rotate through them -- so twenty games cover all three rather than
-    hammering one. Both used to be written into this file, which meant
-    changing either one meant editing a program students are told not to
-    touch.
+    Takes:
+        nothing
 
-    Missing or half-filled, it falls back to something that works. A testing
-    tool that refuses to start because its settings file is absent has picked
-    the wrong thing to be strict about.
+    Hands back:
+        a tuple of (player, levels)
+          player  str -- the name to answer first, or "" for none
+          levels  a list of difficulties to rotate through, one per run
+
+    An EMPTY plays/_player.txt is an answer, not an absence: it means this
+    program asks nothing before the script. Only a MISSING file falls back
+    to the built-in defaults.
     """
     setup = PLAYS / "_player.txt"
     if setup.exists():
@@ -187,18 +347,19 @@ def read_player():
 
 
 def build_answers(script, player, difficulty):
-    """name, difficulty, then the script's choices repeated until we run out.
+    """Turn one plays file into the keystrokes a single run will type.
 
-    The name and the difficulty are supplied HERE rather than in the plays
-    file. Every game opens by asking for both, so every file would otherwise
-    begin with the same two lines, and a reader comparing explore.txt against
-    what actually gets typed would find two answers they could not account
-    for. --show now says where they come from, because that is exactly the
-    question the first reader asked.
+    Takes:
+        script      a Path to the plays/<name>.txt file to read
+        player      str -- the name answered first, or "" for none
+        difficulty  str -- the difficulty answered next, or "" for none
 
-    Repeating the rest is what lets plays/explore.txt be one line long instead
-    of two thousand. It also means a script can never "run out" partway
-    through a game for a boring reason.
+    Hands back:
+        str -- every answer joined with newlines, ending with one
+
+    The file is repeated until there are MAX_ANSWERS of them. That is what
+    lets a one-line script be a real script, and it means a run can never
+    end early for the boring reason of running out of answers.
     """
     # Module 10 teaches exactly these three lines: `with` closes the file
     # whatever happens, `for line in answers_file` reads it one line at a
@@ -209,53 +370,139 @@ def build_answers(script, player, difficulty):
     if not choices:
         die(f"{script.name} is empty.",
             "Put one answer per line in it - the numbers you would type.")
+    # Keep only the ones that are not empty. For a final project both
+    # usually are, so this list stays empty and the script starts at
+    # the student's very first answer.
     answers = [a for a in (player, difficulty) if a]
+    # Keep adding whole copies of the file until there are plenty.
+    # This is the "the file repeats" rule, and it is exactly this
+    # loop -- nothing cleverer is going on.
     while len(answers) < MAX_ANSWERS:
+        # .extend() adds every item of choices. .append() would have
+        # added the list itself as one item, which is the classic slip.
         answers.extend(choices)
     return "\n".join(answers[:MAX_ANSWERS]) + "\n"
 
 
+def explain(message):
+    """A sentence about what this kind of error usually means here, or ''.
+
+    Tied to the mistakes this course actually produces. A generic error name
+    tells a first-year student nothing; "a function forgot to return" tells
+    them where to look.
+    """
+    hints = [
+        ("cannot unpack non-iterable NoneType",
+         "A function that should hand back several values returned nothing. "
+         "Find the function called on that line and check it ends with a "
+         "`return`."),
+        ("not associated with a value",
+         "A function is changing something it was never given. It needs that "
+         "value as a parameter, and needs to `return` it."),
+        ("object is not subscriptable",
+         "Something you indexed with [ ] is None -- usually a function that "
+         "forgot to return."),
+        ("KeyError",
+         "A dictionary was asked for a key it does not have. `.get(key, 0)` "
+         "hands back a default instead of stopping the program."),
+        ("IndexError",
+         "A list was asked for a position it does not have. Check the list is "
+         "as long as you think -- print len() of it."),
+        ("TypeError: can only concatenate str",
+         "A number is being added to a string. str() the number, or use an "
+         "f-string."),
+        ("ZeroDivisionError",
+         "Something divided by a value that reached zero. Guard it with an "
+         "`if` before the division."),
+    ]
+    for needle, hint in hints:
+        if needle in message:
+            return hint
+    return ""
+
+
 def first_real_error(text):
-    """The error a student should act on, or None.
+    """Find the error a student should act on, if there is one.
 
-    EOFError is filtered out on purpose. It means the answers ran out while
-    the game was still asking - that is this script hitting its own limit,
-    not a bug in the game. Reporting it would send students hunting for a
-    problem that is not theirs, which is worse than reporting nothing.
+    Takes:
+        text  str -- the run's output and leftover stderr, joined
 
-    That silence had a cost, though, and jam_line() now pays it back: a
-    script that answers a menu with something it rejects loops until the
-    answers run out, dies of EOFError, and was reported as a clean game.
+    Hands back:
+        a tuple of (message, where, source_line, hint) when the program
+        crashed, or None when it did not. `where` is written as
+        `game.py:601, in craft_menu` -- VS Code turns file:line into a
+        ctrl-clickable link, which is the whole reason for that shape.
+
+    EOFError is deliberately ignored. It means the answers ran out while the
+    program was still asking -- this script hitting its own limit, not a bug
+    in the program. Reporting it would send a student hunting for a problem
+    that is not theirs, which is worse than reporting nothing.
     """
     if "Traceback" not in text:
         return None
     lines = text.splitlines()
     last = next((ln.strip() for ln in reversed(lines)
                  if ln.strip() and ln.lstrip()[:1].isupper() and "Error" in ln), "")
+    # The answers ran out while the program was still asking. That is
+    # our answer limit, not the student's bug, so we say nothing.
     if last.startswith("EOFError"):
         return None
-    where = [ln.strip() for ln in lines if ln.strip().startswith('File "')]
-    spot = ""
-    for w in reversed(where):
-        if "game.py" in w:
-            spot = w
-            break
-    return (last, spot)
+
+    # The LAST frame in the student's own file -- not the deepest frame, which
+    # may be inside Python's own library and is never where they should look.
+    where, source = "", ""
+    pattern = re.compile(r'File "([^"]+)", line (\d+)(?:, in (.+))?')
+    for line in reversed(lines):
+        m = pattern.search(line)
+        if not m:
+            continue
+        path, number, func = m.group(1), int(m.group(2)), (m.group(3) or "").strip()
+        if Path(path).name != GAME.name:
+            continue
+        shown = Path(path).name          # relative: clickable from the repo root
+        where = f"{shown}:{number}" + (f", in {func}" if func else "")
+        try:
+            with open(path, encoding="utf-8") as f:
+                source = f.read().splitlines()[number - 1].strip()
+        except (OSError, IndexError):
+            source = ""
+        break
+    return (last, where, source, explain(last))
+
+
+def report_crash(err, indent="     "):
+    """Print a crash the same way everywhere: what, where, which line, why."""
+    message, where, source, hint = err
+    say(f"{indent}This run crashed:", RED + BOLD)
+    say(f"{indent}  {message}", RED)
+    if where:
+        # file:line -- ctrl+click it in the VS Code terminal to jump there
+        say(f"{indent}  {where}", BOLD)
+    if source:
+        say(f"{indent}    {source[:64]}", DIM)
+    if hint:
+        say(f"{indent}  {hint}", DIM)
+    if where:
+        say(f"{indent}  {DIM}Ctrl+click the file:line above to open it.{OFF}")
 
 
 def show_one(name, answers, choices, player, difficulty):
-    """Explain one run: the file, the keystrokes it becomes, and the game.
+    """Play one run with every question and answer printed as it happens.
 
-    Part 3 plays a real day with the answers echoed where they were read, so
-    the file's lines can be watched going in one at a time.
+    Takes:
+        name        str -- the script's name, for the heading
+        answers     str -- the keystrokes, from build_answers()
+        choices     a list of the script's lines, for the explanation above
+        player      str -- the name answered first, or ""
+        difficulty  str -- the difficulty answered next, or ""
 
-    The first attempt worked the answers out AFTERWARDS, by looking for
-    prompts in the captured output, and was wrong in the worst way -- it
-    under-reported and said nothing about it. input() writes its prompt with
-    no newline, so when the game prints the RESULT of an action it lands on
-    the same line and the prompt stops looking like one. Three questions
-    showed up out of roughly a hundred and fifty, which reads as "the game
-    only asked three things". Echoing at the source cannot miss one.
+    Hands back:
+        True if the run finished cleanly, False if it crashed or stalled
+
+    This is the --show path, and it exists to be believed: a student
+    watching their own prompts scroll past with the answers beside them can
+    see that the program really is being driven, which a row of dots cannot
+    show.
     """
     given = answers.splitlines()
     say()
@@ -347,7 +594,7 @@ def show_one(name, answers, choices, player, difficulty):
     say()
     err = first_real_error(done.stdout + done.stderr)
     if err:
-        say(f"     This run crashed: {err[0]}", RED)
+        report_crash(err)
     else:
         say("     This run finished without crashing.", GREEN)
     say()
@@ -358,16 +605,19 @@ def show_one(name, answers, choices, player, difficulty):
 
 
 def jam_line(text):
-    """The question a run got stuck re-asking, if there is one.
+    """Spot a program stuck re-asking one question, and name the question.
 
-    A script that answers a menu with something the menu rejects does not
-    crash -- the game's own validation loop asks again, forever, until the
-    answers run out. The run then dies of EOFError, which is swallowed as
-    harmless, and the game is reported as fine while never having got past
-    day one.
+    Takes:
+        text  str -- everything the run printed
 
-    Three of the five shipped scripts did exactly that and all showed green.
-    A question asked fifty times in one game is not a game being played.
+    Hands back:
+        a tuple of (line, times) when one line repeats 50 or more times,
+        or None otherwise
+
+    This is NOT a crash, and the report says so. It means the program kept
+    rejecting every answer it was given, which usually means the script is
+    wrong rather than the program. A validating menu plus a file of nothing
+    but junk produces exactly this.
     """
     # BOTH conditions, and the first one is what makes it sound. A thirty-day
     # game prints the action menu about a hundred and fifty times, so
@@ -376,29 +626,42 @@ def jam_line(text):
     # ran until the answers RAN OUT; a real game ends by winning or dying.
     if "EOFError" not in text:
         return None
+    # Counter counts how many times each line appeared. A program
+    # stuck on one prompt prints the same line thousands of times.
     counts = Counter(line.strip() for line in text.splitlines() if line.strip())
     if not counts:
         return None
+    # most_common(1) hands back a list with one (line, count) pair in
+    # it, so [0] pulls that pair out and we unpack it into two names.
     line, seen = counts.most_common(1)[0]
     return (line, seen) if seen >= 50 else None
 
 
 def coverage(asked, runs):
-    """Every question the game asked, and the answers it received.
+    """Print the table of every question asked and every answer it heard.
 
-    Needs no knowledge of this game's menus: the prompt strings come from
-    input() itself. That matters twice over -- it works on a student's own
-    game whatever they called things, and it answers "did my script test
-    everything?" with a list rather than a guess.
+    Takes:
+        asked  a dict of {prompt: set of answers}, built across every run
+        runs   int -- how many runs went into it, for the wording
 
-    A menu that only ever heard ONE answer is the thing to look at. That is
-    how all-5s went a whole term without entering the cave.
+    Hands back:
+        None -- it prints
+
+    It needs to know nothing about this program's menus, because the keys
+    ARE the prompts, captured from the program's own input() calls. Sorted
+    most-answers-first, so the thin ones fall to the bottom where a reader
+    will actually look.
     """
     if not asked:
         return
     say(f"  What the {THING} asked, and what your script answered:", BOLD)
     say()
+    # Sorting a dict walks its KEYS. The minus makes it descending,
+    # so the most-answered questions come first and the thin ones
+    # fall to the bottom, where a reader will actually look.
     for prompt in sorted(asked, key=lambda k: -len(asked[k])):
+        # asked[prompt] is a SET, so the same answer given fifty times is
+        # in it once. That is what makes the next line meaningful.
         answers = sorted(asked[prompt])
         shown = " ".join(answers[:8]) + (" ..." if len(answers) > 8 else "")
         thin = len(answers) == 1
@@ -420,22 +683,37 @@ def coverage(asked, runs):
 
 
 def run_all(runs, player, levels):
-    """Every script in turn, with ONE combined coverage report at the end.
+    """Run every script several times and report on the suite as a whole.
 
-    Combined on purpose. Each script is deliberately narrow -- chop only
-    chops, craft only crafts -- so no single one covers the game and no
-    single report should claim to. What matters is whether the SUITE leaves
-    a menu untried, and that is only visible added up.
+    Takes:
+        runs    int -- how many runs of each script
+        player  str -- the name answered first, or ""
+        levels  a list of difficulties to rotate through
+
+    Hands back:
+        nothing -- it exits 0 if everything passed and 1 if anything did not
+
+    ONE coverage dictionary is kept across every script. Each script is
+    deliberately narrow, so no single one covers the program and no single
+    report should claim to. What matters is whether the whole suite leaves a
+    question untried, and that is only visible added up.
     """
+    # ONE dictionary for the whole suite. Every run below adds into
+    # this same one, which is why the table at the end covers
+    # everything rather than just the last script.
     asked, rows, trouble = {}, [], 0
     for script in available():
         tally = {"crashed": 0, "stuck": 0, "jammed": 0, "ok": 0}
         detail = None
         sys.stdout.write(f"  {DIM}{script:<10}{OFF}")
+        # The same script, several times. The answers are identical; if
+        # the program uses random numbers the runs are not.
         for i in range(runs):
             stdin = build_answers(PLAYS / f"{script}.txt", player,
                                   levels[i % len(levels)])
             state, err = play_once(stdin, asked)
+            # state is one of the four keys in tally, so this adds one to
+            # whichever outcome this run had.
             tally[state] += 1
             if state in ("crashed", "jammed") and detail is None:
                 detail = (state, err)
@@ -456,9 +734,8 @@ def run_all(runs, player, levels):
             continue
         state, err = detail
         if state == "crashed":
-            say(f"  {script}: {err[0]}", RED)
-            if err[1]:
-                say(f"    {err[1]}", DIM)
+            say(f"  {script}:", RED + BOLD)
+            report_crash(err, indent="    ")
         else:
             say(f"  {script}: never got going -- the {THING} kept asking "
                 f"{err[0][:36]!r}", YELLOW)
@@ -475,7 +752,30 @@ def run_all(runs, player, levels):
 
 
 def play_once(stdin, asked_so_far):
+    """Run the program once, with the answers piped in, and say how it went.
+
+    Takes:
+        stdin         str -- the keystrokes, from build_answers()
+        asked_so_far  the shared coverage dict. This function ADDS to it
+
+    Hands back:
+        a tuple of (state, detail)
+          state   "ok", "crashed", "stuck" or "jammed"
+          detail  the error for a crash, the repeated line for a jam,
+                  None for everything else
+
+    A separate process per run, so a crash in the program cannot take this
+    script down with it, and a timeout turns an endless loop into a result
+    instead of a hang.
+
+    Note that the second argument is CHANGED rather than returned. A dict
+    handed to a function is the same dict, so adding to it here adds to the
+    caller's -- which is how one table ends up covering every run.
+    """
     try:
+        # Start a SEPARATE Python and hand it the RUNNER as a one-line
+        # program, with the real program as its argument. Separate, so a
+        # crash in the program cannot take this script down with it.
         done = subprocess.run(
             [sys.executable, "-c", RUNNER, str(GAME)], input=stdin,
             capture_output=True, text=True, timeout=TIMEOUT)
@@ -486,7 +786,13 @@ def play_once(stdin, asked_so_far):
         # The first two answers of every game come from plays/_player.txt,
         # not from the play script. Counting them against the script means
         # scolding it for two questions it never had a say in.
+        # The first answers of each run come from _player.txt, not from
+        # the script. Counting them against the script would scold it for
+        # questions it never had a say in.
         bucket = OURS if i < SETUP_COUNT[0] else asked_so_far
+        # setdefault: "give me the set for this prompt, making an empty
+        # one first if this is a prompt we have not seen". Then .add()
+        # puts the answer in it. Two lines of work in one.
         bucket.setdefault(prompt, set()).add(answer)
     blob = done.stdout + errors
     err = first_real_error(blob)
@@ -499,6 +805,16 @@ def play_once(stdin, asked_so_far):
 
 
 def main():
+    """Read the command line and do what it asks.
+
+    Takes:
+        nothing -- it reads sys.argv
+
+    Hands back:
+        nothing -- every path ends in a print, or in sys.exit
+
+    The full list of commands is at the top of this file.
+    """
     say()
     say(f"  {TITLE}", BOLD)
     rule()
@@ -544,6 +860,9 @@ def main():
     # Flags and the run count are separated, so `mixed --show` is not read as
     # a request for "--show" games. That exact message was the first thing a
     # reader hit when they went looking for what this does.
+    # Split what the student typed into flags and numbers, so that
+    # `playtest.py mixed --show` is not read as a request for
+    # "--show" runs. That exact message confused the first reader.
     flags = [a for a in sys.argv[2:] if a.startswith("-")]
     numbers = [a for a in sys.argv[2:] if not a.startswith("-")]
     unknown = [f for f in flags if f not in ("--show", "-s")]
@@ -647,19 +966,12 @@ def main():
     if crashes:
         say(f"  {len(crashes)} of {runs} games crashed.", RED + BOLD)
         say()
-        for message, spot in sorted(seen.items(), key=lambda x: -x[1]):
-            where = next((s for m, s in crashes if m == message), "")
-            say(f"  {message}", RED)
-            if where:
-                say(f"    {where}", DIM)
+        for message, _ in sorted(seen.items(), key=lambda x: -x[1]):
+            err = next((e for e in crashes if e[0] == message), None)
+            if err:
+                report_crash(err, indent="  ")
             say(f"    happened in {seen[message]} of {runs} games", DIM)
             say()
-        say("  Open that line. The number after 'line' is where to look.")
-        say()
-        say("  If it says a variable is not associated with a value, the", DIM)
-        say("  function is changing something it was never given - it needs", DIM)
-        say("  that value as a parameter, and needs to return it.", DIM)
-        say()
 
     if jams:
         line, seen_count = jams[0]
