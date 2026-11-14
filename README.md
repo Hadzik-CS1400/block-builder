@@ -152,9 +152,16 @@ It finishes by listing every question the game asked and every answer your
 scripts gave it. **A question that only ever heard one answer has not been
 tested — it has been visited.**
 
-`plays/` holds the scripts, and they are ordinary text files with one answer
-per line. Open `plays/explore.txt`; it is a single character. Write your own:
-save `plays/myplan.txt` and run `python playtest.py myplan`.
+`plays/` holds the scripts — ordinary text files with one answer per line.
+Anything after a `#` is a note to yourself and never gets typed at the game:
+
+```
+5     # action menu - explore
+1     # explore's "1 or 2" - take the risky option
+```
+
+Open `plays/badinput.txt` to see what that looks like. Write your own: save
+`plays/myplan.txt` and run `python playtest.py myplan`.
 
 `plays/_player.txt` is the odd one out — it is settings, not a script. First
 line your name, the lines after it the difficulties to rotate through.

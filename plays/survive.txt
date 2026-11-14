@@ -1,6 +1,6 @@
-3
-4
-1
-2
-6
-b
+3     # action menu - gather food, or you starve
+4     # action menu - collect water
+1     # action menu - chop wood for the shelter
+2     # action menu - mine stone for the shelter
+6     # action menu - open the crafting bench
+b     # craft menu - build the shelter, which stops the nightly damage

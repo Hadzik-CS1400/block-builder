@@ -72,8 +72,14 @@ THE SCRIPTS - what you actually write
 plays/normal.txt and the rest are lists of answers, one per line. Open one;
 there is nothing clever in it.
 
-    - Every line is typed at your program EXACTLY as written. There are no
-      comments, because a "#" line would be typed too.
+    - Everything up to a "#" is typed at your program exactly as written.
+      Anything after the "#" is a note for you and is never typed:
+
+          5     # action menu - explore
+          1     # explore's "1 or 2" - take the risky option
+
+      --show prints your note beside the answer, so a file that explains
+      itself stays readable next month.
     - Blank lines are skipped.
     - The file REPEATS. If your program asks more questions than the file
       has answers, it starts again from the top. That is why a one-line file
@@ -346,6 +352,33 @@ def read_player():
     return "PlayTester", ["1", "2", "3"]
 
 
+def read_script(path):
+    """Read a plays file into (answer, note) pairs.
+
+    Everything from a # to the end of the line is a note for the reader and
+    is never typed at the program. That is what lets a plays file explain
+    itself:
+
+        9     # action menu - not a valid choice, so it asks again
+        1     # action menu - chop wood
+
+    Notes are not decoration. --show prints them instead of "line 4 of the
+    file", so the person watching sees what each answer was FOR rather than
+    where it lived.
+
+    One reader for every caller. There were four separate readers before this,
+    which is four chances for one of them to forget that # is a comment.
+    """
+    pairs = []
+    with open(path, encoding="utf-8") as answers_file:
+        for line in answers_file:
+            answer, _, note = line.partition("#")
+            answer, note = answer.strip(), note.strip()
+            if answer:
+                pairs.append((answer, note))
+    return pairs
+
+
 def build_answers(script, player, difficulty):
     """Turn one plays file into the keystrokes a single run will type.
 
@@ -365,8 +398,7 @@ def build_answers(script, player, difficulty):
     # whatever happens, `for line in answers_file` reads it one line at a
     # time, and .strip() takes off the "\n" that every line arrives with.
     # The file-io concept page points back at this function.
-    with open(script, encoding="utf-8") as answers_file:
-        choices = [line.strip() for line in answers_file if line.strip() != ""]
+    choices = [answer for answer, _ in read_script(script)]
     if not choices:
         die(f"{script.name} is empty.",
             "Put one answer per line in it - the numbers you would type.")
@@ -486,7 +518,7 @@ def report_crash(err, indent="     "):
         say(f"{indent}  {DIM}Ctrl+click the file:line above to open it.{OFF}")
 
 
-def show_one(name, answers, choices, player, difficulty):
+def show_one(name, answers, choices, player, difficulty, notes=None):
     """Play one run with every question and answer printed as it happens.
 
     Takes:
@@ -531,7 +563,9 @@ def show_one(name, answers, choices, player, difficulty):
                     + ("the name" if i == 0 else
                        f"difficulty {answer}; the runs rotate through them"))
         else:
-            note = "line %d of the file" % ((i - setup) % len(choices) + 1)
+            spot = (i - setup) % len(choices)
+            written = (notes or [""] * len(choices))[spot]
+            note = written or ("line %d of the file" % (spot + 1))
         say(f"       {i + 1:>3}. {answer:<14}{DIM}{note}{OFF}")
     say(f"       ... {len(given) - 14} more, cycling the same lines", DIM)
     say()
@@ -623,9 +657,14 @@ def show_one(name, answers, choices, player, difficulty):
         if records:
             prompt, answer = records[-1]
             setup = SETUP_COUNT[0]
-            source = ("plays/_player.txt" if len(records) <= setup
-                      else "line %d of plays/%s.txt"
-                           % ((len(records) - 1 - setup) % len(choices) + 1, name))
+            if len(records) <= setup:
+                source = "plays/_player.txt"
+            else:
+                spot = (len(records) - 1 - setup) % len(choices)
+                written = (notes or [""] * len(choices))[spot]
+                source = "line %d of plays/%s.txt" % (spot + 1, name)
+                if written:
+                    source += f" -- {written}"
             say(f"     It had just answered {BOLD}{prompt.strip()[:40]}{OFF}"
                 f" with {RED}{BOLD}{answer}{OFF},")
             say(f"     which is {source}.")
@@ -868,7 +907,7 @@ def main():
     if len(sys.argv) < 2:
         say("  Scripts you can run:")
         for n in names:
-            first = (PLAYS / f"{n}.txt").read_text(encoding="utf-8").split()
+            first = [a for a, _ in read_script(PLAYS / f"{n}.txt")]
             say(f"    {n:<12} {DIM}answers: {' '.join(first[:8])}{OFF}")
         say()
         # Suggest the script most likely to find something. Alphabetical order
@@ -920,12 +959,12 @@ def main():
                 rule()
                 say(f"  SCRIPT {number + 1} OF {len(names)}:  {script}", BOLD)
                 rule()
-                with open(PLAYS / f"{script}.txt", encoding="utf-8") as f:
-                    choices = [ln.strip() for ln in f if ln.strip()]
+                pairs = read_script(PLAYS / f"{script}.txt")
+                choices = [a for a, _ in pairs]
                 level = levels[number % len(levels)]
                 show_one(script,
                          build_answers(PLAYS / f"{script}.txt", player, level),
-                         choices, player, level)
+                         choices, player, level, [n for _, n in pairs])
             rule()
             say(f"  That was all {len(names)} scripts, each played for real.",
                 GREEN + BOLD)
@@ -941,10 +980,10 @@ def main():
         run_all(runs, player, levels)
         return
     if "--show" in flags or "-s" in flags:
-        with open(PLAYS / f"{name}.txt", encoding="utf-8") as answers_file:
-            choices = [ln.strip() for ln in answers_file if ln.strip()]
+        pairs = read_script(PLAYS / f"{name}.txt")
+        choices = [a for a, _ in pairs]
         show_one(name, build_answers(PLAYS / f"{name}.txt", player, levels[0]),
-                 choices, player, levels[0])
+                 choices, player, levels[0], [n for _, n in pairs])
         return
 
     runs = max(1, int(numbers[0])) if numbers else DEFAULT_RUNS

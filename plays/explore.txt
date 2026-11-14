@@ -1,4 +1,4 @@
-5
-1
-5
-2
+5     # action menu - explore
+1     # explore's "1 or 2" - take the risky option
+5     # action menu - explore
+2     # explore's "1 or 2" - take the safe option
