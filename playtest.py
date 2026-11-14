@@ -147,6 +147,16 @@ import sys                        # this Python: executable, argv, stderr, exit
 from collections import Counter   # count repeats: spots a question asked 1000x
 from pathlib import Path          # paths that work on Windows and on a Mac
 
+# region  what HERE is doing  (click the arrow to fold this away)
+#   __file__    this file's own path, as Python was handed it -- often
+#               relative, like "playtest.py" or "block-builder/playtest.py"
+#   .resolve()  turns that into the full path from the drive down
+#   .parent     drops the filename, leaving the folder it sits in
+#
+# So HERE is "the folder this file lives in" -- NOT the folder you happened
+# to be in when you typed the command. That is the point: plays/ and your
+# game.py are found next to playtest.py, however you got here.
+# endregion
 HERE = Path(__file__).resolve().parent
 PLAYS = HERE / "plays"
 
