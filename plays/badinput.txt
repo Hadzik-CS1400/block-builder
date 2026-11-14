@@ -1,3 +1,6 @@
+PlayTester   # the name, asked once when the game starts
+3            # difficulty, asked once - hard - bad input on the least forgiving setting
+---          # below here repeats for as long as the game asks
 9     # action menu - not one of 1-6, so the game asks again
 1     # action menu - chop wood, a real answer this time
 x     # action menu - a letter where it wants a number

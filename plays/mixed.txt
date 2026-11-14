@@ -1,3 +1,6 @@
+PlayTester   # the name, asked once when the game starts
+1            # difficulty, asked once - easy
+---          # below here repeats for as long as the game asks
 1     # action menu - chop wood
 2     # action menu - mine stone
 3     # action menu - gather food

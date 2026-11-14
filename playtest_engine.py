@@ -92,28 +92,33 @@ there is nothing clever in it.
       has answers, it starts again from the top. That is why a one-line file
       is legal and useful - and why a file that never reaches your quit
       option never ends.
-    - A file whose name starts with "_" is settings, not a script, and is
-      left out of the listing. plays/_player.txt is the only one.
+    - A file whose name starts with "_" is left out of the listing, so
+      notes or a half-written plan can sit in the folder safely.
+    - A line of three or more dashes splits the file: above it are the
+      answers your program asks ONCE at the start, below are the ones it
+      asks over and over. Only the bottom half repeats.
 
 Write your own: make plays/myplan.txt, put the answers in it, and run
     python playtest.py myplan
 
 ===========================================================================
-plays/_player.txt - answers given BEFORE your script starts
+THE OPENING ANSWERS - the part above the dashes
 ===========================================================================
 
-Some programs open by asking something every run has to answer the same way
-- Block Builder asks for a name and a difficulty. Those live here instead of
-at the top of every script, so the scripts stay readable.
+Block Builder opens by asking for a name and a difficulty, and it asks them
+once. Those go at the top of each script, above a line of dashes:
 
-    line 1       the name
-    lines 2+     one difficulty per line, rotated across runs
+    PlayTester   # the name
+    2            # difficulty - normal
+    ---
+    1            # action menu - chop wood, every turn
 
-An EMPTY file means "this program asks nothing before the script starts",
-which is the normal case for a final project. A MISSING file falls back to
-built-in Block Builder defaults, which is wrong for anything else - so if
-your program does not open with fixed questions, create the file and leave
-it empty.
+Each script carries its own, so chop.txt can play on easy and survive.txt on
+hard, and you can read either file and know exactly what happens without
+looking anywhere else.
+
+A program that opens with no questions - which is most final projects - just
+leaves the dashes out, and the whole file is answers.
 
 ===========================================================================
 READING THIS FILE
@@ -214,8 +219,8 @@ OFF    = "\033[0m"    # back to normal
 
 DEFAULT_RUNS = 20
 ALL_RUNS = 6         # per script when running them all
-OURS = {}            # prompts answered from plays/_player.txt
-SETUP_COUNT = [2]    # how many of those there are, set at run time
+OURS = {}            # prompts answered above a script's --- line
+SETUP_COUNT = [0]    # how many of those there are, set per script at run time
 MAX_ANSWERS = 4000          # a game that wants more than this is stuck
 TIMEOUT = 30                # seconds for one game
 
@@ -379,8 +384,8 @@ def available():
     Hands back:
         a sorted list of names WITHOUT the .txt, e.g. ["badinput", "normal"]
 
-    A leading underscore means "not a script". That is how _player.txt stays
-    out of the listing while living in the same folder.
+    A leading underscore means "not a script", so a notes file or a
+    half-written plan can live in the same folder without being run.
     """
     if not PLAYS.is_dir():
         return []
@@ -388,33 +393,6 @@ def available():
     # becomes "normal" -- which is what a student types.
     return sorted(p.stem for p in PLAYS.glob("*.txt")
                   if not p.name.startswith("_"))
-
-
-def read_player():
-    """Read the answers that come before the script starts.
-
-    Takes:
-        nothing
-
-    Hands back:
-        a tuple of (player, levels)
-          player  str -- the name to answer first, or "" for none
-          levels  a list of difficulties to rotate through, one per run
-
-    An EMPTY plays/_player.txt is an answer, not an absence: it means this
-    program asks nothing before the script. Only a MISSING file falls back
-    to the built-in defaults.
-    """
-    setup = PLAYS / "_player.txt"
-    if setup.exists():
-        with open(setup, encoding="utf-8") as f:
-            lines = [line.strip() for line in f if line.strip()]
-        # An EMPTY file is an answer, not an absence: it means this program
-        # asks nothing before the script starts. Falling back to a name here
-        # fed "PlayTester" to a budget tracker's main menu, which rejected it
-        # forever. Only a MISSING file takes the defaults.
-        return (lines[0] if lines else ""), (lines[1:] or [""])
-    return "PlayTester", ["1", "2", "3"]
 
 
 def read_script(path):
@@ -427,6 +405,23 @@ def read_script(path):
         9     # action menu - not a valid choice, so it asks again
         1     # action menu - chop wood
 
+    A line of three or more dashes splits the file in two. Above it are the
+    answers the program asks for ONCE, at the start -- the name, the
+    difficulty. Below are the ones it asks over and over, and only that half
+    repeats:
+
+        PlayTester   # the name, asked once
+        2            # difficulty, asked once
+        ---
+        1            # action menu - chop wood, every turn
+
+    The split has to exist because the file repeats. With the name as plain
+    line 1, it would be typed at the action menu every time round -- about
+    fifteen times in a thirty-day game.
+
+    A file with no dashes is all loop, which is right for a program that
+    opens with no questions at all.
+
     Notes are not decoration. --show prints them instead of "line 4 of the
     file", so the person watching sees what each answer was FOR rather than
     where it lived.
@@ -434,43 +429,51 @@ def read_script(path):
     One reader for every caller. There were four separate readers before this,
     which is four chances for one of them to forget that # is a comment.
     """
-    pairs = []
+    setup, loop, split = [], [], False
     with open(path, encoding="utf-8") as answers_file:
         for line in answers_file:
             answer, _, note = line.partition("#")
             answer, note = answer.strip(), note.strip()
-            if answer:
-                pairs.append((answer, note))
-    return pairs
+            if not answer:
+                continue
+            if len(answer) >= 3 and set(answer) == {"-"}:
+                split = True
+                continue
+            (loop if split else setup).append((answer, note))
+    # No dashes at all: every line is a looping answer, not setup.
+    if not split:
+        setup, loop = [], setup
+    return setup, loop
 
 
-def build_answers(script, player, difficulty):
+def build_answers(script):
     """Turn one plays file into the keystrokes a single run will type.
 
     Takes:
-        script      a Path to the plays/<name>.txt file to read
-        player      str -- the name answered first, or "" for none
-        difficulty  str -- the difficulty answered next, or "" for none
+        script  a Path to the plays/<name>.txt file to read
 
     Hands back:
         str -- every answer joined with newlines, ending with one
 
-    The file is repeated until there are MAX_ANSWERS of them. That is what
-    lets a one-line script be a real script, and it means a run can never
-    end early for the boring reason of running out of answers.
+    The setup answers are typed once. The looping half is repeated until
+    there are MAX_ANSWERS of them. That is what lets a one-line script be a
+    real script, and it means a run can never end early for the boring
+    reason of running out of answers.
     """
     # Module 10 teaches exactly these three lines: `with` closes the file
     # whatever happens, `for line in answers_file` reads it one line at a
     # time, and .strip() takes off the "\n" that every line arrives with.
     # The file-io concept page points back at this function.
-    choices = [answer for answer, _ in read_script(script)]
-    if not choices:
+    setup, loop = read_script(script)
+    choices = [answer for answer, _ in loop]
+    if not choices and not setup:
         die(f"{script.name} is empty.",
             "Put one answer per line in it - the numbers you would type.")
-    # Keep only the ones that are not empty. For a final project both
-    # usually are, so this list stays empty and the script starts at
-    # the student's very first answer.
-    answers = [a for a in (player, difficulty) if a]
+    if not choices:
+        die(f"{script.name} has answers above the --- but none below it.",
+            "The part below the dashes is what repeats, so it cannot be empty.")
+    # The setup answers are typed once and never again.
+    answers = [a for a, _ in setup]
     # Keep adding whole copies of the file until there are plenty.
     # This is the "the file repeats" rule, and it is exactly this
     # loop -- nothing cleverer is going on.
@@ -583,15 +586,14 @@ def report_crash(err, indent="     "):
         say(f"{indent}  {DIM}Ctrl+click the file:line above to open it.{OFF}")
 
 
-def show_one(name, answers, choices, player, difficulty, notes=None):
+def show_one(name, answers, choices, setup_pairs=(), notes=None):
     """Play one run with every question and answer printed as it happens.
 
     Takes:
         name        str -- the script's name, for the heading
         answers     str -- the keystrokes, from build_answers()
-        choices     a list of the script's lines, for the explanation above
-        player      str -- the name answered first, or ""
-        difficulty  str -- the difficulty answered next, or ""
+        choices     a list of the script's looping lines
+        setup_pairs the (answer, note) pairs above the --- line, if any
 
     Hands back:
         True if the run finished cleanly, False if it crashed or stalled
@@ -612,21 +614,21 @@ def show_one(name, answers, choices, player, difficulty, notes=None):
     say("     Those lines are keystrokes, typed in order, starting again at")
     say(f"     the top when the {THING} asks for more.")
     say()
-    if SETUP_COUNT[0]:
-        say(f"     The first {SETUP_COUNT[0]} answer(s) come from "
-            f"plays/_player.txt, not from this")
-        say("     script -- every run opens with the same ones, so they live in")
-        say("     one place instead of at the top of every play script.")
+    setup = len(setup_pairs)
+    if setup:
+        say(f"     The first {setup} answer(s) are the ones above the --- "
+            f"line. The")
+        say("     program asks those once, so they are typed once. Everything")
+        say("     below the dashes is what repeats.")
         say()
-    setup = SETUP_COUNT[0]
     for i, answer in enumerate(given[:14]):
         # Which answers are setup is a count, not the constant 2. A program
         # that opens with no questions has none, and labelling its first two
         # real answers as ours was wrong in both directions.
         if i < setup:
-            note = (f"{YELLOW}plays/_player.txt{OFF}{DIM} - "
-                    + ("the name" if i == 0 else
-                       f"difficulty {answer}; the runs rotate through them"))
+            written = setup_pairs[i][1]
+            note = (f"{YELLOW}above the ---{OFF}{DIM} - "
+                    + (written or "asked once, at the start"))
         else:
             spot = (i - setup) % len(choices)
             written = (notes or [""] * len(choices))[spot]
@@ -723,7 +725,7 @@ def show_one(name, answers, choices, player, difficulty, notes=None):
             prompt, answer = records[-1]
             setup = SETUP_COUNT[0]
             if len(records) <= setup:
-                source = "plays/_player.txt"
+                source = f"above the --- in plays/{name}.txt"
             else:
                 spot = (len(records) - 1 - setup) % len(choices)
                 written = (notes or [""] * len(choices))[spot]
@@ -806,7 +808,7 @@ def coverage(asked, runs):
         if prompt in asked:
             continue
         shown = " ".join(sorted(OURS[prompt]))
-        say(f"    {DIM}{prompt[:34]:<34}{shown}   <- plays/_player.txt{OFF}")
+        say(f"    {DIM}{prompt[:34]:<34}{shown}   <- above the ---{OFF}")
     say()
     lonely = [p for p in asked if len(asked[p]) == 1]
     if lonely:
@@ -816,13 +818,11 @@ def coverage(asked, runs):
         say()
 
 
-def run_all(runs, player, levels):
+def run_all(runs):
     """Run every script several times and report on the suite as a whole.
 
     Takes:
         runs    int -- how many runs of each script
-        player  str -- the name answered first, or ""
-        levels  a list of difficulties to rotate through
 
     Hands back:
         nothing -- it exits 0 if everything passed and 1 if anything did not
@@ -842,9 +842,10 @@ def run_all(runs, player, levels):
         sys.stdout.write(f"  {DIM}{script:<10}{OFF}")
         # The same script, several times. The answers are identical; if
         # the program uses random numbers the runs are not.
+        setup, _loop = read_script(PLAYS / f"{script}.txt")
+        SETUP_COUNT[0] = len(setup)
         for i in range(runs):
-            stdin = build_answers(PLAYS / f"{script}.txt", player,
-                                  levels[i % len(levels)])
+            stdin = build_answers(PLAYS / f"{script}.txt")
             state, err = play_once(stdin, asked)
             # state is one of the four keys in tally, so this adds one to
             # whichever outcome this run had.
@@ -917,12 +918,9 @@ def play_once(stdin, asked_so_far):
         return "stuck", None
     asked, errors = split_records(done.stderr)
     for i, (prompt, answer) in enumerate(asked):
-        # The first two answers of every game come from plays/_player.txt,
-        # not from the play script. Counting them against the script means
-        # scolding it for two questions it never had a say in.
-        # The first answers of each run come from _player.txt, not from
-        # the script. Counting them against the script would scold it for
-        # questions it never had a say in.
+        # The answers above a script's --- line are asked once, at the
+        # start. They are counted separately so the looping half of the
+        # script is not scolded for questions it never had a say in.
         bucket = OURS if i < SETUP_COUNT[0] else asked_so_far
         # setdefault: "give me the set for this prompt, making an empty
         # one first if this is a prompt we have not seen". Then .add()
@@ -956,14 +954,14 @@ def roll_once(stdin, target, forced):
     return first_real_error(done.stdout + "\n".join(leftover)), sites
 
 
-def sweep(name, player, level):
+def sweep(name):
     """Try every value every random draw in the game can produce.
 
     A seed replays a sample; this covers the range. The question it answers is
     not "did anything break this time" but "which values break it, and are
     there any others".
     """
-    stdin = build_answers(PLAYS / f"{name}.txt", player, level)
+    stdin = build_answers(PLAYS / f"{name}.txt")
     say(f"  Finding the random draws first, using plays/{name}.txt ...", DIM)
     _crash, sites = roll_once(stdin, -1, 0)
     if not sites:
@@ -1087,7 +1085,8 @@ def _run():
     if len(sys.argv) < 2:
         say("  Scripts you can run:")
         for n in names:
-            first = [a for a, _ in read_script(PLAYS / f"{n}.txt")]
+            _setup, loop = read_script(PLAYS / f"{n}.txt")
+            first = [a for a, _ in loop]
             say(f"    {n:<12} {DIM}answers: {' '.join(first[:8])}{OFF}")
         say()
         # Suggest the script most likely to find something. Alphabetical order
@@ -1127,8 +1126,6 @@ def _run():
             f"Try:  python playtest.py {name} 50",
             f"  or: python playtest.py {name} --show")
 
-    player, levels = read_player()
-    SETUP_COUNT[0] = len([a for a in (player, levels[0]) if a])
     if name == "all":
         if "--show" in flags or "-s" in flags:
             # Every script, in full. It is long on purpose -- the point of
@@ -1140,12 +1137,11 @@ def _run():
                 rule()
                 say(f"  SCRIPT {number + 1} OF {len(names)}:  {script}", BOLD)
                 rule()
-                pairs = read_script(PLAYS / f"{script}.txt")
-                choices = [a for a, _ in pairs]
-                level = levels[number % len(levels)]
-                show_one(script,
-                         build_answers(PLAYS / f"{script}.txt", player, level),
-                         choices, player, level, [n for _, n in pairs])
+                setup, loop = read_script(PLAYS / f"{script}.txt")
+                SETUP_COUNT[0] = len(setup)
+                choices = [a for a, _ in loop]
+                show_one(script, build_answers(PLAYS / f"{script}.txt"),
+                         choices, setup, [n for _, n in loop])
             rule()
             say(f"  That was all {len(names)} scripts, each played for real.",
                 GREEN + BOLD)
@@ -1154,29 +1150,30 @@ def _run():
             say()
             return
         runs = max(1, int(numbers[0])) if numbers else ALL_RUNS
-        who = (f" as {player}" if player else "")
-        how = (f", difficulty {', '.join(levels)}" if levels[0] else "")
-        say(f"  Every script, {runs} {THINGS} each{who}{how}.")
+        say(f"  Every script, {runs} {THINGS} each. Each one carries its own")
+        say(f"  opening answers, so the difficulties differ between them.")
         say()
-        run_all(runs, player, levels)
+        run_all(runs)
         return
     if "--sweep" in flags:
-        sys.exit(sweep(name, player, levels[0]))
+        sys.exit(sweep(name))
 
     if "--show" in flags or "-s" in flags:
-        pairs = read_script(PLAYS / f"{name}.txt")
-        choices = [a for a, _ in pairs]
-        show_one(name, build_answers(PLAYS / f"{name}.txt", player, levels[0]),
-                 choices, player, levels[0], [n for _, n in pairs])
+        setup, loop = read_script(PLAYS / f"{name}.txt")
+        SETUP_COUNT[0] = len(setup)
+        choices = [a for a, _ in loop]
+        show_one(name, build_answers(PLAYS / f"{name}.txt"),
+                 choices, setup, [n for _, n in loop])
         return
 
     runs = max(1, int(numbers[0])) if numbers else DEFAULT_RUNS
     say(f"  Playing {runs} {THINGS}, answering from plays/{name}.txt ...")
-    if player or levels[0]:
-        where = ("from plays/_player.txt" if (PLAYS / "_player.txt").exists()
-                 else "built-in defaults -- make plays/_player.txt to change them")
-        say(f"  {DIM}Playing as {player}, rotating difficulty "
-            f"{', '.join(levels)} -- {where}{OFF}")
+    setup, _loop = read_script(PLAYS / f"{name}.txt")
+    SETUP_COUNT[0] = len(setup)
+    if setup:
+        opening = ", ".join(a for a, _ in setup)
+        say(f"  {DIM}Opening answers, from the top of that file: "
+            f"{opening}{OFF}")
     say(f"  {DIM}Same answers every run -- but the dice are different, so the"
         f"{OFF}")
     say(f"  {DIM}{THINGS} are not. That is why it is {runs} and not one.{OFF}")
@@ -1187,8 +1184,7 @@ def _run():
     crashes, stuck, jams, seen = [], 0, [], {}
     asked = {}
     for i in range(runs):
-        stdin = build_answers(PLAYS / f"{name}.txt", player,
-                              levels[i % len(levels)])
+        stdin = build_answers(PLAYS / f"{name}.txt")
         state, err = play_once(stdin, asked)
         if state == "crashed":
             crashes.append(err)

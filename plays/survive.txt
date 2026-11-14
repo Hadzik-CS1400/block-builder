@@ -1,3 +1,6 @@
+PlayTester   # the name, asked once when the game starts
+2            # difficulty, asked once - normal
+---          # below here repeats for as long as the game asks
 3     # action menu - gather food, or you starve
 4     # action menu - collect water
 1     # action menu - chop wood for the shelter

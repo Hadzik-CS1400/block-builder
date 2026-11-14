@@ -163,8 +163,19 @@ Anything after a `#` is a note to yourself and never gets typed at the game:
 Open `plays/badinput.txt` to see what that looks like. Write your own: save
 `plays/myplan.txt` and run `python playtest.py myplan`.
 
-`plays/_player.txt` is the odd one out — it is settings, not a script. First
-line your name, the lines after it the difficulties to rotate through.
+Each script opens with the two answers the game asks once — your name and a
+difficulty — above a line of dashes. Only the part *below* the dashes
+repeats, which is why they are separated:
+
+```
+PlayTester   # the name, asked once when the game starts
+2            # difficulty, asked once - normal
+---          # below here repeats for as long as the game asks
+1            # action menu - chop wood, every turn
+```
+
+Change the difficulty in one file and only that script plays on it, so you
+can test easy and hard side by side.
 
 And to save your work to GitHub — **either** the terminal:
 
