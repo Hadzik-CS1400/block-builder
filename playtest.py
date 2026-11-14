@@ -148,14 +148,23 @@ from collections import Counter   # count repeats: spots a question asked 1000x
 from pathlib import Path          # paths that work on Windows and on a Mac
 
 # region  what HERE is doing  (click the arrow to fold this away)
-#   __file__    this file's own path, as Python was handed it -- often
-#               relative, like "playtest.py" or "block-builder/playtest.py"
-#   .resolve()  turns that into the full path from the drive down
-#   .parent     drops the filename, leaving the folder it sits in
+# Say your repo lives in C:\CS1400\block-builder, and from C:\CS1400 you typed
+#     python block-builder\playtest.py
 #
-# So HERE is "the folder this file lives in" -- NOT the folder you happened
-# to be in when you typed the command. That is the point: plays/ and your
-# game.py are found next to playtest.py, however you got here.
+#   __file__    the path Python was handed, exactly as you typed it:
+#                                 block-builder\playtest.py
+#   .resolve()  fills in front:   C:\CS1400\block-builder\playtest.py
+#   .parent     drops the file:   C:\CS1400\block-builder      <-- HERE
+#
+#   so PLAYS, which is HERE / "plays", comes out as
+#                                 C:\CS1400\block-builder\plays
+#   and your game.py sits beside it, at
+#                                 C:\CS1400\block-builder\game.py
+#
+# Those are real paths. Paste one into File Explorer and the folder opens.
+#
+# HERE is the folder THIS FILE is in -- never the folder you were standing in
+# when you typed the command. That is why it works from anywhere.
 # endregion
 HERE = Path(__file__).resolve().parent
 PLAYS = HERE / "plays"
