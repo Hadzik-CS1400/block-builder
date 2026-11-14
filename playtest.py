@@ -632,10 +632,6 @@ def show_one(name, answers, choices, player, difficulty):
             say()
         report_crash(err)
         say()
-    say("  That is the whole trick: the file is a stack of keystrokes, so", DIM)
-    say("  nothing depends on a person being there to type them. Run it", DIM)
-    say("  twenty times and the answers stay the same while the dice do not.", DIM)
-    say()
 
 
 def jam_line(text):
