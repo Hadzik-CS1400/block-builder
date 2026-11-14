@@ -166,8 +166,8 @@ r""" WHAT "HERE" IS DOING - it is the folder THIS FILE is sitting in
     you were standing in when you typed the command, which is exactly why
     this works from anywhere.
 """
-HERE = Path(__file__).resolve().parent
-PLAYS = HERE / "plays"
+HERE = Path(__file__).resolve().parent  # EX: C:\CS1400\block-builder
+PLAYS = HERE / "plays"                  # EX: C:\CS1400\block-builder\plays
 
 
 def find_program():
@@ -194,7 +194,7 @@ def find_program():
     return others[0] if len(others) == 1 else None
 
 
-GAME = find_program()
+GAME = find_program()  # EX: C:\CS1400\block-builder\game.py
 
 # "game" is wrong on a final project and "program" reads oddly in Block
 # Builder, so the noun follows the file being tested. Cosmetic only -- nothing
