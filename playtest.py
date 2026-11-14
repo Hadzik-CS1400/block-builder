@@ -147,25 +147,25 @@ import sys                        # this Python: executable, argv, stderr, exit
 from collections import Counter   # count repeats: spots a question asked 1000x
 from pathlib import Path          # paths that work on Windows and on a Mac
 
-# region  what HERE is doing  (click the arrow to fold this away)
-# Say your repo lives in C:\CS1400\block-builder, and from C:\CS1400 you typed
-#     python block-builder\playtest.py
-#
-#   __file__    the path Python was handed, exactly as you typed it:
-#                                 block-builder\playtest.py
-#   .resolve()  fills in front:   C:\CS1400\block-builder\playtest.py
-#   .parent     drops the file:   C:\CS1400\block-builder      <-- HERE
-#
-#   so PLAYS, which is HERE / "plays", comes out as
-#                                 C:\CS1400\block-builder\plays
-#   and your game.py sits beside it, at
-#                                 C:\CS1400\block-builder\game.py
-#
-# Those are real paths. Paste one into File Explorer and the folder opens.
-#
-# HERE is the folder THIS FILE is in -- never the folder you were standing in
-# when you typed the command. That is why it works from anywhere.
-# endregion
+r""" WHAT "HERE" IS DOING - it is the folder THIS FILE is sitting in
+
+    Say your repo lives in C:\CS1400\block-builder, and from C:\CS1400 you
+    typed:   python block-builder\playtest.py
+
+      __file__    the path Python was handed, just as you typed it:
+                                  block-builder\playtest.py
+      .resolve()  fills in front: C:\CS1400\block-builder\playtest.py
+      .parent     drops the file: C:\CS1400\block-builder      <-- HERE
+
+    so PLAYS, which is HERE / "plays", comes out as
+                                  C:\CS1400\block-builder\plays
+    and your game.py sits next to it, at
+                                  C:\CS1400\block-builder\game.py
+
+    Paste either into File Explorer and it opens. HERE is never the folder
+    you were standing in when you typed the command, which is exactly why
+    this works from anywhere.
+"""
 HERE = Path(__file__).resolve().parent
 PLAYS = HERE / "plays"
 
