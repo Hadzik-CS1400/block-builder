@@ -139,11 +139,40 @@ The journey, start to finish:
         -> one dictionary of answers    run_all()
         -> the table you read           coverage()
 """
+# Six imports, and you have probably not met any of them. None need
+# installing -- they all come with Python. `import x` means "fetch the code
+# somebody already wrote for x", and these six are why this file is as short
+# as it is.
+
+# Reads Python source as a STRUCTURE rather than as text, without running it.
+# Used to count the random.randint calls written in your game, so --sweep can
+# say how many it never reached. Searching the text for "randint" would also
+# count the word inside a comment.
 import ast
+
+# Regular expressions: patterns for finding things inside text. Used to pull
+# the file name and line number out of Python's crash message, which arrives
+# as one long string.
 import re
+
+# Starts ANOTHER program from inside this one and captures what it printed.
+# This is the piece the whole tool rests on: your game.py runs as a separate
+# Python, so it can crash without taking this file down with it.
 import subprocess
+
+# Information about the Python running right now. Used for sys.executable
+# (the path to this exact Python, so your game runs under the same one),
+# sys.argv (the words you typed after the filename), sys.stderr, sys.exit.
 import sys
+
+# Counts how many times each thing appears. One line -- Counter(lines) --
+# replaces a dictionary, a loop and an if. Used to spot a question the game
+# asked hundreds of times, which is how a jammed script is detected.
 from collections import Counter
+
+# A file path as an object instead of a string. `HERE / "game.py"` builds a
+# path that is right on Windows and on a Mac, which "HERE + '/' + name" is
+# not.
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
