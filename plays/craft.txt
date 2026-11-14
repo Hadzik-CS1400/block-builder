@@ -1,3 +1,9 @@
+# craft.txt - gather, then build
+#
+# Collects wood and stone, opens the bench and builds a shelter. This is the
+# path where the game has to REMEMBER something: what you built earlier has
+# to still be there later.
+
 PlayTester   # the name, asked once when the game starts
 2            # difficulty, asked once - normal
 ---          # below here repeats for as long as the game asks

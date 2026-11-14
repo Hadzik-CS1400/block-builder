@@ -1,3 +1,9 @@
+# chop.txt - the narrowest script there is
+#
+# Chops wood every turn, for the whole game. One answer, repeated. It shows
+# the simplest path through the game works, and nothing whatever about any
+# other path. Start here when something is badly broken.
+
 PlayTester   # the name, asked once when the game starts
 1            # difficulty, asked once - easy - the simplest script, on the kindest setting
 ---          # below here repeats for as long as the game asks

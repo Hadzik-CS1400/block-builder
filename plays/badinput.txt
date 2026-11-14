@@ -1,3 +1,12 @@
+# badinput.txt - answers the game should refuse
+#
+# Letters where it wants numbers, numbers outside the menu, junk. Nothing
+# here is a typo; every line is wrong on purpose. A game that survives this
+# is one that survives a real person using it.
+#
+# Read the "zz" line. It is NOT refused, and that is a real finding this
+# script turned up - the game takes anything that is not "1" to mean "2".
+
 PlayTester   # the name, asked once when the game starts
 3            # difficulty, asked once - hard - bad input on the least forgiving setting
 ---          # below here repeats for as long as the game asks

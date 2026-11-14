@@ -1,3 +1,9 @@
+# explore.txt - the risky action, both ways
+#
+# Explores, and answers its "1 or 2" question one way and then the other, so
+# neither branch goes untried. Explore is where the random damage lives, which
+# is why this script is worth running many times rather than once.
+
 PlayTester   # the name, asked once when the game starts
 3            # difficulty, asked once - hard - exploring is where the risk is
 ---          # below here repeats for as long as the game asks

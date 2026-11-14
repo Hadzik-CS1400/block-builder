@@ -1,3 +1,10 @@
+# mixed.txt - a bit of everything
+#
+# Walks the whole action menu in order, then the crafting bench, then round
+# again. The widest script here: if a menu option is broken, this is the one
+# most likely to find it. It is also the least focused, so when it does break
+# the other scripts tell you where.
+
 PlayTester   # the name, asked once when the game starts
 1            # difficulty, asked once - easy
 ---          # below here repeats for as long as the game asks

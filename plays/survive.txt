@@ -1,3 +1,10 @@
+# survive.txt - stay alive, the long way
+#
+# Food, water, then the materials for a shelter. The only script that plays
+# the game the way it is meant to be played, so it is the one that reaches
+# the late days -- and the only one that finds bugs that need a high day
+# number to happen.
+
 PlayTester   # the name, asked once when the game starts
 2            # difficulty, asked once - normal
 ---          # below here repeats for as long as the game asks
