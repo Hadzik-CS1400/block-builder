@@ -32,6 +32,13 @@ EVERY COMMAND
         where they were typed. The one to use when something is going wrong
         and you want to see it happen.
 
+    python playtest.py normal --sweep
+        Every value every random draw in the program can produce, forced one
+        at a time. Running many times SAMPLES the random numbers; this covers
+        them. Slower -- one game per value -- and it answers a different
+        question: not "did anything break this time" but "which values break
+        it, and are there any others".
+
     -s        is the short form of --show.
     EXIT CODE is 0 when everything passed and 1 when anything crashed,
               stalled or jammed, so this can gate a commit or a hand-in.
@@ -132,6 +139,7 @@ The journey, start to finish:
         -> one dictionary of answers    run_all()
         -> the table you read           coverage()
 """
+import ast
 import re
 import subprocess
 import sys
@@ -252,6 +260,39 @@ def split_records(stderr_text):
                 continue
         leftover.append(line)
     return asked, "\n".join(leftover)
+
+
+# --sweep needs a different wrapper from the one above. It still answers
+# input() from the script, but it also seeds the program and can FORCE one
+# random draw to one value.
+#
+# Why the seed: while one call is forced, every other call must be pinned, or
+# an unlucky draw somewhere else gets blamed on the value being forced. The
+# demo version of this reported a harmless roll as a bug before the seed was
+# added, with a real traceback behind it.
+#
+# target of -1 forces nothing, which is how the call sites are discovered.
+RAND = chr(4)
+RAND_RUNNER = (
+    "import builtins, random, runpy, sys, inspect\n"
+    "target, forced = int(sys.argv[2]), int(sys.argv[3])\n"
+    "random.seed(0)\n"
+    "_real_rand = random.randint\n"
+    "def swept(low, high):\n"
+    "    caller = inspect.currentframe().f_back\n"
+    "    if caller.f_lineno == target and low <= forced <= high:\n"
+    "        value = forced\n"
+    "    else:\n"
+    "        value = _real_rand(low, high)\n"
+    "    sys.stderr.write(chr(4) + '%d|%d|%d' % (caller.f_lineno, low, high)"
+    " + chr(10))\n"
+    "    return value\n"
+    "random.randint = swept\n"
+    "runpy.run_path(sys.argv[1], run_name='__main__')\n"
+)
+
+# A range wider than this is not worth trying one value at a time.
+SWEEPABLE = 60
 
 
 def say(msg="", color=""):
@@ -873,6 +914,121 @@ def play_once(stdin, asked_so_far):
     return "ok", None
 
 
+def roll_once(stdin, target, forced):
+    """Play one game with one random draw forced. Hands back (crash, sites)."""
+    try:
+        done = subprocess.run(
+            [sys.executable, "-c", RAND_RUNNER, str(GAME), str(target), str(forced)],
+            input=stdin, capture_output=True, text=True, timeout=TIMEOUT)
+    except subprocess.TimeoutExpired:
+        return "", {}
+    sites, leftover = {}, []
+    for line in done.stderr.splitlines():
+        if line.startswith(RAND):
+            where, low, high = line[1:].split("|")
+            sites[int(where)] = (int(low), int(high))
+        else:
+            leftover.append(line)
+    return first_real_error(done.stdout + "\n".join(leftover)), sites
+
+
+def sweep(name, player, level):
+    """Try every value every random draw in the game can produce.
+
+    A seed replays a sample; this covers the range. The question it answers is
+    not "did anything break this time" but "which values break it, and are
+    there any others".
+    """
+    stdin = build_answers(PLAYS / f"{name}.txt", player, level)
+    say(f"  Finding the random draws first, using plays/{name}.txt ...", DIM)
+    _crash, sites = roll_once(stdin, -1, 0)
+    if not sites:
+        say("  This game made no random.randint calls.", GREEN)
+        say()
+        return 0
+
+    # Discovery runs the game ONCE, so a draw inside a branch that run did
+    # not take is never seen. Counting what the source actually contains is
+    # the only way to say so -- otherwise the report reads as full coverage
+    # when it may be a little over half.
+    written = 0
+    try:
+        tree = ast.parse(GAME.read_text(encoding="utf-8"))
+        written = sum(1 for n in ast.walk(tree)
+                      if isinstance(n, ast.Call)
+                      and isinstance(n.func, ast.Attribute)
+                      and n.func.attr == "randint")
+    except (OSError, SyntaxError):
+        pass
+
+    plan = {w: (lo, hi) for w, (lo, hi) in sites.items() if hi - lo + 1 <= SWEEPABLE}
+    skipped = {w: v for w, v in sites.items() if w not in plan}
+    total = sum(hi - lo + 1 for lo, hi in plan.values())
+    say(f"  {len(sites)} draw(s) found. Trying every value of {len(plan)} of "
+        f"them &mdash; {total} games.".replace("&mdash;", "--"), BOLD)
+    say()
+
+    found = []
+    for where in sorted(plan):
+        low, high = plan[where]
+        hits = []
+        for value in range(low, high + 1):
+            crash, _ = roll_once(stdin, where, value)
+            if crash:
+                hits.append((value, crash))
+                found.append((where, value, crash))
+            sys.stdout.write((RED + "x" + OFF) if crash else (GREEN + "." + OFF))
+            sys.stdout.flush()
+        say()
+        say(f"    {GAME.name}:{where:<5} {low} to {high:<4} "
+            + (f"{RED}{len(hits)} value(s) crash{OFF}" if hits
+               else f"{GREEN}all fine{OFF}"))
+        for value, crash in hits:
+            say(f"      when it draws {value}  ->  {crash[0][:52]}", RED)
+    say()
+    for where, (low, high) in skipped.items():
+        say(f"    {GAME.name}:{where:<5} {low} to {high} skipped -- "
+            f"{high - low + 1} values is too many to try one at a time", DIM)
+    if skipped:
+        say()
+
+    rule()
+    if found:
+        # One bug reached by six different values is one bug. Listing it six
+        # times reads as six problems and buries the thing worth fixing.
+        by_line = {}
+        for where, value, crash in found:
+            by_line.setdefault((where, crash[0]), []).append(value)
+        say(f"  {len(by_line)} problem(s), reached by {len(found)} value(s).",
+            RED + BOLD)
+        say()
+        for (where, message), values in by_line.items():
+            run = (f"{min(values)} to {max(values)}"
+                   if len(values) > 2 and
+                   values == list(range(min(values), max(values) + 1))
+                   else ", ".join(map(str, values)))
+            say(f"    {GAME.name} line {where}, when it draws {run}", BOLD)
+            say(f"      {message[:62]}", RED)
+        say()
+        say("  Not a seed and not a sample -- those are the values, and for", DIM)
+        say("  the draws that were swept there are no others.", DIM)
+    else:
+        say(f"  {total} games, nothing broke.", GREEN + BOLD)
+        say()
+        say("  Every value those draws can produce has been tried.", DIM)
+
+    missed = written - len(sites) if written else 0
+    if missed > 0:
+        say()
+        say(f"  {missed} of the {written} random draws in {GAME.name} were "
+            f"never reached,", YELLOW)
+        say(f"  so nothing was swept for them. They sit in code this script "
+            f"did not", YELLOW)
+        say(f"  run -- try another plays file.", YELLOW)
+    say()
+    return 1 if found else 0
+
+
 def main():
     """Read the command line and do what it asks.
 
@@ -934,11 +1090,12 @@ def main():
     # "--show" runs. That exact message confused the first reader.
     flags = [a for a in sys.argv[2:] if a.startswith("-")]
     numbers = [a for a in sys.argv[2:] if not a.startswith("-")]
-    unknown = [f for f in flags if f not in ("--show", "-s")]
+    unknown = [f for f in flags if f not in ("--show", "-s", "--sweep")]
     if unknown:
         die(f"'{unknown[0]}' is not an option.",
-            "The only one is --show, which plays ONE game and walks through",
-            "what the file is, what it turns into, and what the game did.",
+            "There are two: --show plays ONE game and walks through what the",
+            "file is and what the game did, and --sweep tries every value",
+            "every random draw in the game can produce.",
             "",
             f"Try:  python playtest.py {name} --show")
     if numbers and not numbers[0].isdigit():
@@ -979,6 +1136,9 @@ def main():
         say()
         run_all(runs, player, levels)
         return
+    if "--sweep" in flags:
+        sys.exit(sweep(name, player, levels[0]))
+
     if "--show" in flags or "-s" in flags:
         pairs = read_script(PLAYS / f"{name}.txt")
         choices = [a for a, _ in pairs]
