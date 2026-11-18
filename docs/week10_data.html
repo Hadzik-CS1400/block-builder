@@ -95,6 +95,12 @@
      student has to type. */
   .code div.ln  { font-size:1.18rem; }
   .code div.ctx { font-size:.94rem; }
+  /* The line the arrow is on. Brighter than the other changed lines and
+     marked in the gutter, so a step of eight lines still has exactly one
+     line being talked about. */
+  .after .code div.ln.now { background:rgba(64,162,92,.3);
+                            box-shadow:inset 3px 0 0 #40a25c; }
+  .code div.ln.now .mk::after { content:"\25B8"; margin-left:.1rem; }
   /* Indentation is always measured at the smaller size, so four spaces are
      four spaces on every row and the code lines up in one column. */
   .code .ind { display:inline-block; font-size:.94rem; }
@@ -304,17 +310,20 @@ var DEMOS = [
     {
      "n": 88,
      "t": "def add_journal(journal, day, event):",
-     "c": true
+     "c": true,
+     "why": "Same name, same parameters -- the callers do not change."
     },
     {
      "n": 89,
      "t": "    \"\"\"Add one entry. No return -- a list is changed in place.\"\"\"",
-     "c": true
+     "c": true,
+     "why": "The docstring says the one thing that is surprising: no return."
     },
     {
      "n": 90,
      "t": "    journal.append(f\"Day {day}: {event}\")",
-     "c": true
+     "c": true,
+     "why": "Puts the entry into the list the caller handed in. That list is the caller's own, so the caller already has the entry."
     }
    ]
   ],
@@ -440,42 +449,50 @@ var DEMOS = [
     {
      "n": 93,
      "t": "def show_journal(journal):",
-     "c": true
+     "c": true,
+     "why": "Takes the list, as before."
     },
     {
      "n": 94,
      "t": "    \"\"\"Print the journal, newest last.\"\"\"",
-     "c": true
+     "c": true,
+     "why": "Newest last, because .append() puts each entry on the end."
     },
     {
      "n": 95,
      "t": "    if not journal:",
-     "c": true
+     "c": true,
+     "why": "THE GUARD. An empty list is False, so this asks \"is there nothing in it?\""
     },
     {
      "n": 96,
      "t": "        return",
-     "c": true
+     "c": true,
+     "why": "Leaves immediately. Without these two lines you print the \"Trail Journal\" heading on day 1 with nothing underneath it -- a header for an empty list."
     },
     {
      "n": 97,
      "t": "    print()",
-     "c": true
+     "c": true,
+     "why": "A blank line, so the journal does not collide with the status block above it."
     },
     {
      "n": 98,
      "t": "    print(\"[bold]Trail Journal[/bold]\")",
-     "c": true
+     "c": true,
+     "why": "The heading. It only runs now when there is something to head."
     },
     {
      "n": 99,
      "t": "    for entry in journal:",
-     "c": true
+     "c": true,
+     "why": "One pass per entry. The list hands them over in the order they were appended, which is the order the days happened."
     },
     {
      "n": 100,
      "t": "        print(\"  \" + entry)",
-     "c": true
+     "c": true,
+     "why": "Two spaces of indent so the entries sit under the heading."
     }
    ]
   ],
@@ -507,12 +524,14 @@ var DEMOS = [
     {
      "n": 411,
      "t": "    if journal:",
-     "c": true
+     "c": true,
+     "why": "Only when there is something to show -- the same empty-list test as the guard above."
     },
     {
      "n": 412,
      "t": "        print(\"  [dim]Lately: \" + \"; \".join(journal[-3:]) + \"[/dim]\")",
-     "c": true
+     "c": true,
+     "why": "[-3:] is the last three. On day 1 it hands back the one entry rather than failing, which is why no length check is needed."
     }
    ],
    [
@@ -638,17 +657,20 @@ var DEMOS = [
     {
      "n": 110,
      "t": "PICKAXE = \"pickaxe\"",
-     "c": true
+     "c": true,
+     "why": "The name written once. Everywhere else refers to PICKAXE."
     },
     {
      "n": 111,
      "t": "SHELTER = \"shelter\"",
-     "c": true
+     "c": true,
+     "why": "A typo here is a NameError on the first run; a typo in a bare \"shelter\" is silence."
     },
     {
      "n": 112,
      "t": "BENCH = \"bench\"",
-     "c": true
+     "c": true,
+     "why": "CAPITALS are the convention for a value that never changes."
     }
    ],
    [
@@ -865,7 +887,8 @@ var DEMOS = [
     {
      "n": 355,
      "t": "    if SHELTER in crafted:",
-     "c": true
+     "c": true,
+     "why": "Asks the list instead of a flag. Reads the same as the English: is shelter in what I have crafted?"
     },
     {
      "n": 356,
@@ -892,7 +915,8 @@ var DEMOS = [
     {
      "n": 431,
      "t": "        if SHELTER in crafted and BENCH in crafted:",
-     "c": true
+     "c": true,
+     "why": "The same question twice, joined with `and`. No new variables needed for a second recipe."
     },
     {
      "n": 432,
@@ -978,42 +1002,50 @@ var DEMOS = [
     {
      "n": 453,
      "t": "player = {",
-     "c": true
+     "c": true,
+     "why": "One name for the whole player, instead of six loose ones."
     },
     {
      "n": 454,
      "t": "    \"health\": health,",
-     "c": true
+     "c": true,
+     "why": "Health lives here too, which is why later loops have to step over it."
     },
     {
      "n": 455,
      "t": "    \"wood\": wood,",
-     "c": true
+     "c": true,
+     "why": "The key is a string; the value is what the loose variable held."
     },
     {
      "n": 456,
      "t": "    \"stone\": stone,",
-     "c": true
+     "c": true,
+     "why": "Nothing is computed here -- the values are simply moved in."
     },
     {
      "n": 457,
      "t": "    \"iron\": 0,",
-     "c": true
+     "c": true,
+     "why": "Iron starts at 0, exactly as the loose variable did."
     },
     {
      "n": 458,
      "t": "    \"food\": food,",
-     "c": true
+     "c": true,
+     "why": "Food."
     },
     {
      "n": 459,
      "t": "    \"water\": water,",
-     "c": true
+     "c": true,
+     "why": "Water. Six resources, one name."
     },
     {
      "n": 460,
      "t": "}",
-     "c": true
+     "c": true,
+     "why": "The closing brace. From here, player[\"wood\"] is the wood."
     }
    ],
    [
@@ -1105,7 +1137,8 @@ var DEMOS = [
     {
      "n": 527,
      "t": "            explore(player)",
-     "c": true
+     "c": true,
+     "why": "No unpacking on the left. explore changes the dictionary it was handed, so there is nothing to catch."
     },
     {
      "n": 528,
@@ -1115,7 +1148,8 @@ var DEMOS = [
     {
      "n": 529,
      "t": "            craft_menu(player, crafted)",
-     "c": true
+     "c": true,
+     "why": "Same for crafting. Two arguments instead of six, and no return line to keep in step."
     }
    ],
    [
@@ -1159,27 +1193,32 @@ var DEMOS = [
     {
      "n": 114,
      "t": "RECIPES = {",
-     "c": true
+     "c": true,
+     "why": "The recipe book, as data. It sits at the top of the file with the other constants."
     },
     {
      "n": 115,
      "t": "    PICKAXE: {\"wood\": 3, \"stone\": 2},",
-     "c": true
+     "c": true,
+     "why": "The value is itself a dictionary -- a recipe is a set of ingredient:amount pairs."
     },
     {
      "n": 116,
      "t": "    SHELTER: {\"wood\": 20, \"stone\": 10},",
-     "c": true
+     "c": true,
+     "why": "Shelter costs more of the same two things. Same shape."
     },
     {
      "n": 117,
      "t": "    BENCH:   {\"wood\": 10, \"stone\": 5, \"iron\": 2},",
-     "c": true
+     "c": true,
+     "why": "The bench needs iron, which the other two do not mention at all. That is why .get() matters later."
     },
     {
      "n": 118,
      "t": "}",
-     "c": true
+     "c": true,
+     "why": "Adding a fourth recipe is one more line here, and nothing else."
     }
    ],
    [
@@ -1304,17 +1343,20 @@ var DEMOS = [
     {
      "n": 294,
      "t": "def try_craft(player, crafted, item_name):",
-     "c": true
+     "c": true,
+     "why": "Three parameters now: who, what they have built, and which recipe. No costs."
     },
     {
      "n": 295,
      "t": "    \"\"\"Spend resources on one item if every ingredient is available.\"\"\"",
-     "c": true
+     "c": true,
+     "why": "One line, because the explanation moved out of the code."
     },
     {
      "n": 296,
      "t": "    costs = RECIPES[item_name]",
-     "c": true
+     "c": true,
+     "why": "Looks the recipe up by name. costs is now a little dictionary of ingredient:amount."
     },
     {
      "n": 297,
@@ -1324,42 +1366,50 @@ var DEMOS = [
     {
      "n": 298,
      "t": "    # Week 4 taught that a recipe needs EVERY ingredient. .get() hands back 0",
-     "c": true
+     "c": true,
+     "why": "The comment names the trap before the line that avoids it."
     },
     {
      "n": 299,
      "t": "    # for a resource the player has never held, instead of raising KeyError.",
-     "c": true
+     "c": true,
+     "why": "A player who has never held iron has no \"iron\" key at all."
     },
     {
      "n": 300,
      "t": "    for resource, needed in costs.items():",
-     "c": true
+     "c": true,
+     "why": "FIRST LOOP -- the check. Walks every ingredient this recipe needs, whatever they are."
     },
     {
      "n": 301,
      "t": "        if player.get(resource, 0) < needed:",
-     "c": true
+     "c": true,
+     "why": ".get(resource, 0) hands back 0 for a key that is missing, where player[resource] would raise KeyError and end the game."
     },
     {
      "n": 302,
      "t": "            print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")",
-     "c": true
+     "c": true,
+     "why": "Says which item failed."
     },
     {
      "n": 303,
      "t": "            print(\"[red]    Need \" + str(needed) + \" \" + resource",
-     "c": true
+     "c": true,
+     "why": "And says which ingredient ran short -- `resource` is the name the loop is holding when it gives up."
     },
     {
      "n": 304,
      "t": "                  + \", have \" + str(player.get(resource, 0)) + \".[/red]\")",
-     "c": true
+     "c": true,
+     "why": "How much is needed against how much there is."
     },
     {
      "n": 305,
      "t": "            return False",
-     "c": true
+     "c": true,
+     "why": "Leaves WITHOUT SPENDING ANYTHING. This is why the check is a separate loop: stop here and nothing has been taken."
     },
     {
      "n": 306,
@@ -1369,27 +1419,32 @@ var DEMOS = [
     {
      "n": 307,
      "t": "    for resource, needed in costs.items():",
-     "c": true
+     "c": true,
+     "why": "SECOND LOOP -- the spend. It only runs because the first loop finished without returning, so everything is affordable."
     },
     {
      "n": 308,
      "t": "        player[resource] = player[resource] - needed",
-     "c": true
+     "c": true,
+     "why": "Takes the cost off the dictionary. The caller sees it, because it is the caller's dictionary."
     },
     {
      "n": 309,
      "t": "    crafted.append(item_name)",
-     "c": true
+     "c": true,
+     "why": "Records the craft by name, for the `in crafted` checks."
     },
     {
      "n": 310,
      "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
-     "c": true
+     "c": true,
+     "why": "Tells the player it worked."
     },
     {
      "n": 311,
      "t": "    return True",
-     "c": true
+     "c": true,
+     "why": "True, for anything that wants to know."
     }
    ]
   ],
@@ -1510,32 +1565,38 @@ var DEMOS = [
     {
      "n": 327,
      "t": "    if craft == \"a\":",
-     "c": true
+     "c": true,
+     "why": "The menu letter still chooses the branch."
     },
     {
      "n": 328,
      "t": "        try_craft(player, crafted, PICKAXE)",
-     "c": true
+     "c": true,
+     "why": "One line. The branch names the recipe and nothing else -- no costs, no unpacking, no flag."
     },
     {
      "n": 329,
      "t": "    elif craft == \"b\":",
-     "c": true
+     "c": true,
+     "why": "Second letter."
     },
     {
      "n": 330,
      "t": "        try_craft(player, crafted, SHELTER)",
-     "c": true
+     "c": true,
+     "why": "Identical shape. Compare this with the four lines it replaced."
     },
     {
      "n": 331,
      "t": "    elif craft == \"c\":",
-     "c": true
+     "c": true,
+     "why": "Third letter."
     },
     {
      "n": 332,
      "t": "        try_craft(player, crafted, BENCH)",
-     "c": true
+     "c": true,
+     "why": "Add a fourth recipe and this is the only place in the function that grows."
     },
     {
      "n": 333,
@@ -1577,22 +1638,26 @@ var DEMOS = [
     {
      "n": 136,
      "t": "    low = {name: amount for name, amount in player.items()",
-     "c": true
+     "c": true,
+     "why": "A DICT comprehension: name: amount builds pairs, so `low` is itself a little dictionary."
     },
     {
      "n": 137,
      "t": "           if name != \"health\" and amount < 5}",
-     "c": true
+     "c": true,
+     "why": "The condition on the end filters. Health is skipped because it is not a resource, and under five is what counts as low."
     },
     {
      "n": 138,
      "t": "    if low:",
-     "c": true
+     "c": true,
+     "why": "An empty dictionary is False, so this asks \"did anything come back?\""
     },
     {
      "n": 139,
      "t": "        print(\"  [yellow]Running low: \" + \", \".join(low) + \"[/yellow]\")",
-     "c": true
+     "c": true,
+     "why": "Joining a dictionary joins its KEYS, which is exactly the list of names wanted."
     }
    ],
    [
@@ -1687,22 +1752,26 @@ var DEMOS = [
     {
      "n": 129,
      "t": "    for name, amount in player.items():",
-     "c": true
+     "c": true,
+     "why": ".items() hands over the key and the value together, so one loop can print both."
     },
     {
      "n": 130,
      "t": "        if name == \"health\":",
-     "c": true
+     "c": true,
+     "why": "Health is in this dictionary but is not a resource."
     },
     {
      "n": 131,
      "t": "            continue",
-     "c": true
+     "c": true,
+     "why": "continue skips just this one pass and goes to the next key."
     },
     {
      "n": 132,
      "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")",
-     "c": true
+     "c": true,
+     "why": "name.title() turns \"wood\" into \"Wood\", and the widths keep the column aligned however long the name is."
     }
    ],
    [
@@ -1803,6 +1872,16 @@ var countEl = document.getElementById("count");
 var backBtn = document.getElementById("back");
 var nextBtn = document.getElementById("next");
 
+/* The lines this step changes, in file order. One arrow press each: that
+   is what makes this a stepper rather than a slideshow of diffs. */
+function framesOf(d) {
+  var out = [];
+  (d.after || []).forEach(function (seg) {
+    seg.forEach(function (ln) { if (ln.c && ln.t.trim()) { out.push(ln); } });
+  });
+  return out;
+}
+
 function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
                   .replace(/>/g, "&gt;");
@@ -1839,7 +1918,7 @@ function hi(src) {
   });
 }
 
-function codeHTML(segments, side, band) {
+function codeHTML(segments, side, band, active) {
   var mark = side === "before" ? "-" : "+";
   var label = side === "before" ? "Week 9" : "this TODO";
   var head = '<div class="tabbar"><span class="fname">game.py</span>' +
@@ -1862,6 +1941,7 @@ function codeHTML(segments, side, band) {
          snippet can be found. It gets no change mark and no tint, so the
          eye goes straight to the lines that actually changed. */
       var cls = ln.c ? "ln" : "ctx";
+      if (ln === active) { cls += " now"; }
       var m = ln.c ? mark : " ";
       /* Leading indentation is split off and rendered at the CONTEXT size on
          every line, changed or not. Otherwise a changed line's four spaces
@@ -1873,7 +1953,12 @@ function codeHTML(segments, side, band) {
                '<span class="mk">' + m + "</span>" +
                '<span class="ind">' + cut[1] + "</span>" +
                hi(cut[2]) + "</div>");
-      if (side === "after" && band && ln.n === lastChanged) {
+      /* The band follows the line being stepped, not the end of the
+         pane -- it explains THAT line. */
+      if (side === "after" && band && ln === (active || {})) {
+        out.push('<div class="calc">' + esc(band) + "</div>");
+      } else if (side === "after" && band && !active &&
+                 ln.n === lastChanged) {
         out.push('<div class="calc">' + esc(band) + "</div>");
       }
     });
@@ -1904,8 +1989,15 @@ function buildRail() {
   });
 }
 
+var fi = 0;   /* which changed line of this step the arrow is on */
+
 function render() {
   var d = DEMOS[at];
+  var frames = framesOf(d);
+  if (fi >= frames.length) { fi = frames.length - 1; }
+  if (fi < 0) { fi = 0; }
+  var active = frames[fi] || null;
+  var band = (active && active.why) ? active.why : d.band;
   stage.innerHTML =
     '<div class="head"><div class="tn">' + PARTS[d.part] +
       " &middot; TODO " + esc(d.todo) + '</div><h2>' + esc(d.title) + "</h2></div>" +
@@ -1913,7 +2005,7 @@ function render() {
       '<div class="col before"><div class="colhead">Before &mdash; your Week 9 game</div>' +
         codeHTML(d.before, "before") + "</div>" +
       '<div class="col after"><div class="colhead">After &mdash; this TODO</div>' +
-        codeHTML(d.after, "after", d.band) + "</div>" +
+        codeHTML(d.after, "after", band, active) + "</div>" +
     "</div>" +
     '<div class="shape">' +
       '<div class="box was"><h3>The shape it was</h3><p>' + d.was + "</p></div>" +
@@ -1922,22 +2014,51 @@ function render() {
     "</div>" +
     '<p class="note">' + d.note + "</p>";
   countEl.textContent = "TODO " + d.todo + " \u00b7 step " + (at + 1) +
-                        " of " + DEMOS.length;
-  backBtn.disabled = at === 0;
-  nextBtn.disabled = at === DEMOS.length - 1;
+                        " of " + DEMOS.length +
+                        (frames.length > 1
+                           ? "  \u00b7  line " + (fi + 1) + " of " +
+                             frames.length
+                           : "");
+  backBtn.disabled = at === 0 && fi === 0;
+  nextBtn.disabled = at === DEMOS.length - 1 && fi === frames.length - 1;
   buildRail();
 }
 
 function go(n) {
   at = Math.max(0, Math.min(DEMOS.length - 1, n));
+  fi = 0;
   render();
 }
 
-backBtn.addEventListener("click", function () { go(at - 1); });
-nextBtn.addEventListener("click", function () { go(at + 1); });
+/* One press is one changed LINE. Running off the end of a step moves to the
+   next one, so the whole page is a single walk from the first repair to the
+   last dictionary rather than a slideshow of diffs. */
+function stepBy(delta) {
+  var frames = framesOf(DEMOS[at]);
+  var next = fi + delta;
+  if (next < 0) {
+    if (at === 0) { return; }
+    at -= 1;
+    fi = Math.max(0, framesOf(DEMOS[at]).length - 1);
+  } else if (next >= frames.length) {
+    if (at === DEMOS.length - 1) { return; }
+    at += 1;
+    fi = 0;
+  } else {
+    fi = next;
+  }
+  render();
+}
+
+backBtn.addEventListener("click", function () { stepBy(-1); });
+nextBtn.addEventListener("click", function () { stepBy(1); });
 document.addEventListener("keydown", function (e) {
-  if (e.key === "ArrowRight") { go(at + 1); }
-  if (e.key === "ArrowLeft") { go(at - 1); }
+  if (e.key === "ArrowRight") { stepBy(1); }
+  if (e.key === "ArrowLeft") { stepBy(-1); }
+  /* Up and Down jump a whole TODO, for when you know where you are going
+     and do not want to press through eight lines to get there. */
+  if (e.key === "ArrowDown") { go(at + 1); }
+  if (e.key === "ArrowUp") { go(at - 1); }
 });
 
 render();
