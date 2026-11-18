@@ -258,23 +258,23 @@ def explore(health, wood, stone, iron, food, water):
 
 
 def try_craft(item_name, wood, stone, iron, wood_cost, stone_cost, iron_cost=0):
-    """Spend resources on one item if they are all available.
+    """Return True if the materials cover the cost, else False.
 
-    NEW Week 7: iron_cost defaults to 0, because most recipes do not use iron.
+    It reports; it does not spend. The numbers it is handed are copies, so
+    subtracting here would change nothing the caller can see -- which is why
+    every branch below does its own subtraction.
+
+    iron_cost defaults to 0 because most recipes do not use iron.
     Week 4 taught that a recipe needs EVERY ingredient — hence `and`, not `or`.
-    Returns the resources plus a True/False saying whether it worked.
     """
     if wood >= wood_cost and stone >= stone_cost and iron >= iron_cost:
-        wood = wood - wood_cost
-        stone = stone - stone_cost
-        iron = iron - iron_cost
         print("[bold green]    Crafted " + item_name + "![/bold green]")
-        return wood, stone, iron, True
+        return True
 
     print("[red]    Not enough resources for " + item_name + ".[/red]")
     print("[red]    Need " + str(wood_cost) + " wood, " + str(stone_cost)
           + " stone, " + str(iron_cost) + " iron.[/red]")
-    return wood, stone, iron, False
+    return False
 
 
 def craft_menu(wood, stone, iron, has_pickaxe, has_shelter, has_bench):
@@ -293,16 +293,20 @@ def craft_menu(wood, stone, iron, has_pickaxe, has_shelter, has_bench):
             print("[red]    Enter a, b, c, or d.[/red]")
 
     if craft == "a":
-        wood, stone, iron, ok = try_craft("a wooden pickaxe", wood, stone, iron, 3, 2)
-        if ok:
+        if try_craft("a wooden pickaxe", wood, stone, iron, 3, 2):
+            wood = wood - 3
+            stone = stone - 2
             has_pickaxe = True
     elif craft == "b":
-        wood, stone, iron, ok = try_craft("a shelter", wood, stone, iron, 20, 10)
-        if ok:
+        if try_craft("a shelter", wood, stone, iron, 20, 10):
+            wood = wood - 20
+            stone = stone - 10
             has_shelter = True
     elif craft == "c":
-        wood, stone, iron, ok = try_craft("a crafting bench", wood, stone, iron, 10, 5, 2)
-        if ok:
+        if try_craft("a crafting bench", wood, stone, iron, 10, 5, 2):
+            wood = wood - 10
+            stone = stone - 5
+            iron = iron - 2
             has_bench = True
 
     return wood, stone, iron, has_pickaxe, has_shelter, has_bench

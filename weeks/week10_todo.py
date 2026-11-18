@@ -21,7 +21,7 @@
 #   changes is how the game HOLDS what it knows, and almost every line you
 #   write this week removes two.
 #
-#     - a journal that is a real list, not one long string with newlines in it
+#     - a journal that is a real list, not one long string with "|" in it
 #     - one list of everything you have built
 #     - ONE dictionary holding all six resources
 #     - a recipe book that is data instead of code
@@ -70,11 +70,17 @@
 #
 # CANNOT PICTURE WHAT "CHANGE THE SHAPE" MEANS?
 #   Open docs/week10_data.html in a browser -- double-click it. It has ONE
-#   STEP PER TODO BELOW, in this order, and arrow keys walk it. Each step puts
-#   THIS game's real lines side by side -- your Week 9 code on the left, the
-#   same place after that one TODO on the right -- and then names the shape it
-#   was, the shape it becomes, and the one thing the old shape could not do.
-#   That last part is the only reason any of these changes are worth making.
+#   STEP PER TODO BELOW, and the arrow walks it ONE LINE AT A TIME, saying
+#   what each line is for. The left pane is solutions/week09_game.py -- last
+#   week's worked answer, which arrives in your repo this week -- and the
+#   right is the same place after that TODO. Under each pair it names the
+#   shape it was, the shape it becomes, and the one thing the old shape
+#   could not do, which is the only reason any of these changes are worth
+#   making.
+#
+#   Where you solved last week differently, the left pane will not match
+#   your file line for line. That is fine: what changes this week is the
+#   SHAPE, and the shape is the same either way.
 #
 #   So when you are stuck on, say, TODO 6b, open it and press along to 6b.
 #   Nothing in it runs; it is about the shape of your data, the way
@@ -181,7 +187,7 @@
 #                  if not journal:
 #                      return
 #                  print()
-#                  print("[bold]Trail Journal[/bold]")
+#                  print("[bold]Build Log[/bold]")
 #                  for entry in journal:
 #                      print("  " + entry)
 #
@@ -230,9 +236,25 @@
 #          you run it, naming the line. CAPITALS are the convention for a
 #          value that never changes; you already have one in this game.
 #
-# TODO 3c: when a recipe succeeds, append its name:
+# TODO 3c: when a recipe succeeds, append its name.
 #
-#              crafted.append(SHELTER)
+#          WHERE IT GOES: exactly where the flag used to be. Inside the
+#          branch, inside the `if try_craft(...)`, after the subtraction:
+#
+#              if craft == "b":
+#                  if try_craft("a shelter", wood, stone, iron, 20, 10):
+#                      wood = wood - 20
+#                      stone = stone - 10
+#                      crafted.append(SHELTER)     <- was has_shelter = True
+#
+#          THREE branches, THREE appends -- one per recipe, each naming its
+#          own constant. Not one append at the end of the function: the
+#          append has to sit inside the `if`, or you record a craft that
+#          never happened because the materials were short.
+#
+#          (STEP 6 collapses all three into a single line inside try_craft,
+#          once that function knows the recipe name AND the crafted list.
+#          It cannot yet -- it is not handed `crafted` this week.)
 #
 # TODO 3d: everywhere you tested a flag, ask the list instead:
 #

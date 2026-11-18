@@ -160,8 +160,8 @@
 <body>
 
 <h1>Week 10 &mdash; one step per TODO</h1>
-<p class="sub">Your Week 9 game on the left, the same place after this week's
-  TODO on the right. Nothing runs here. Under each pair: the shape it was, the
+<p class="sub">Last week&rsquo;s worked answer on the left, the same place
+  after this week&rsquo;s TODO on the right. Nothing runs here. Under each pair: the shape it was, the
   shape it becomes, and <strong>the one thing the old shape could not
   do</strong> &mdash; which is the only reason the change is worth making.
   <span class="kbd">&larr;</span> <span class="kbd">&rarr;</span> step through
@@ -177,7 +177,12 @@
 
 <div id="stage"></div>
 
-<p class="legend">Line numbers are the real ones in each file &mdash; yours
+<p class="legend"><strong>The left pane is
+  <code>solutions/week09_game.py</code></strong> &mdash; the worked answer
+  that arrives in your repo this week, not your own file. Where you solved
+  something differently, yours will not match line for line, and that is
+  fine: what this week changes is the SHAPE, and the shape is the same
+  either way. Line numbers are the real ones in each file &mdash; yours
   will differ, because you have been personalizing this game since Week 2.
   Find the code by what it says, not by where it sits. A step with nothing on
   the left is code that did not exist last week.</p>
@@ -219,27 +224,27 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 440,
+     "n": 444,
      "t": "max_days = 30",
      "c": false
     },
     {
-     "n": 441,
+     "n": 445,
      "t": "game_over = False",
      "c": false
     },
     {
-     "n": 442,
+     "n": 446,
      "t": "journal = \"\"",
      "c": true
     },
     {
-     "n": 443,
+     "n": 447,
      "t": "has_shelter = False",
      "c": false
     },
     {
-     "n": 444,
+     "n": 448,
      "t": "has_bench = False",
      "c": false
     }
@@ -340,27 +345,27 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 459,
+     "n": 463,
      "t": "    print(\"=\" * 50)",
      "c": false
     },
     {
-     "n": 460,
+     "n": 464,
      "t": "    print(\"[bold]Day \" + str(day) + \" of \" + str(max_days) + \"[/bold]\")",
      "c": false
     },
     {
-     "n": 461,
+     "n": 465,
      "t": "    journal = add_journal(journal, day, \"a new day began\")",
      "c": true
     },
     {
-     "n": 462,
+     "n": 466,
      "t": "    print(\"Health: \" + str(health) + \"  Food: \" + str(food) + \"  Water: \" + str(water))",
      "c": false
     },
     {
-     "n": 463,
+     "n": 467,
      "t": "    print(\"Wood: \" + str(wood) + \"  Stone: \" + str(stone) + \"  Iron: \" + str(iron))",
      "c": false
     }
@@ -478,7 +483,7 @@ var DEMOS = [
     },
     {
      "n": 98,
-     "t": "    print(\"[bold]Trail Journal[/bold]\")",
+     "t": "    print(\"[bold]Build Log[/bold]\")",
      "c": true,
      "why": "The heading. It only runs now when there is something to head."
     },
@@ -560,39 +565,39 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 441,
+     "n": 445,
      "t": "game_over = False",
      "c": false
     },
     {
-     "n": 442,
+     "n": 446,
      "t": "journal = \"\"",
      "c": false
     },
     {
-     "n": 443,
+     "n": 447,
      "t": "has_shelter = False",
      "c": true
     },
     {
-     "n": 444,
+     "n": 448,
      "t": "has_bench = False",
      "c": true
     },
     {
-     "n": 445,
+     "n": 449,
      "t": "has_pickaxe = False",
      "c": true
     }
    ],
    [
     {
-     "n": 447,
+     "n": 451,
      "t": "print()",
      "c": false
     },
     {
-     "n": 448,
+     "n": 452,
      "t": "print(\"You chose \" + mode + \" mode.\")",
      "c": false
     }
@@ -699,71 +704,83 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 296,
-     "t": "        wood, stone, iron, ok = try_craft(\"a wooden pickaxe\", wood, stone, iron, 3, 2)",
-     "c": false
-    },
-    {
      "n": 297,
-     "t": "        if ok:",
+     "t": "            wood = wood - 3",
      "c": false
     },
     {
      "n": 298,
+     "t": "            stone = stone - 2",
+     "c": false
+    },
+    {
+     "n": 299,
      "t": "            has_pickaxe = True",
      "c": true
     },
     {
-     "n": 299,
+     "n": 300,
      "t": "    elif craft == \"b\":",
      "c": false
     },
     {
-     "n": 300,
-     "t": "        wood, stone, iron, ok = try_craft(\"a shelter\", wood, stone, iron, 20, 10)",
-     "c": false
-    },
-    {
      "n": 301,
-     "t": "        if ok:",
+     "t": "        if try_craft(\"a shelter\", wood, stone, iron, 20, 10):",
      "c": false
     },
     {
      "n": 302,
-     "t": "            has_shelter = True",
-     "c": true
+     "t": "            wood = wood - 20",
+     "c": false
     },
     {
      "n": 303,
-     "t": "    elif craft == \"c\":",
+     "t": "            stone = stone - 10",
      "c": false
     },
     {
      "n": 304,
-     "t": "        wood, stone, iron, ok = try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2)",
-     "c": false
+     "t": "            has_shelter = True",
+     "c": true
     },
     {
      "n": 305,
-     "t": "        if ok:",
+     "t": "    elif craft == \"c\":",
      "c": false
     },
     {
      "n": 306,
+     "t": "        if try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2):",
+     "c": false
+    }
+   ],
+   [
+    {
+     "n": 308,
+     "t": "            stone = stone - 5",
+     "c": false
+    },
+    {
+     "n": 309,
+     "t": "            iron = iron - 2",
+     "c": false
+    },
+    {
+     "n": 310,
      "t": "            has_bench = True",
      "c": true
     }
    ],
    [
     {
-     "n": 308,
+     "n": 312,
      "t": "    return wood, stone, iron, has_pickaxe, has_shelter, has_bench",
      "c": false
     }
    ],
    [
     {
-     "n": 311,
+     "n": 315,
      "t": "def eat_and_drink(food, water, health, food_cost=2, water_cost=2):",
      "c": false
     }
@@ -806,7 +823,7 @@ var DEMOS = [
   "now": "append whatever was crafted",
   "buys": "One line now works for every recipe, instead of one line per flag.",
   "note": "Three lines become one, and that one does not name a recipe. Write it in each branch for now &mdash; by TODO 6b all three branches share a single copy inside <code>try_craft</code>, which is where the after column shows it.",
-  "band": "Records the craft by putting its name in the list, whichever\nrecipe it was."
+  "band": "Goes INSIDE each branch, where has_pickaxe = True used to be --\nthree branches, three appends, each naming its own constant. The\npane shows where STEP 6 finally puts it, once try_craft is handed\nthe crafted list. This week it is not, so it stays in the branches."
  },
  {
   "todo": "3d",
@@ -815,56 +832,56 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 333,
+     "n": 337,
      "t": "    print(\"-\" * 50)",
      "c": false
     },
     {
-     "n": 334,
+     "n": 338,
      "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
      "c": false
     }
    ],
    [
     {
-     "n": 336,
+     "n": 340,
      "t": "    if has_shelter:",
      "c": true
     },
     {
-     "n": 337,
+     "n": 341,
      "t": "        print(\"[green]Safe inside the shelter you built.[/green]\")",
      "c": false
     },
     {
-     "n": 338,
+     "n": 342,
      "t": "    elif wood >= 5:",
      "c": false
     }
    ],
    [
     {
-     "n": 414,
+     "n": 418,
      "t": "        print()",
      "c": false
     },
     {
-     "n": 415,
+     "n": 419,
      "t": "        print(\"[bold green]\" + name + \" survived \" + str(max_days) + \" days![/bold green]\")",
      "c": false
     },
     {
-     "n": 416,
+     "n": 420,
      "t": "        if has_shelter and has_bench:",
      "c": true
     },
     {
-     "n": 417,
+     "n": 421,
      "t": "            print(\"[bold green]With a shelter AND a crafting bench \u2014 master crafter![/bold green]\")",
      "c": false
     },
     {
-     "n": 418,
+     "n": 422,
      "t": "        elif has_shelter:",
      "c": false
     }
@@ -943,41 +960,41 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 424,
+     "n": 428,
      "t": "    return False",
      "c": false
     }
    ],
    [
     {
-     "n": 434,
+     "n": 438,
      "t": "title_screen()",
      "c": false
     }
    ],
    [
     {
-     "n": 436,
+     "n": 440,
      "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()",
      "c": true
     },
     {
-     "n": 437,
+     "n": 441,
      "t": "",
      "c": true
     },
     {
-     "n": 438,
+     "n": 442,
      "t": "iron = 0",
      "c": true
     },
     {
-     "n": 439,
+     "n": 443,
      "t": "day = 1",
      "c": false
     },
     {
-     "n": 440,
+     "n": 444,
      "t": "max_days = 30",
      "c": false
     }
@@ -1074,49 +1091,49 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 505,
+     "n": 509,
      "t": "            water = water + gather(\"water\", 3, 7)",
      "c": false
     },
     {
-     "n": 506,
+     "n": 510,
      "t": "        elif choice == \"5\":",
      "c": false
     },
     {
-     "n": 507,
+     "n": 511,
      "t": "            health, wood, stone, iron, food, water = explore(",
      "c": true
     },
     {
-     "n": 508,
+     "n": 512,
      "t": "                health, wood, stone, iron, food, water)",
      "c": true
     },
     {
-     "n": 509,
+     "n": 513,
      "t": "        elif choice == \"6\":",
      "c": false
     },
     {
-     "n": 510,
+     "n": 514,
      "t": "            wood, stone, iron, has_pickaxe, has_shelter, has_bench = craft_menu(",
      "c": true
     },
     {
-     "n": 511,
+     "n": 515,
      "t": "                wood, stone, iron, has_pickaxe, has_shelter, has_bench)",
      "c": true
     }
    ],
    [
     {
-     "n": 513,
+     "n": 517,
      "t": "    food, water, health = eat_and_drink(food, water, health)",
      "c": false
     },
     {
-     "n": 514,
+     "n": 518,
      "t": "    health = night_phase(day, health, has_shelter, wood)",
      "c": false
     }
@@ -1253,7 +1270,7 @@ var DEMOS = [
     },
     {
      "n": 261,
-     "t": "    \"\"\"Spend resources on one item if they are all available.",
+     "t": "    \"\"\"Return True if the materials cover the cost, else False.",
      "c": true
     },
     {
@@ -1263,42 +1280,42 @@ var DEMOS = [
     },
     {
      "n": 263,
-     "t": "    NEW Week 7: iron_cost defaults to 0, because most recipes do not use iron.",
+     "t": "    It reports; it does not spend. The numbers it is handed are copies, so",
      "c": true
     },
     {
      "n": 264,
-     "t": "    Week 4 taught that a recipe needs EVERY ingredient \u2014 hence `and`, not `or`.",
+     "t": "    subtracting here would change nothing the caller can see -- which is why",
      "c": true
     },
     {
      "n": 265,
-     "t": "    Returns the resources plus a True/False saying whether it worked.",
+     "t": "    every branch below does its own subtraction.",
      "c": true
     },
     {
      "n": 266,
-     "t": "    \"\"\"",
+     "t": "",
      "c": true
     },
     {
      "n": 267,
-     "t": "    if wood >= wood_cost and stone >= stone_cost and iron >= iron_cost:",
+     "t": "    iron_cost defaults to 0 because most recipes do not use iron.",
      "c": true
     },
     {
      "n": 268,
-     "t": "        wood = wood - wood_cost",
+     "t": "    Week 4 taught that a recipe needs EVERY ingredient \u2014 hence `and`, not `or`.",
      "c": true
     },
     {
      "n": 269,
-     "t": "        stone = stone - stone_cost",
+     "t": "    \"\"\"",
      "c": true
     },
     {
      "n": 270,
-     "t": "        iron = iron - iron_cost",
+     "t": "    if wood >= wood_cost and stone >= stone_cost and iron >= iron_cost:",
      "c": true
     },
     {
@@ -1308,7 +1325,7 @@ var DEMOS = [
     },
     {
      "n": 272,
-     "t": "        return wood, stone, iron, True",
+     "t": "        return True",
      "c": true
     },
     {
@@ -1333,7 +1350,7 @@ var DEMOS = [
     },
     {
      "n": 277,
-     "t": "    return wood, stone, iron, False",
+     "t": "    return False",
      "c": true
     }
    ]
@@ -1479,70 +1496,90 @@ var DEMOS = [
     },
     {
      "n": 296,
-     "t": "        wood, stone, iron, ok = try_craft(\"a wooden pickaxe\", wood, stone, iron, 3, 2)",
+     "t": "        if try_craft(\"a wooden pickaxe\", wood, stone, iron, 3, 2):",
      "c": true
     },
     {
      "n": 297,
-     "t": "        if ok:",
+     "t": "            wood = wood - 3",
      "c": true
     },
     {
      "n": 298,
-     "t": "            has_pickaxe = True",
+     "t": "            stone = stone - 2",
      "c": true
     },
     {
      "n": 299,
-     "t": "    elif craft == \"b\":",
+     "t": "            has_pickaxe = True",
      "c": true
     },
     {
      "n": 300,
-     "t": "        wood, stone, iron, ok = try_craft(\"a shelter\", wood, stone, iron, 20, 10)",
+     "t": "    elif craft == \"b\":",
      "c": true
     },
     {
      "n": 301,
-     "t": "        if ok:",
+     "t": "        if try_craft(\"a shelter\", wood, stone, iron, 20, 10):",
      "c": true
     },
     {
      "n": 302,
-     "t": "            has_shelter = True",
+     "t": "            wood = wood - 20",
      "c": true
     },
     {
      "n": 303,
-     "t": "    elif craft == \"c\":",
+     "t": "            stone = stone - 10",
      "c": true
     },
     {
      "n": 304,
-     "t": "        wood, stone, iron, ok = try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2)",
+     "t": "            has_shelter = True",
      "c": true
     },
     {
      "n": 305,
-     "t": "        if ok:",
+     "t": "    elif craft == \"c\":",
      "c": true
     },
     {
      "n": 306,
+     "t": "        if try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2):",
+     "c": true
+    },
+    {
+     "n": 307,
+     "t": "            wood = wood - 10",
+     "c": true
+    },
+    {
+     "n": 308,
+     "t": "            stone = stone - 5",
+     "c": true
+    },
+    {
+     "n": 309,
+     "t": "            iron = iron - 2",
+     "c": true
+    },
+    {
+     "n": 310,
      "t": "            has_bench = True",
      "c": true
     }
    ],
    [
     {
-     "n": 308,
+     "n": 312,
      "t": "    return wood, stone, iron, has_pickaxe, has_shelter, has_bench",
      "c": false
     }
    ],
    [
     {
-     "n": 311,
+     "n": 315,
      "t": "def eat_and_drink(food, water, health, food_cost=2, water_cost=2):",
      "c": false
     }
@@ -1800,29 +1837,29 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 392,
+     "n": 396,
      "t": "    print(\"[bold]End of Day \" + str(day) + \"[/bold]\")",
      "c": false
     },
     {
-     "n": 393,
+     "n": 397,
      "t": "    print(\"Health: \" + str(health))",
      "c": false
     },
     {
-     "n": 394,
+     "n": 398,
      "t": "    print(\"Wood: \" + str(wood) + \"  Stone: \" + str(stone) + \"  Iron: \" + str(iron))",
      "c": true
     },
     {
-     "n": 395,
+     "n": 399,
      "t": "    print(\"Food: \" + str(food) + \"  Water: \" + str(water))",
      "c": false
     }
    ],
    [
     {
-     "n": 397,
+     "n": 401,
      "t": "    if health < 30 and food < 5:",
      "c": false
     }
@@ -1920,7 +1957,7 @@ function hi(src) {
 
 function codeHTML(segments, side, band, active) {
   var mark = side === "before" ? "-" : "+";
-  var label = side === "before" ? "Week 9" : "this TODO";
+  var label = side === "before" ? "solutions/week09_game.py" : "this TODO";
   var head = '<div class="tabbar"><span class="fname">game.py</span>' +
              '<span class="meta">' + label + "</span></div>";
   if (!segments) {
@@ -2002,7 +2039,7 @@ function render() {
     '<div class="head"><div class="tn">' + PARTS[d.part] +
       " &middot; TODO " + esc(d.todo) + '</div><h2>' + esc(d.title) + "</h2></div>" +
     '<div class="cols">' +
-      '<div class="col before"><div class="colhead">Before &mdash; your Week 9 game</div>' +
+      '<div class="col before"><div class="colhead">Before &mdash; last week&rsquo;s answer</div>' +
         codeHTML(d.before, "before") + "</div>" +
       '<div class="col after"><div class="colhead">After &mdash; this TODO</div>' +
         codeHTML(d.after, "after", band, active) + "</div>" +
