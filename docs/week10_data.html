@@ -87,6 +87,10 @@
   .after .code .mk { color:#40a25c; }
   .before .code div.ln { background:rgba(138,61,79,.12); }
   .after .code div.ln  { background:rgba(64,162,92,.11); }
+  /* Unchanged code, shown only so the snippet can be located in a file whose
+     line numbers are not ours. Dimmed rather than hidden: it has to be
+     readable enough to search for, and quiet enough not to compete. */
+  .code div.ctx { opacity:.5; }
   .gap { text-align:center; color:#585b70; padding:.15rem 0 !important; }
   /* Syntax colors, identical to the other steppers in this course. */
   .code .kw { color:#cba6f7; } .code .fn { color:#89dceb; }
@@ -154,16 +158,58 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 440,
+     "t": "max_days = 30",
+     "c": false
+    },
+    {
+     "n": 441,
+     "t": "game_over = False",
+     "c": false
+    },
+    {
      "n": 442,
-     "t": "journal = \"\""
+     "t": "journal = \"\"",
+     "c": true
+    },
+    {
+     "n": 443,
+     "t": "has_shelter = False",
+     "c": false
+    },
+    {
+     "n": 444,
+     "t": "has_bench = False",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 452,
+     "t": "max_days = 30",
+     "c": false
+    },
+    {
+     "n": 453,
+     "t": "game_over = False",
+     "c": false
+    },
+    {
      "n": 454,
-     "t": "journal = []"
+     "t": "journal = []",
+     "c": true
+    },
+    {
+     "n": 455,
+     "t": "crafted = []",
+     "c": false
+    },
+    {
+     "n": 456,
+     "t": "",
+     "c": false
     }
    ]
   ],
@@ -180,15 +226,18 @@ var DEMOS = [
    [
     {
      "n": 88,
-     "t": "def add_journal(journal, day, event):"
+     "t": "def add_journal(journal, day, event):",
+     "c": true
     },
     {
      "n": 89,
-     "t": "    \"\"\"Add one entry to the journal string and hand the new journal back.\"\"\""
+     "t": "    \"\"\"Add one entry to the journal string and hand the new journal back.\"\"\"",
+     "c": true
     },
     {
      "n": 90,
-     "t": "    return journal + f\"Day {day}: {event}\\n\""
+     "t": "    return journal + f\"Day {day}: {event}\\n\"",
+     "c": true
     }
    ]
   ],
@@ -196,15 +245,18 @@ var DEMOS = [
    [
     {
      "n": 88,
-     "t": "def add_journal(journal, day, event):"
+     "t": "def add_journal(journal, day, event):",
+     "c": true
     },
     {
      "n": 89,
-     "t": "    \"\"\"Add one entry. No return -- a list is changed in place.\"\"\""
+     "t": "    \"\"\"Add one entry. No return -- a list is changed in place.\"\"\"",
+     "c": true
     },
     {
      "n": 90,
-     "t": "    journal.append(f\"Day {day}: {event}\")"
+     "t": "    journal.append(f\"Day {day}: {event}\")",
+     "c": true
     }
    ]
   ],
@@ -220,16 +272,58 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 459,
+     "t": "    print(\"=\" * 50)",
+     "c": false
+    },
+    {
+     "n": 460,
+     "t": "    print(\"[bold]Day \" + str(day) + \" of \" + str(max_days) + \"[/bold]\")",
+     "c": false
+    },
+    {
      "n": 461,
-     "t": "    journal = add_journal(journal, day, \"a new day began\")"
+     "t": "    journal = add_journal(journal, day, \"a new day began\")",
+     "c": true
+    },
+    {
+     "n": 462,
+     "t": "    print(\"Health: \" + str(health) + \"  Food: \" + str(food) + \"  Water: \" + str(water))",
+     "c": false
+    },
+    {
+     "n": 463,
+     "t": "    print(\"Wood: \" + str(wood) + \"  Stone: \" + str(stone) + \"  Iron: \" + str(iron))",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 469,
+     "t": "    print(\"=\" * 50)",
+     "c": false
+    },
+    {
+     "n": 470,
+     "t": "    print(\"[bold]Day \" + str(day) + \" of \" + str(max_days) + \"[/bold]\")",
+     "c": false
+    },
+    {
      "n": 471,
-     "t": "    add_journal(journal, day, \"a new day began\")"
+     "t": "    add_journal(journal, day, \"a new day began\")",
+     "c": true
+    },
+    {
+     "n": 472,
+     "t": "    show_inventory(player)",
+     "c": false
+    },
+    {
+     "n": 473,
+     "t": "    print(\"=\" * 50)",
+     "c": false
     }
    ]
   ],
@@ -246,31 +340,38 @@ var DEMOS = [
    [
     {
      "n": 93,
-     "t": "def show_journal(journal):"
+     "t": "def show_journal(journal):",
+     "c": true
     },
     {
      "n": 94,
-     "t": "    \"\"\"Print the journal one entry per line.\"\"\""
+     "t": "    \"\"\"Print the journal one entry per line.\"\"\"",
+     "c": true
     },
     {
      "n": 95,
-     "t": "    print()"
+     "t": "    print()",
+     "c": true
     },
     {
      "n": 96,
-     "t": "    print(\"[bold]Trail Journal[/bold]\")"
+     "t": "    print(\"[bold]Trail Journal[/bold]\")",
+     "c": true
     },
     {
      "n": 97,
-     "t": "    for entry in journal.split(\"\\n\"):"
+     "t": "    for entry in journal.split(\"\\n\"):",
+     "c": true
     },
     {
      "n": 98,
-     "t": "        if entry.strip() != \"\":"
+     "t": "        if entry.strip() != \"\":",
+     "c": true
     },
     {
      "n": 99,
-     "t": "            print(\"  \" + entry)"
+     "t": "            print(\"  \" + entry)",
+     "c": true
     }
    ]
   ],
@@ -278,35 +379,43 @@ var DEMOS = [
    [
     {
      "n": 93,
-     "t": "def show_journal(journal):"
+     "t": "def show_journal(journal):",
+     "c": true
     },
     {
      "n": 94,
-     "t": "    \"\"\"Print the journal, newest last.\"\"\""
+     "t": "    \"\"\"Print the journal, newest last.\"\"\"",
+     "c": true
     },
     {
      "n": 95,
-     "t": "    if not journal:"
+     "t": "    if not journal:",
+     "c": true
     },
     {
      "n": 96,
-     "t": "        return"
+     "t": "        return",
+     "c": true
     },
     {
      "n": 97,
-     "t": "    print()"
+     "t": "    print()",
+     "c": true
     },
     {
      "n": 98,
-     "t": "    print(\"[bold]Trail Journal[/bold]\")"
+     "t": "    print(\"[bold]Trail Journal[/bold]\")",
+     "c": true
     },
     {
      "n": 99,
-     "t": "    for entry in journal:"
+     "t": "    for entry in journal:",
+     "c": true
     },
     {
      "n": 100,
-     "t": "        print(\"  \" + entry)"
+     "t": "        print(\"  \" + entry)",
+     "c": true
     }
    ]
   ],
@@ -323,12 +432,34 @@ var DEMOS = [
   "after": [
    [
     {
+     "n": 398,
+     "t": "    # NEW: slicing a list. [-3:] is \"the last three\", and it is safe on a",
+     "c": false
+    },
+    {
+     "n": 399,
+     "t": "    # list of one -- it just hands back the one.",
+     "c": false
+    },
+    {
      "n": 400,
-     "t": "    if journal:"
+     "t": "    if journal:",
+     "c": true
     },
     {
      "n": 401,
-     "t": "        print(\"  [dim]Lately: \" + \"; \".join(journal[-3:]) + \"[/dim]\")"
+     "t": "        print(\"  [dim]Lately: \" + \"; \".join(journal[-3:]) + \"[/dim]\")",
+     "c": true
+    },
+    {
+     "n": 402,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 403,
+     "t": "    if player[\"health\"] < 30 and player[\"food\"] < 5:",
+     "c": false
     }
    ]
   ],
@@ -344,24 +475,68 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 441,
+     "t": "game_over = False",
+     "c": false
+    },
+    {
+     "n": 442,
+     "t": "journal = \"\"",
+     "c": false
+    },
+    {
      "n": 443,
-     "t": "has_shelter = False"
+     "t": "has_shelter = False",
+     "c": true
     },
     {
      "n": 444,
-     "t": "has_bench = False"
+     "t": "has_bench = False",
+     "c": true
     },
     {
      "n": 445,
-     "t": "has_pickaxe = False"
+     "t": "has_pickaxe = False",
+     "c": true
+    },
+    {
+     "n": 446,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 447,
+     "t": "print()",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 453,
+     "t": "game_over = False",
+     "c": false
+    },
+    {
+     "n": 454,
+     "t": "journal = []",
+     "c": false
+    },
+    {
      "n": 455,
-     "t": "crafted = []"
+     "t": "crafted = []",
+     "c": true
+    },
+    {
+     "n": 456,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 457,
+     "t": "print()",
+     "c": false
     }
    ]
   ],
@@ -377,28 +552,98 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 296,
+     "t": "        wood, stone, iron, ok = try_craft(\"a wooden pickaxe\", wood, stone, iron, 3, 2)",
+     "c": false
+    },
+    {
+     "n": 297,
+     "t": "        if ok:",
+     "c": false
+    },
+    {
      "n": 298,
-     "t": "            has_pickaxe = True"
-    }
-   ],
-   [
+     "t": "            has_pickaxe = True",
+     "c": true
+    },
+    {
+     "n": 299,
+     "t": "    elif craft == \"b\":",
+     "c": false
+    },
+    {
+     "n": 300,
+     "t": "        wood, stone, iron, ok = try_craft(\"a shelter\", wood, stone, iron, 20, 10)",
+     "c": false
+    },
+    {
+     "n": 301,
+     "t": "        if ok:",
+     "c": false
+    },
     {
      "n": 302,
-     "t": "            has_shelter = True"
-    }
-   ],
-   [
+     "t": "            has_shelter = True",
+     "c": true
+    },
+    {
+     "n": 303,
+     "t": "    elif craft == \"c\":",
+     "c": false
+    },
+    {
+     "n": 304,
+     "t": "        wood, stone, iron, ok = try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2)",
+     "c": false
+    },
+    {
+     "n": 305,
+     "t": "        if ok:",
+     "c": false
+    },
     {
      "n": 306,
-     "t": "            has_bench = True"
+     "t": "            has_bench = True",
+     "c": true
+    },
+    {
+     "n": 307,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 308,
+     "t": "    return wood, stone, iron, has_pickaxe, has_shelter, has_bench",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 296,
+     "t": "    for resource, needed in costs.items():",
+     "c": false
+    },
+    {
+     "n": 297,
+     "t": "        player[resource] = player[resource] - needed",
+     "c": false
+    },
+    {
      "n": 298,
-     "t": "    crafted.append(item_name)"
+     "t": "    crafted.append(item_name)",
+     "c": true
+    },
+    {
+     "n": 299,
+     "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
+     "c": false
+    },
+    {
+     "n": 300,
+     "t": "    return True",
+     "c": false
     }
    ]
   ],
@@ -414,28 +659,112 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 334,
+     "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
+     "c": false
+    },
+    {
+     "n": 335,
+     "t": "",
+     "c": false
+    },
+    {
      "n": 336,
-     "t": "    if has_shelter:"
+     "t": "    if has_shelter:",
+     "c": true
+    },
+    {
+     "n": 337,
+     "t": "        print(\"[green]Safe inside the shelter you built.[/green]\")",
+     "c": false
+    },
+    {
+     "n": 338,
+     "t": "    elif wood >= 5:",
+     "c": false
     }
    ],
    [
     {
+     "n": 414,
+     "t": "        print()",
+     "c": false
+    },
+    {
+     "n": 415,
+     "t": "        print(\"[bold green]\" + name + \" survived \" + str(max_days) + \" days![/bold green]\")",
+     "c": false
+    },
+    {
      "n": 416,
-     "t": "        if has_shelter and has_bench:"
+     "t": "        if has_shelter and has_bench:",
+     "c": true
+    },
+    {
+     "n": 417,
+     "t": "            print(\"[bold green]With a shelter AND a crafting bench \u2014 master crafter![/bold green]\")",
+     "c": false
+    },
+    {
+     "n": 418,
+     "t": "        elif has_shelter:",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 342,
+     "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
+     "c": false
+    },
+    {
+     "n": 343,
+     "t": "",
+     "c": false
+    },
+    {
      "n": 344,
-     "t": "    if \"shelter\" in crafted:"
+     "t": "    if \"shelter\" in crafted:",
+     "c": true
+    },
+    {
+     "n": 345,
+     "t": "        print(\"[green]Safe inside the shelter you built.[/green]\")",
+     "c": false
+    },
+    {
+     "n": 346,
+     "t": "    elif player[\"wood\"] >= 5:",
+     "c": false
     }
    ],
    [
     {
+     "n": 418,
+     "t": "        print()",
+     "c": false
+    },
+    {
+     "n": 419,
+     "t": "        print(\"[bold green]\" + name + \" survived \" + str(max_days) + \" days![/bold green]\")",
+     "c": false
+    },
+    {
      "n": 420,
-     "t": "        if \"shelter\" in crafted and \"bench\" in crafted:"
+     "t": "        if \"shelter\" in crafted and \"bench\" in crafted:",
+     "c": true
+    },
+    {
+     "n": 421,
+     "t": "            print(\"[bold green]With a shelter AND a crafting bench \u2014 master crafter![/bold green]\")",
+     "c": false
+    },
+    {
+     "n": 422,
+     "t": "        elif \"shelter\" in crafted:",
+     "c": false
     }
    ]
   ],
@@ -451,52 +780,103 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 434,
+     "t": "title_screen()",
+     "c": false
+    },
+    {
+     "n": 435,
+     "t": "",
+     "c": false
+    },
+    {
      "n": 436,
-     "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()"
+     "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()",
+     "c": true
     },
     {
      "n": 437,
-     "t": ""
+     "t": "",
+     "c": true
     },
     {
      "n": 438,
-     "t": "iron = 0"
+     "t": "iron = 0",
+     "c": true
+    },
+    {
+     "n": 439,
+     "t": "day = 1",
+     "c": false
+    },
+    {
+     "n": 440,
+     "t": "max_days = 30",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 440,
+     "t": "# Six separate variables become one dictionary. Everything that used to",
+     "c": false
+    },
+    {
+     "n": 441,
+     "t": "# be passed around six at a time is now passed around once.",
+     "c": false
+    },
+    {
      "n": 442,
-     "t": "player = {"
+     "t": "player = {",
+     "c": true
     },
     {
      "n": 443,
-     "t": "    \"health\": health,"
+     "t": "    \"health\": health,",
+     "c": true
     },
     {
      "n": 444,
-     "t": "    \"wood\": wood,"
+     "t": "    \"wood\": wood,",
+     "c": true
     },
     {
      "n": 445,
-     "t": "    \"stone\": stone,"
+     "t": "    \"stone\": stone,",
+     "c": true
     },
     {
      "n": 446,
-     "t": "    \"iron\": 0,"
+     "t": "    \"iron\": 0,",
+     "c": true
     },
     {
      "n": 447,
-     "t": "    \"food\": food,"
+     "t": "    \"food\": food,",
+     "c": true
     },
     {
      "n": 448,
-     "t": "    \"water\": water,"
+     "t": "    \"water\": water,",
+     "c": true
     },
     {
      "n": 449,
-     "t": "}"
+     "t": "}",
+     "c": true
+    },
+    {
+     "n": 450,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 451,
+     "t": "day = 1",
+     "c": false
     }
    ]
   ],
@@ -512,36 +892,88 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 510,
-     "t": "            wood, stone, iron, has_pickaxe, has_shelter, has_bench = craft_menu("
+     "n": 505,
+     "t": "            water = water + gather(\"water\", 3, 7)",
+     "c": false
     },
     {
-     "n": 511,
-     "t": "                wood, stone, iron, has_pickaxe, has_shelter, has_bench)"
-    }
-   ],
-   [
+     "n": 506,
+     "t": "        elif choice == \"5\":",
+     "c": false
+    },
     {
      "n": 507,
-     "t": "            health, wood, stone, iron, food, water = explore("
+     "t": "            health, wood, stone, iron, food, water = explore(",
+     "c": true
     },
     {
      "n": 508,
-     "t": "                health, wood, stone, iron, food, water)"
+     "t": "                health, wood, stone, iron, food, water)",
+     "c": true
+    },
+    {
+     "n": 509,
+     "t": "        elif choice == \"6\":",
+     "c": false
+    },
+    {
+     "n": 510,
+     "t": "            wood, stone, iron, has_pickaxe, has_shelter, has_bench = craft_menu(",
+     "c": true
+    },
+    {
+     "n": 511,
+     "t": "                wood, stone, iron, has_pickaxe, has_shelter, has_bench)",
+     "c": true
+    },
+    {
+     "n": 512,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 513,
+     "t": "    food, water, health = eat_and_drink(food, water, health)",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
-     "n": 518,
-     "t": "            craft_menu(player, crafted)"
-    }
-   ],
-   [
+     "n": 514,
+     "t": "            player[\"water\"] = player[\"water\"] + gather(\"water\", 3, 7)",
+     "c": false
+    },
+    {
+     "n": 515,
+     "t": "        elif choice == \"5\":",
+     "c": false
+    },
     {
      "n": 516,
-     "t": "            explore(player)"
+     "t": "            explore(player)",
+     "c": true
+    },
+    {
+     "n": 517,
+     "t": "        elif choice == \"6\":",
+     "c": false
+    },
+    {
+     "n": 518,
+     "t": "            craft_menu(player, crafted)",
+     "c": true
+    },
+    {
+     "n": 519,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 520,
+     "t": "    eat_and_drink(player)",
+     "c": false
     }
    ]
   ],
@@ -558,24 +990,49 @@ var DEMOS = [
   "after": [
    [
     {
+     "n": 101,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 102,
+     "t": "",
+     "c": false
+    },
+    {
      "n": 103,
-     "t": "RECIPES = {"
+     "t": "RECIPES = {",
+     "c": true
     },
     {
      "n": 104,
-     "t": "    \"pickaxe\": {\"wood\": 3, \"stone\": 2},"
+     "t": "    \"pickaxe\": {\"wood\": 3, \"stone\": 2},",
+     "c": true
     },
     {
      "n": 105,
-     "t": "    \"shelter\": {\"wood\": 20, \"stone\": 10},"
+     "t": "    \"shelter\": {\"wood\": 20, \"stone\": 10},",
+     "c": true
     },
     {
      "n": 106,
-     "t": "    \"bench\":   {\"wood\": 10, \"stone\": 5, \"iron\": 2},"
+     "t": "    \"bench\":   {\"wood\": 10, \"stone\": 5, \"iron\": 2},",
+     "c": true
     },
     {
      "n": 107,
-     "t": "}"
+     "t": "}",
+     "c": true
+    },
+    {
+     "n": 108,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 109,
+     "t": "",
+     "c": false
     }
    ]
   ],
@@ -592,75 +1049,93 @@ var DEMOS = [
    [
     {
      "n": 260,
-     "t": "def try_craft(item_name, wood, stone, iron, wood_cost, stone_cost, iron_cost=0):"
+     "t": "def try_craft(item_name, wood, stone, iron, wood_cost, stone_cost, iron_cost=0):",
+     "c": true
     },
     {
      "n": 261,
-     "t": "    \"\"\"Spend resources on one item if they are all available."
+     "t": "    \"\"\"Spend resources on one item if they are all available.",
+     "c": true
     },
     {
      "n": 262,
-     "t": ""
+     "t": "",
+     "c": true
     },
     {
      "n": 263,
-     "t": "    NEW Week 7: iron_cost defaults to 0, because most recipes do not use iron."
+     "t": "    NEW Week 7: iron_cost defaults to 0, because most recipes do not use iron.",
+     "c": true
     },
     {
      "n": 264,
-     "t": "    Week 4 taught that a recipe needs EVERY ingredient \u2014 hence `and`, not `or`."
+     "t": "    Week 4 taught that a recipe needs EVERY ingredient \u2014 hence `and`, not `or`.",
+     "c": true
     },
     {
      "n": 265,
-     "t": "    Returns the resources plus a True/False saying whether it worked."
+     "t": "    Returns the resources plus a True/False saying whether it worked.",
+     "c": true
     },
     {
      "n": 266,
-     "t": "    \"\"\""
+     "t": "    \"\"\"",
+     "c": true
     },
     {
      "n": 267,
-     "t": "    if wood >= wood_cost and stone >= stone_cost and iron >= iron_cost:"
+     "t": "    if wood >= wood_cost and stone >= stone_cost and iron >= iron_cost:",
+     "c": true
     },
     {
      "n": 268,
-     "t": "        wood = wood - wood_cost"
+     "t": "        wood = wood - wood_cost",
+     "c": true
     },
     {
      "n": 269,
-     "t": "        stone = stone - stone_cost"
+     "t": "        stone = stone - stone_cost",
+     "c": true
     },
     {
      "n": 270,
-     "t": "        iron = iron - iron_cost"
+     "t": "        iron = iron - iron_cost",
+     "c": true
     },
     {
      "n": 271,
-     "t": "        print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")"
+     "t": "        print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
+     "c": true
     },
     {
      "n": 272,
-     "t": "        return wood, stone, iron, True"
+     "t": "        return wood, stone, iron, True",
+     "c": true
     },
     {
      "n": 273,
-     "t": ""
+     "t": "",
+     "c": true
     },
     {
      "n": 274,
-     "t": "    print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")"
+     "t": "    print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")",
+     "c": true
     },
     {
      "n": 275,
-     "t": "    print(\"[red]    Need \" + str(wood_cost) + \" wood, \" + str(stone_cost)"
+     "t": "    print(\"[red]    Need \" + str(wood_cost) + \" wood, \" + str(stone_cost)",
+     "c": true
     },
     {
      "n": 276,
-     "t": "          + \" stone, \" + str(iron_cost) + \" iron.[/red]\")"
+     "t": "          + \" stone, \" + str(iron_cost) + \" iron.[/red]\")",
+     "c": true
     },
     {
      "n": 277,
-     "t": "    return wood, stone, iron, False"
+     "t": "    return wood, stone, iron, False",
+     "c": true
     }
    ]
   ],
@@ -668,75 +1143,93 @@ var DEMOS = [
    [
     {
      "n": 283,
-     "t": "def try_craft(player, crafted, item_name):"
+     "t": "def try_craft(player, crafted, item_name):",
+     "c": true
     },
     {
      "n": 284,
-     "t": "    \"\"\"Spend resources on one item if every ingredient is available.\"\"\""
+     "t": "    \"\"\"Spend resources on one item if every ingredient is available.\"\"\"",
+     "c": true
     },
     {
      "n": 285,
-     "t": "    costs = RECIPES[item_name]"
+     "t": "    costs = RECIPES[item_name]",
+     "c": true
     },
     {
      "n": 286,
-     "t": ""
+     "t": "",
+     "c": true
     },
     {
      "n": 287,
-     "t": "    # Week 4 taught that a recipe needs EVERY ingredient. .get() hands back 0"
+     "t": "    # Week 4 taught that a recipe needs EVERY ingredient. .get() hands back 0",
+     "c": true
     },
     {
      "n": 288,
-     "t": "    # for a resource the player has never held, instead of raising KeyError."
+     "t": "    # for a resource the player has never held, instead of raising KeyError.",
+     "c": true
     },
     {
      "n": 289,
-     "t": "    for resource, needed in costs.items():"
+     "t": "    for resource, needed in costs.items():",
+     "c": true
     },
     {
      "n": 290,
-     "t": "        if player.get(resource, 0) < needed:"
+     "t": "        if player.get(resource, 0) < needed:",
+     "c": true
     },
     {
      "n": 291,
-     "t": "            print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")"
+     "t": "            print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")",
+     "c": true
     },
     {
      "n": 292,
-     "t": "            print(\"[red]    Need \" + str(needed) + \" \" + resource"
+     "t": "            print(\"[red]    Need \" + str(needed) + \" \" + resource",
+     "c": true
     },
     {
      "n": 293,
-     "t": "                  + \", have \" + str(player.get(resource, 0)) + \".[/red]\")"
+     "t": "                  + \", have \" + str(player.get(resource, 0)) + \".[/red]\")",
+     "c": true
     },
     {
      "n": 294,
-     "t": "            return False"
+     "t": "            return False",
+     "c": true
     },
     {
      "n": 295,
-     "t": ""
+     "t": "",
+     "c": true
     },
     {
      "n": 296,
-     "t": "    for resource, needed in costs.items():"
+     "t": "    for resource, needed in costs.items():",
+     "c": true
     },
     {
      "n": 297,
-     "t": "        player[resource] = player[resource] - needed"
+     "t": "        player[resource] = player[resource] - needed",
+     "c": true
     },
     {
      "n": 298,
-     "t": "    crafted.append(item_name)"
+     "t": "    crafted.append(item_name)",
+     "c": true
     },
     {
      "n": 299,
-     "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")"
+     "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
+     "c": true
     },
     {
      "n": 300,
-     "t": "    return True"
+     "t": "    return True",
+     "c": true
     }
    ]
   ],
@@ -752,80 +1245,138 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 293,
+     "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
+     "c": false
+    },
+    {
+     "n": 294,
+     "t": "",
+     "c": false
+    },
+    {
      "n": 295,
-     "t": "    if craft == \"a\":"
+     "t": "    if craft == \"a\":",
+     "c": true
     },
     {
      "n": 296,
-     "t": "        wood, stone, iron, ok = try_craft(\"a wooden pickaxe\", wood, stone, iron, 3, 2)"
+     "t": "        wood, stone, iron, ok = try_craft(\"a wooden pickaxe\", wood, stone, iron, 3, 2)",
+     "c": true
     },
     {
      "n": 297,
-     "t": "        if ok:"
+     "t": "        if ok:",
+     "c": true
     },
     {
      "n": 298,
-     "t": "            has_pickaxe = True"
+     "t": "            has_pickaxe = True",
+     "c": true
     },
     {
      "n": 299,
-     "t": "    elif craft == \"b\":"
+     "t": "    elif craft == \"b\":",
+     "c": true
     },
     {
      "n": 300,
-     "t": "        wood, stone, iron, ok = try_craft(\"a shelter\", wood, stone, iron, 20, 10)"
+     "t": "        wood, stone, iron, ok = try_craft(\"a shelter\", wood, stone, iron, 20, 10)",
+     "c": true
     },
     {
      "n": 301,
-     "t": "        if ok:"
+     "t": "        if ok:",
+     "c": true
     },
     {
      "n": 302,
-     "t": "            has_shelter = True"
+     "t": "            has_shelter = True",
+     "c": true
     },
     {
      "n": 303,
-     "t": "    elif craft == \"c\":"
+     "t": "    elif craft == \"c\":",
+     "c": true
     },
     {
      "n": 304,
-     "t": "        wood, stone, iron, ok = try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2)"
+     "t": "        wood, stone, iron, ok = try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2)",
+     "c": true
     },
     {
      "n": 305,
-     "t": "        if ok:"
+     "t": "        if ok:",
+     "c": true
     },
     {
      "n": 306,
-     "t": "            has_bench = True"
+     "t": "            has_bench = True",
+     "c": true
+    },
+    {
+     "n": 307,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 308,
+     "t": "    return wood, stone, iron, has_pickaxe, has_shelter, has_bench",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 314,
+     "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
+     "c": false
+    },
+    {
+     "n": 315,
+     "t": "",
+     "c": false
+    },
+    {
      "n": 316,
-     "t": "    if craft == \"a\":"
+     "t": "    if craft == \"a\":",
+     "c": true
     },
     {
      "n": 317,
-     "t": "        try_craft(player, crafted, \"pickaxe\")"
+     "t": "        try_craft(player, crafted, \"pickaxe\")",
+     "c": true
     },
     {
      "n": 318,
-     "t": "    elif craft == \"b\":"
+     "t": "    elif craft == \"b\":",
+     "c": true
     },
     {
      "n": 319,
-     "t": "        try_craft(player, crafted, \"shelter\")"
+     "t": "        try_craft(player, crafted, \"shelter\")",
+     "c": true
     },
     {
      "n": 320,
-     "t": "    elif craft == \"c\":"
+     "t": "    elif craft == \"c\":",
+     "c": true
     },
     {
      "n": 321,
-     "t": "        try_craft(player, crafted, \"bench\")"
+     "t": "        try_craft(player, crafted, \"bench\")",
+     "c": true
+    },
+    {
+     "n": 322,
+     "t": "def eat_and_drink(player, food_cost=2, water_cost=2):",
+     "c": false
+    },
+    {
+     "n": 323,
+     "t": "    \"\"\"Week 4 eating, with the daily costs as default parameters.\"\"\"",
+     "c": false
     }
    ]
   ],
@@ -842,20 +1393,44 @@ var DEMOS = [
   "after": [
    [
     {
+     "n": 123,
+     "t": "    # A DICT comprehension. Same shape as the list one, but it builds",
+     "c": false
+    },
+    {
+     "n": 124,
+     "t": "    # key: value pairs, so `low` is itself a little dictionary.",
+     "c": false
+    },
+    {
      "n": 125,
-     "t": "    low = {name: amount for name, amount in player.items()"
+     "t": "    low = {name: amount for name, amount in player.items()",
+     "c": true
     },
     {
      "n": 126,
-     "t": "           if name != \"health\" and amount < 5}"
+     "t": "           if name != \"health\" and amount < 5}",
+     "c": true
     },
     {
      "n": 127,
-     "t": "    if low:"
+     "t": "    if low:",
+     "c": true
     },
     {
      "n": 128,
-     "t": "        print(\"  [yellow]Running low: \" + \", \".join(low) + \"[/yellow]\")"
+     "t": "        print(\"  [yellow]Running low: \" + \", \".join(low) + \"[/yellow]\")",
+     "c": true
+    },
+    {
+     "n": 129,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 130,
+     "t": "",
+     "c": false
     }
    ]
   ],
@@ -871,48 +1446,98 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 112,
+     "t": "    print(f\"  {'Health:':<12} {health:>5}\")",
+     "c": false
+    },
+    {
+     "n": 113,
+     "t": "    print(\"-\" * 40)",
+     "c": false
+    },
+    {
      "n": 114,
-     "t": "    print(\"[bold cyan]Resources:[/bold cyan]\")"
+     "t": "    print(\"[bold cyan]Resources:[/bold cyan]\")",
+     "c": true
     },
     {
      "n": 115,
-     "t": "    print(f\"  {'Wood:':<12} {wood:>5}\")"
+     "t": "    print(f\"  {'Wood:':<12} {wood:>5}\")",
+     "c": true
     },
     {
      "n": 116,
-     "t": "    print(f\"  {'Stone:':<12} {stone:>5}\")"
+     "t": "    print(f\"  {'Stone:':<12} {stone:>5}\")",
+     "c": true
     },
     {
      "n": 117,
-     "t": "    print(f\"  {'Iron:':<12} {iron:>5}\")"
+     "t": "    print(f\"  {'Iron:':<12} {iron:>5}\")",
+     "c": true
     },
     {
      "n": 118,
-     "t": "    print(f\"  {'Food:':<12} {food:>5}\")"
+     "t": "    print(f\"  {'Food:':<12} {food:>5}\")",
+     "c": true
     },
     {
      "n": 119,
-     "t": "    print(f\"  {'Water:':<12} {water:>5}\")"
+     "t": "    print(f\"  {'Water:':<12} {water:>5}\")",
+     "c": true
+    },
+    {
+     "n": 120,
+     "t": "    print(\"-\" * 40)",
+     "c": false
+    },
+    {
+     "n": 121,
+     "t": "    print(\"Total resources: \" + str(total_resources))",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 116,
+     "t": "    separate variables could never do.",
+     "c": false
+    },
+    {
+     "n": 117,
+     "t": "    \"\"\"",
+     "c": false
+    },
+    {
      "n": 118,
-     "t": "    for name, amount in player.items():"
+     "t": "    for name, amount in player.items():",
+     "c": true
     },
     {
      "n": 119,
-     "t": "        if name == \"health\":"
+     "t": "        if name == \"health\":",
+     "c": true
     },
     {
      "n": 120,
-     "t": "            continue"
+     "t": "            continue",
+     "c": true
     },
     {
      "n": 121,
-     "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")"
+     "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")",
+     "c": true
+    },
+    {
+     "n": 122,
+     "t": "",
+     "c": false
+    },
+    {
+     "n": 123,
+     "t": "    # A DICT comprehension. Same shape as the list one, but it builds",
+     "c": false
     }
    ]
   ],
@@ -928,16 +1553,58 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 392,
+     "t": "    print(\"[bold]End of Day \" + str(day) + \"[/bold]\")",
+     "c": false
+    },
+    {
+     "n": 393,
+     "t": "    print(\"Health: \" + str(health))",
+     "c": false
+    },
+    {
      "n": 394,
-     "t": "    print(\"Wood: \" + str(wood) + \"  Stone: \" + str(stone) + \"  Iron: \" + str(iron))"
+     "t": "    print(\"Wood: \" + str(wood) + \"  Stone: \" + str(stone) + \"  Iron: \" + str(iron))",
+     "c": true
+    },
+    {
+     "n": 395,
+     "t": "    print(\"Food: \" + str(food) + \"  Water: \" + str(water))",
+     "c": false
+    },
+    {
+     "n": 396,
+     "t": "",
+     "c": false
     }
    ]
   ],
   "after": [
    [
     {
+     "n": 145,
+     "t": "    print(\"-\" * 40)",
+     "c": false
+    },
+    {
+     "n": 146,
+     "t": "    print(\"[bold cyan]Resources:[/bold cyan]\")",
+     "c": false
+    },
+    {
      "n": 147,
-     "t": "    show_inventory(player)"
+     "t": "    show_inventory(player)",
+     "c": true
+    },
+    {
+     "n": 148,
+     "t": "    print(\"-\" * 40)",
+     "c": false
+    },
+    {
+     "n": 149,
+     "t": "    print(\"Total resources: \" + str(total_resources))",
+     "c": false
     }
    ]
   ],
@@ -1004,8 +1671,13 @@ function codeHTML(segments, side) {
   segments.forEach(function (seg, i) {
     if (i) { out.push('<div class="gap">&middot; &middot; &middot;</div>'); }
     seg.forEach(function (ln) {
-      out.push('<div class="ln"><span class="n">' + ln.n + "</span>" +
-               '<span class="mk">' + mark + "</span>" + hi(ln.t) + "</div>");
+      /* A context line is real code from the same file, shown only so the
+         snippet can be found. It gets no change mark and no tint, so the
+         eye goes straight to the lines that actually changed. */
+      var cls = ln.c ? "ln" : "ctx";
+      var m = ln.c ? mark : " ";
+      out.push('<div class="' + cls + '"><span class="n">' + ln.n + "</span>" +
+               '<span class="mk">' + m + "</span>" + hi(ln.t) + "</div>");
     });
   });
   return '<div class="pane">' + head +
