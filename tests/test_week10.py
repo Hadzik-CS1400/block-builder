@@ -109,14 +109,23 @@ def output_lines():
     return out.splitlines()
 
 
-def dict_literals(tree, min_keys=1, values_are_dicts=False):
-    """Dictionary literals, optionally ones whose values are themselves dicts."""
+def dict_literals(tree, min_keys=1, values_are_dicts=False, allow_names=False):
+    """Dictionary literals, optionally ones whose values are themselves dicts.
+
+    `allow_names` counts a key that is a NAME as well as one that is a string
+    literal. STEP 3 has students pull the recipe names out into constants --
+    PICKAXE = "pickaxe" -- so that a mistyped name is a NameError instead of
+    a silent False. Those constants then key RECIPES, and a check that only
+    recognised string literals would have told a student who did exactly what
+    was asked that their recipe book "is still code rather than data".
+    """
     found = []
     for node in ast.walk(tree):
         if not isinstance(node, ast.Dict):
             continue
         keys = [k for k in node.keys
-                if isinstance(k, ast.Constant) and isinstance(k.value, str)]
+                if (isinstance(k, ast.Constant) and isinstance(k.value, str))
+                or (allow_names and isinstance(k, ast.Name))]
         if len(keys) < min_keys:
             continue
         if values_are_dicts:
@@ -258,15 +267,16 @@ def test_resources_and_recipes_are_dictionaries():
             '    player["wood"] = player["wood"] + 3'
         )
 
-    nested = dict_literals(tree, min_keys=2, values_are_dicts=True)
+    nested = dict_literals(tree, min_keys=2, values_are_dicts=True,
+                           allow_names=True)
     if not nested:
         fail(
             "The recipe book is still code rather than data. STEP 6 writes "
             "the recipes as a dictionary whose values are themselves "
             "dictionaries:\n"
             '    RECIPES = {\n'
-            '        "pickaxe": {"wood": 3, "stone": 2},\n'
-            '        "shelter": {"wood": 20, "stone": 10},\n'
+            '        PICKAXE: {"wood": 3, "stone": 2},\n'
+            '        SHELTER: {"wood": 20, "stone": 10},\n'
             '    }\n'
             "Then try_craft looks the costs up instead of taking one "
             "parameter per ingredient."

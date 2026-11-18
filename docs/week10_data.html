@@ -205,30 +205,30 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 452,
+     "n": 463,
      "t": "max_days = 30",
      "c": false
     },
     {
-     "n": 453,
+     "n": 464,
      "t": "game_over = False",
      "c": false
     },
     {
-     "n": 454,
+     "n": 465,
      "t": "journal = []",
      "c": true
-    },
-    {
-     "n": 455,
-     "t": "crafted = []",
-     "c": false
     }
    ],
    [
     {
-     "n": 457,
+     "n": 468,
      "t": "print()",
+     "c": false
+    },
+    {
+     "n": 469,
+     "t": "print(\"You chose \" + mode + \" mode.\")",
      "c": false
     }
    ]
@@ -321,27 +321,27 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 469,
+     "n": 480,
      "t": "    print(\"=\" * 50)",
      "c": false
     },
     {
-     "n": 470,
+     "n": 481,
      "t": "    print(\"[bold]Day \" + str(day) + \" of \" + str(max_days) + \"[/bold]\")",
      "c": false
     },
     {
-     "n": 471,
+     "n": 482,
      "t": "    add_journal(journal, day, \"a new day began\")",
      "c": true
     },
     {
-     "n": 472,
+     "n": 483,
      "t": "    show_inventory(player)",
      "c": false
     },
     {
-     "n": 473,
+     "n": 484,
      "t": "    print(\"=\" * 50)",
      "c": false
     }
@@ -452,36 +452,36 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 395,
+     "n": 406,
      "t": "    print(f\"  {'Health:':<12} {player['health']:>5}\")",
      "c": false
     },
     {
-     "n": 396,
+     "n": 407,
      "t": "    show_inventory(player)",
      "c": false
     }
    ],
    [
     {
-     "n": 400,
+     "n": 411,
      "t": "    if journal:",
      "c": true
     },
     {
-     "n": 401,
+     "n": 412,
      "t": "        print(\"  [dim]Lately: \" + \"; \".join(journal[-3:]) + \"[/dim]\")",
      "c": true
     }
    ],
    [
     {
-     "n": 403,
+     "n": 414,
      "t": "    if player[\"health\"] < 30 and player[\"food\"] < 5:",
      "c": false
     },
     {
-     "n": 404,
+     "n": 415,
      "t": "        print(\"[bold red]CRITICAL: Low health AND low food![/bold red]\")",
      "c": false
     }
@@ -540,29 +540,29 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 453,
+     "n": 464,
      "t": "game_over = False",
      "c": false
     },
     {
-     "n": 454,
+     "n": 465,
      "t": "journal = []",
      "c": false
     },
     {
-     "n": 455,
+     "n": 466,
      "t": "crafted = []",
      "c": true
     }
    ],
    [
     {
-     "n": 457,
+     "n": 468,
      "t": "print()",
      "c": false
     },
     {
-     "n": 458,
+     "n": 469,
      "t": "print(\"You chose \" + mode + \" mode.\")",
      "c": false
     }
@@ -575,6 +575,59 @@ var DEMOS = [
  },
  {
   "todo": "3b",
+  "part": "A",
+  "title": "Name the three recipes once, near the top",
+  "before": null,
+  "after": [
+   [
+    {
+     "n": 99,
+     "t": "    for entry in journal:",
+     "c": false
+    },
+    {
+     "n": 100,
+     "t": "        print(\"  \" + entry)",
+     "c": false
+    }
+   ],
+   [
+    {
+     "n": 110,
+     "t": "PICKAXE = \"pickaxe\"",
+     "c": true
+    },
+    {
+     "n": 111,
+     "t": "SHELTER = \"shelter\"",
+     "c": true
+    },
+    {
+     "n": 112,
+     "t": "BENCH = \"bench\"",
+     "c": true
+    }
+   ],
+   [
+    {
+     "n": 121,
+     "t": "def show_inventory(player):",
+     "c": false
+    },
+    {
+     "n": 122,
+     "t": "    \"\"\"The ONE place that prints the resources (STEP 7).",
+     "c": false
+    }
+   ]
+  ],
+  "was": "the name typed as a bare string wherever it was needed",
+  "now": "three constants, each written once",
+  "buys": "A mistyped name becomes an error instead of silence. <code>SHELTER</code> spelled wrong is a NameError on the first run; <code>\"sheltr\"</code> is just never in the list.",
+  "note": "<code>if \"sheltr\" in crafted:</code> is perfectly good Python. It is simply always <code>False</code>, so the shelter never works and <strong>nothing points at the line that caused it</strong> &mdash; you would go hunting in night_phase. CAPITALS are the convention for a value that never changes, and you already have one in this game."
+ },
+ {
+  "todo": "3c",
   "part": "A",
   "title": "When a recipe succeeds, append its name",
   "before": [
@@ -653,28 +706,32 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 296,
-     "t": "    for resource, needed in costs.items():",
+     "n": 292,
+     "t": "        player[\"stone\"] = player[\"stone\"] + random.randint(1, 3)",
      "c": false
     },
     {
-     "n": 297,
-     "t": "        player[resource] = player[resource] - needed",
+     "n": 293,
+     "t": "        print(\"[green]  A quiet day. Gathered some wood and stone.[/green]\")",
      "c": false
-    },
+    }
+   ],
+   [
     {
-     "n": 298,
+     "n": 309,
      "t": "    crafted.append(item_name)",
      "c": true
-    },
+    }
+   ],
+   [
     {
-     "n": 299,
-     "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
+     "n": 312,
+     "t": "def craft_menu(player, crafted):",
      "c": false
     },
     {
-     "n": 300,
-     "t": "    return True",
+     "n": 313,
+     "t": "    \"\"\"The Week 6 crafting menu, now driven by the RECIPES dict.\"\"\"",
      "c": false
     }
    ]
@@ -685,7 +742,7 @@ var DEMOS = [
   "note": "Three lines become one, and that one does not name a recipe. Write it in each branch for now &mdash; by TODO 6b all three branches share a single copy inside <code>try_craft</code>, which is where the after column shows it."
  },
  {
-  "todo": "3c",
+  "todo": "3d",
   "part": "A",
   "title": "Ask the list instead of testing a flag",
   "before": [
@@ -749,57 +806,57 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 341,
+     "n": 352,
      "t": "    print(\"-\" * 50)",
      "c": false
     },
     {
-     "n": 342,
+     "n": 353,
      "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
      "c": false
     }
    ],
    [
     {
-     "n": 344,
-     "t": "    if \"shelter\" in crafted:",
+     "n": 355,
+     "t": "    if SHELTER in crafted:",
      "c": true
     },
     {
-     "n": 345,
+     "n": 356,
      "t": "        print(\"[green]Safe inside the shelter you built.[/green]\")",
      "c": false
     },
     {
-     "n": 346,
+     "n": 357,
      "t": "    elif player[\"wood\"] >= 5:",
      "c": false
     }
    ],
    [
     {
-     "n": 418,
+     "n": 429,
      "t": "        print()",
      "c": false
     },
     {
-     "n": 419,
+     "n": 430,
      "t": "        print(\"[bold green]\" + name + \" survived \" + str(max_days) + \" days![/bold green]\")",
      "c": false
     },
     {
-     "n": 420,
-     "t": "        if \"shelter\" in crafted and \"bench\" in crafted:",
+     "n": 431,
+     "t": "        if SHELTER in crafted and BENCH in crafted:",
      "c": true
     },
     {
-     "n": 421,
+     "n": 432,
      "t": "            print(\"[bold green]With a shelter AND a crafting bench \u2014 master crafter![/bold green]\")",
      "c": false
     },
     {
-     "n": 422,
-     "t": "        elif \"shelter\" in crafted:",
+     "n": 433,
+     "t": "        elif SHELTER in crafted:",
      "c": false
     }
    ]
@@ -859,68 +916,68 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 436,
+     "n": 447,
      "t": "title_screen()",
      "c": false
     }
    ],
    [
     {
-     "n": 438,
+     "n": 449,
      "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()",
      "c": false
     }
    ],
    [
     {
-     "n": 442,
+     "n": 453,
      "t": "player = {",
      "c": true
     },
     {
-     "n": 443,
+     "n": 454,
      "t": "    \"health\": health,",
      "c": true
     },
     {
-     "n": 444,
+     "n": 455,
      "t": "    \"wood\": wood,",
      "c": true
     },
     {
-     "n": 445,
+     "n": 456,
      "t": "    \"stone\": stone,",
      "c": true
     },
     {
-     "n": 446,
+     "n": 457,
      "t": "    \"iron\": 0,",
      "c": true
     },
     {
-     "n": 447,
+     "n": 458,
      "t": "    \"food\": food,",
      "c": true
     },
     {
-     "n": 448,
+     "n": 459,
      "t": "    \"water\": water,",
      "c": true
     },
     {
-     "n": 449,
+     "n": 460,
      "t": "}",
      "c": true
     }
    ],
    [
     {
-     "n": 451,
+     "n": 462,
      "t": "day = 1",
      "c": false
     },
     {
-     "n": 452,
+     "n": 463,
      "t": "max_days = 30",
      "c": false
     }
@@ -989,39 +1046,39 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 514,
+     "n": 525,
      "t": "            player[\"water\"] = player[\"water\"] + gather(\"water\", 3, 7)",
      "c": false
     },
     {
-     "n": 515,
+     "n": 526,
      "t": "        elif choice == \"5\":",
      "c": false
     },
     {
-     "n": 516,
+     "n": 527,
      "t": "            explore(player)",
      "c": true
     },
     {
-     "n": 517,
+     "n": 528,
      "t": "        elif choice == \"6\":",
      "c": false
     },
     {
-     "n": 518,
+     "n": 529,
      "t": "            craft_menu(player, crafted)",
      "c": true
     }
    ],
    [
     {
-     "n": 520,
+     "n": 531,
      "t": "    eat_and_drink(player)",
      "c": false
     },
     {
-     "n": 521,
+     "n": 532,
      "t": "    night_phase(day, player, crafted)",
      "c": false
     }
@@ -1040,51 +1097,51 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 99,
-     "t": "    for entry in journal:",
+     "n": 111,
+     "t": "SHELTER = \"shelter\"",
      "c": false
     },
     {
-     "n": 100,
-     "t": "        print(\"  \" + entry)",
+     "n": 112,
+     "t": "BENCH = \"bench\"",
      "c": false
     }
    ],
    [
     {
-     "n": 103,
+     "n": 114,
      "t": "RECIPES = {",
      "c": true
     },
     {
-     "n": 104,
-     "t": "    \"pickaxe\": {\"wood\": 3, \"stone\": 2},",
+     "n": 115,
+     "t": "    PICKAXE: {\"wood\": 3, \"stone\": 2},",
      "c": true
     },
     {
-     "n": 105,
-     "t": "    \"shelter\": {\"wood\": 20, \"stone\": 10},",
+     "n": 116,
+     "t": "    SHELTER: {\"wood\": 20, \"stone\": 10},",
      "c": true
     },
     {
-     "n": 106,
-     "t": "    \"bench\":   {\"wood\": 10, \"stone\": 5, \"iron\": 2},",
+     "n": 117,
+     "t": "    BENCH:   {\"wood\": 10, \"stone\": 5, \"iron\": 2},",
      "c": true
     },
     {
-     "n": 107,
+     "n": 118,
      "t": "}",
      "c": true
     }
    ],
    [
     {
-     "n": 110,
+     "n": 121,
      "t": "def show_inventory(player):",
      "c": false
     },
     {
-     "n": 111,
+     "n": 122,
      "t": "    \"\"\"The ONE place that prints the resources (STEP 7).",
      "c": false
     }
@@ -1196,92 +1253,92 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 283,
+     "n": 294,
      "t": "def try_craft(player, crafted, item_name):",
      "c": true
     },
     {
-     "n": 284,
+     "n": 295,
      "t": "    \"\"\"Spend resources on one item if every ingredient is available.\"\"\"",
      "c": true
     },
     {
-     "n": 285,
+     "n": 296,
      "t": "    costs = RECIPES[item_name]",
      "c": true
     },
     {
-     "n": 286,
-     "t": "",
-     "c": true
-    },
-    {
-     "n": 287,
-     "t": "    # Week 4 taught that a recipe needs EVERY ingredient. .get() hands back 0",
-     "c": true
-    },
-    {
-     "n": 288,
-     "t": "    # for a resource the player has never held, instead of raising KeyError.",
-     "c": true
-    },
-    {
-     "n": 289,
-     "t": "    for resource, needed in costs.items():",
-     "c": true
-    },
-    {
-     "n": 290,
-     "t": "        if player.get(resource, 0) < needed:",
-     "c": true
-    },
-    {
-     "n": 291,
-     "t": "            print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")",
-     "c": true
-    },
-    {
-     "n": 292,
-     "t": "            print(\"[red]    Need \" + str(needed) + \" \" + resource",
-     "c": true
-    },
-    {
-     "n": 293,
-     "t": "                  + \", have \" + str(player.get(resource, 0)) + \".[/red]\")",
-     "c": true
-    },
-    {
-     "n": 294,
-     "t": "            return False",
-     "c": true
-    },
-    {
-     "n": 295,
-     "t": "",
-     "c": true
-    },
-    {
-     "n": 296,
-     "t": "    for resource, needed in costs.items():",
-     "c": true
-    },
-    {
      "n": 297,
-     "t": "        player[resource] = player[resource] - needed",
+     "t": "",
      "c": true
     },
     {
      "n": 298,
-     "t": "    crafted.append(item_name)",
+     "t": "    # Week 4 taught that a recipe needs EVERY ingredient. .get() hands back 0",
      "c": true
     },
     {
      "n": 299,
-     "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
+     "t": "    # for a resource the player has never held, instead of raising KeyError.",
      "c": true
     },
     {
      "n": 300,
+     "t": "    for resource, needed in costs.items():",
+     "c": true
+    },
+    {
+     "n": 301,
+     "t": "        if player.get(resource, 0) < needed:",
+     "c": true
+    },
+    {
+     "n": 302,
+     "t": "            print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")",
+     "c": true
+    },
+    {
+     "n": 303,
+     "t": "            print(\"[red]    Need \" + str(needed) + \" \" + resource",
+     "c": true
+    },
+    {
+     "n": 304,
+     "t": "                  + \", have \" + str(player.get(resource, 0)) + \".[/red]\")",
+     "c": true
+    },
+    {
+     "n": 305,
+     "t": "            return False",
+     "c": true
+    },
+    {
+     "n": 306,
+     "t": "",
+     "c": true
+    },
+    {
+     "n": 307,
+     "t": "    for resource, needed in costs.items():",
+     "c": true
+    },
+    {
+     "n": 308,
+     "t": "        player[resource] = player[resource] - needed",
+     "c": true
+    },
+    {
+     "n": 309,
+     "t": "    crafted.append(item_name)",
+     "c": true
+    },
+    {
+     "n": 310,
+     "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
+     "c": true
+    },
+    {
+     "n": 311,
      "t": "    return True",
      "c": true
     }
@@ -1389,54 +1446,54 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 313,
+     "n": 324,
      "t": "        if craft != \"a\" and craft != \"b\" and craft != \"c\" and craft != \"d\":",
      "c": false
     },
     {
-     "n": 314,
+     "n": 325,
      "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
      "c": false
     }
    ],
    [
     {
-     "n": 316,
+     "n": 327,
      "t": "    if craft == \"a\":",
      "c": true
     },
     {
-     "n": 317,
-     "t": "        try_craft(player, crafted, \"pickaxe\")",
+     "n": 328,
+     "t": "        try_craft(player, crafted, PICKAXE)",
      "c": true
     },
     {
-     "n": 318,
+     "n": 329,
      "t": "    elif craft == \"b\":",
      "c": true
     },
     {
-     "n": 319,
-     "t": "        try_craft(player, crafted, \"shelter\")",
+     "n": 330,
+     "t": "        try_craft(player, crafted, SHELTER)",
      "c": true
     },
     {
-     "n": 320,
+     "n": 331,
      "t": "    elif craft == \"c\":",
      "c": true
     },
     {
-     "n": 321,
-     "t": "        try_craft(player, crafted, \"bench\")",
+     "n": 332,
+     "t": "        try_craft(player, crafted, BENCH)",
      "c": true
     },
     {
-     "n": 322,
+     "n": 333,
      "t": "def eat_and_drink(player, food_cost=2, water_cost=2):",
      "c": false
     },
     {
-     "n": 323,
+     "n": 334,
      "t": "    \"\"\"Week 4 eating, with the daily costs as default parameters.\"\"\"",
      "c": false
     }
@@ -1455,46 +1512,46 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 120,
-     "t": "            continue",
+     "n": 127,
+     "t": "    separate variables could never do.",
      "c": false
     },
     {
-     "n": 121,
-     "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")",
+     "n": 128,
+     "t": "    \"\"\"",
      "c": false
     }
    ],
    [
     {
-     "n": 125,
+     "n": 136,
      "t": "    low = {name: amount for name, amount in player.items()",
      "c": true
     },
     {
-     "n": 126,
+     "n": 137,
      "t": "           if name != \"health\" and amount < 5}",
      "c": true
     },
     {
-     "n": 127,
+     "n": 138,
      "t": "    if low:",
      "c": true
     },
     {
-     "n": 128,
+     "n": 139,
      "t": "        print(\"  [yellow]Running low: \" + \", \".join(low) + \"[/yellow]\")",
      "c": true
     }
    ],
    [
     {
-     "n": 131,
+     "n": 142,
      "t": "def show_starting_status(name, day, player):",
      "c": false
     },
     {
-     "n": 132,
+     "n": 143,
      "t": "    \"\"\"The Week 2 starting status block, now reading one dict.\"\"\"",
      "c": false
     }
@@ -1566,44 +1623,44 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 116,
+     "n": 127,
      "t": "    separate variables could never do.",
      "c": false
     },
     {
-     "n": 117,
+     "n": 128,
      "t": "    \"\"\"",
      "c": false
     },
     {
-     "n": 118,
+     "n": 129,
      "t": "    for name, amount in player.items():",
      "c": true
     },
     {
-     "n": 119,
+     "n": 130,
      "t": "        if name == \"health\":",
      "c": true
     },
     {
-     "n": 120,
+     "n": 131,
      "t": "            continue",
      "c": true
     },
     {
-     "n": 121,
+     "n": 132,
      "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")",
      "c": true
     }
    ],
    [
     {
-     "n": 125,
+     "n": 136,
      "t": "    low = {name: amount for name, amount in player.items()",
      "c": false
     },
     {
-     "n": 126,
+     "n": 137,
      "t": "           if name != \"health\" and amount < 5}",
      "c": false
     }
@@ -1652,27 +1709,27 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 145,
+     "n": 156,
      "t": "    print(\"-\" * 40)",
      "c": false
     },
     {
-     "n": 146,
+     "n": 157,
      "t": "    print(\"[bold cyan]Resources:[/bold cyan]\")",
      "c": false
     },
     {
-     "n": 147,
+     "n": 158,
      "t": "    show_inventory(player)",
      "c": true
     },
     {
-     "n": 148,
+     "n": 159,
      "t": "    print(\"-\" * 40)",
      "c": false
     },
     {
-     "n": 149,
+     "n": 160,
      "t": "    print(\"Total resources: \" + str(total_resources))",
      "c": false
     }
@@ -1728,7 +1785,7 @@ function hi(src) {
   });
 }
 
-function codeHTML(segments, side) {
+function codeHTML(segments, side, ahead) {
   var mark = side === "before" ? "-" : "+";
   var label = side === "before" ? "Week 9" : "this TODO";
   var head = '<div class="tabbar"><span class="fname">game.py</span>' +
@@ -1793,7 +1850,7 @@ function render() {
       '<div class="col before"><div class="colhead">Before &mdash; your Week 9 game</div>' +
         codeHTML(d.before, "before") + "</div>" +
       '<div class="col after"><div class="colhead">After &mdash; this TODO</div>' +
-        codeHTML(d.after, "after") + "</div>" +
+        codeHTML(d.after, "after", d.ahead) + "</div>" +
     "</div>" +
     '<div class="shape">' +
       '<div class="box was"><h3>The shape it was</h3><p>' + d.was + "</p></div>" +

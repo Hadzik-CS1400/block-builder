@@ -153,14 +153,36 @@
 #
 #              crafted = []
 #
-# TODO 3b: when a recipe succeeds, append its name:
+# TODO 3b: near the top of your file, name the three recipes once:
 #
-#              crafted.append("shelter")
+#              PICKAXE = "pickaxe"
+#              SHELTER = "shelter"
+#              BENCH = "bench"
 #
-# TODO 3c: everywhere you tested a flag, ask the list instead:
+#          Do this BEFORE you start using the names, because you are about
+#          to type each one in several places and that is the problem.
 #
-#              if has_shelter:            <- before
-#              if "shelter" in crafted:   <- now
+#          A bare "shelter" typed wrong is not an error. Python is perfectly
+#          happy with
+#
+#              if "sheltr" in crafted:
+#
+#          -- "sheltr" is simply never in the list, so the test is always
+#          False, your shelter silently never works, and nothing points at
+#          the line that caused it. You would go looking at night_phase.
+#
+#          Write SHELTER instead and a typo is a NameError the first time
+#          you run it, naming the line. CAPITALS are the convention for a
+#          value that never changes; you already have one in this game.
+#
+# TODO 3c: when a recipe succeeds, append its name:
+#
+#              crafted.append(SHELTER)
+#
+# TODO 3d: everywhere you tested a flag, ask the list instead:
+#
+#              if has_shelter:          <- before
+#              if SHELTER in crafted:   <- now
 #
 #          `in` asks a list whether it holds something. Add a fourth recipe
 #          next month and you add no new variable at all.
@@ -241,10 +263,13 @@
 # TODO 6a: near the top of your file, write the recipes as a dict of dicts:
 #
 #              RECIPES = {
-#                  "pickaxe": {"wood": 3, "stone": 2},
-#                  "shelter": {"wood": 20, "stone": 10},
-#                  "bench":   {"wood": 10, "stone": 5, "iron": 2},
+#                  PICKAXE: {"wood": 3, "stone": 2},
+#                  SHELTER: {"wood": 20, "stone": 10},
+#                  BENCH:   {"wood": 10, "stone": 5, "iron": 2},
 #              }
+#
+#          The keys are the constants from TODO 3b, so the recipe book and
+#          the `in crafted` checks can never disagree about a name.
 #
 #          The value of each key is itself a dictionary. That is allowed, and
 #          it is how most real data is shaped.
@@ -286,7 +311,7 @@
 # TODO 6c: now the menu branches shrink to one line each:
 #
 #              if craft == "a":
-#                  try_craft(player, crafted, "pickaxe")
+#                  try_craft(player, crafted, PICKAXE)
 
 
 # -----------------------------------------------------------------------------
