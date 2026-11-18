@@ -1463,7 +1463,7 @@ var DEMOS = [
      "n": 300,
      "t": "    for resource, needed in costs.items():",
      "c": true,
-     "why": "FIRST LOOP -- the check. Walks every ingredient this recipe needs, whatever they are."
+     "why": "TWO names after `for`, and this is the first time in this game.\nA dictionary holds pairs, and .items() hands over the whole pair each time round -- so the loop needs somewhere to put both: the key goes in `resource`, the value in `needed`. One name would catch only the key.\n`resource` and `needed` are names YOU chose, not keywords. Call them k and v and it runs the same; call them what they are and the next line reads like English.\nIt is still the Module 4 for loop. One pass per ingredient -- two for a pickaxe, three for the bench -- and FIRST LOOP means it only checks. Nothing is spent yet."
     },
     {
      "n": 301,
