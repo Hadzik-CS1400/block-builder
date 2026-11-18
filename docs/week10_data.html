@@ -77,12 +77,27 @@
           overflow-x:auto; font-family:Consolas,'Courier New',monospace;
           font-size:1.02rem; line-height:1.65; }
   .code div { white-space:pre; color:#cdd6f4; padding:0 .7rem 0 0; }
-  .code .n { display:inline-block; min-width:4ch; text-align:right;
+  /* The gutter is sized in REM, not ch. ch is relative to the element's own
+     font, and changed lines are deliberately set larger than context lines
+     below -- in ch the numbers would sit in two different columns and the
+     code would start at two different places. rem is root-relative, so one
+     column holds for both sizes. */
+  .code .n { display:inline-block; min-width:2.7rem; text-align:right;
              margin-right:.8rem; padding-right:.55rem; color:#585b70;
-             border-right:1px solid #2a2c33; user-select:none; }
+             border-right:1px solid #2a2c33; user-select:none;
+             font-size:.95rem; }
   /* The change mark, where an IDE puts its gutter diff bar. */
-  .code .mk { display:inline-block; width:1.2ch; margin-right:.4rem;
-              font-weight:800; user-select:none; }
+  .code .mk { display:inline-block; width:1rem; margin-right:.4rem;
+              font-weight:800; user-select:none; font-size:.95rem; }
+  /* The lines this TODO actually changes are set LARGER than the landmarks
+     around them. The tint alone was not enough: on a projector the eye lands
+     on whatever is biggest, and what matters here is the one or two lines a
+     student has to type. */
+  .code div.ln  { font-size:1.18rem; }
+  .code div.ctx { font-size:.94rem; }
+  /* Indentation is always measured at the smaller size, so four spaces are
+     four spaces on every row and the code lines up in one column. */
+  .code .ind { display:inline-block; font-size:.94rem; }
   .before .code .mk { color:#8a3d4f; }
   .after .code .mk { color:#40a25c; }
   .before .code div.ln { background:rgba(138,61,79,.12); }
@@ -1731,8 +1746,16 @@ function codeHTML(segments, side) {
          eye goes straight to the lines that actually changed. */
       var cls = ln.c ? "ln" : "ctx";
       var m = ln.c ? mark : " ";
+      /* Leading indentation is split off and rendered at the CONTEXT size on
+         every line, changed or not. Otherwise a changed line's four spaces
+         are wider than a context line's four spaces -- they are the same
+         four spaces in the file -- and the code starts at two different
+         places in a pane that is meant to read as one listing. */
+      var cut = /^([ \t]*)([\s\S]*)$/.exec(ln.t);
       out.push('<div class="' + cls + '"><span class="n">' + ln.n + "</span>" +
-               '<span class="mk">' + m + "</span>" + hi(ln.t) + "</div>");
+               '<span class="mk">' + m + "</span>" +
+               '<span class="ind">' + cut[1] + "</span>" +
+               hi(cut[2]) + "</div>");
     });
   });
   return '<div class="pane">' + head +
