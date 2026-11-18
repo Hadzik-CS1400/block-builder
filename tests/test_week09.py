@@ -237,7 +237,19 @@ def test_the_journal_records_the_day():
             '    entry = f"Day {day}: {event}"\n'
             "Without the day it is a pile of events in no order."
         )
-    if ".split(" not in source:
+    # `.append` counts as well as `.split`, because Week 10 turns this journal
+    # into a list and a list journal is shown back by looping it -- there is
+    # nothing left to split. Requiring `.split(` failed a student who had gone
+    # on to Week 10, for work that was more advanced rather than less.
+    #
+    # Asked of the SYNTAX TREE, not of the text. `".split(" in source` is true
+    # when the words appear in a comment or a docstring, and this file's own
+    # explanation of .append() was enough to satisfy the text version of this
+    # check on a game whose journal had been deleted outright.
+    shown = [n for n in ast.walk(tree)
+             if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+             and n.func.attr in ("split", "append")]
+    if not shown:
         fail(
             "The journal is being built but never taken apart. Showing it "
             "back means splitting on the delimiter you joined with:\n"
