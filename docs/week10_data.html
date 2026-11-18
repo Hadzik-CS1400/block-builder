@@ -215,6 +215,7 @@ var DEMOS = [
   "now": "iron alongside the others, with a default cost of 0",
   "buys": "The crafting bench costs 2 iron. Without that parameter the function cannot check the one ingredient that matters for it, so the bench has been craftable without iron all term.",
   "note": "<strong>This one is our mistake, not yours.</strong> The left pane is the line Week 7 printed in its instructions; the right is what the published answer actually used. They should have matched and they did not. <code>iron_cost=0</code> is a default parameter from Week 7 &mdash; most recipes do not use iron, so most calls can still leave it off. STEP 6 replaces this function entirely, so fix it now and you will not touch its parameters again.",
+  "src9": true,
   "band": "try_craft can see iron now, so the bench recipe can check all\nthree of the things it costs."
  },
  {
@@ -285,6 +286,7 @@ var DEMOS = [
   "now": "an empty list",
   "buys": "A list holds each entry as its own item, so you can loop over it and slice it. The journal used to be one long piece of text.",
   "note": "Both are &ldquo;empty&rdquo;. Only one of them can be appended to.",
+  "src9": false,
   "band": "Creates the journal as an empty list, ready for .append() to put\nentries into."
  },
  {
@@ -336,6 +338,7 @@ var DEMOS = [
   "now": "change the list that already exists",
   "buys": "A list can be changed in place, so the function does not need to hand anything back.",
   "note": "<strong>This is the whole week in one function.</strong> A string cannot be changed, so the only way to add to it was to make a new one and return it. A list is <em>mutable</em>: <code>.append()</code> changes the one list everybody is sharing, so the <code>return</code> has nothing left to do.",
+  "src9": false,
   "band": "add_journal drops the entry straight into the list everyone\nshares. Nothing new is built, so nothing is handed back."
  },
  {
@@ -404,6 +407,7 @@ var DEMOS = [
   "now": "just call it",
   "buys": "The list was already changed inside the function, so there is nothing left to assign.",
   "note": "<strong>The single most common way to lose an hour this week.</strong> Leave the <code>journal =</code> on the front and <code>journal</code> becomes <code>None</code>, because <code>.append()</code> returns nothing. The game runs on for a while and then fails somewhere else entirely, with nothing pointing back at this line.",
+  "src9": false,
   "band": "Calls add_journal and stops there. The entry is already in the\nlist by the time the call returns."
  },
  {
@@ -505,6 +509,7 @@ var DEMOS = [
   "now": "loop over the entries",
   "buys": "The entries are already separate, so there is nothing to split apart.",
   "note": "Look at what left: <code>.split(\"\\n\")</code> and the <code>if entry.strip() != \"\"</code> that had to throw away the empty piece splitting always leaves behind. Both existed only to undo the joining. <code>if not journal:</code> is how you ask a list whether it is empty.",
+  "src9": false,
   "band": "Walks the list and prints one entry per line, and leaves early\nwhen there is nothing in it yet."
  },
  {
@@ -556,6 +561,7 @@ var DEMOS = [
   "now": "a slice, <code>journal[-3:]</code>",
   "buys": "A slice gives you part of a list in one expression, and it copes when there are fewer than three entries.",
   "note": "<code>[-3:]</code> reads as <em>from three before the end, to the end</em>. Try it on day 1 and watch it cope &mdash; that tolerance is why slices get used instead of index arithmetic.",
+  "src9": false,
   "band": "Prints the last three entries at the end of each day, joined onto\none line with semicolons."
  },
  {
@@ -638,6 +644,7 @@ var DEMOS = [
   "now": "one list of names",
   "buys": "One list can hold everything you have built, so a fourth recipe does not mean a fourth variable.",
   "note": "Three names that could only ever answer three fixed questions, replaced by one that can answer any of them &mdash; including ones you have not thought of yet.",
+  "src9": false,
   "band": "Creates one list to hold the name of everything you have built."
  },
  {
@@ -695,6 +702,7 @@ var DEMOS = [
   "now": "three constants, each written once",
   "buys": "A mistyped name becomes an error instead of silence. <code>SHELTER</code> spelled wrong is a NameError on the first run; <code>\"sheltr\"</code> is just never in the list.",
   "note": "<code>if \"sheltr\" in crafted:</code> is perfectly good Python. It is simply always <code>False</code>, so the shelter never works and <strong>nothing points at the line that caused it</strong> &mdash; you would go hunting in night_phase. CAPITALS are the convention for a value that never changes, and you already have one in this game.",
+  "src9": false,
   "band": "Gives each recipe name a constant, so the rest of the program can\nrefer to it by name instead of by spelling."
  },
  {
@@ -789,33 +797,87 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 292,
-     "t": "        player[\"stone\"] = player[\"stone\"] + random.randint(1, 3)",
+     "n": 295,
+     "t": "    if craft == \"a\":",
      "c": false
     },
     {
-     "n": 293,
-     "t": "        print(\"[green]  A quiet day. Gathered some wood and stone.[/green]\")",
+     "n": 296,
+     "t": "        if try_craft(\"a wooden pickaxe\", wood, stone, iron, 3, 2):",
      "c": false
-    }
-   ],
-   [
+    },
+    {
+     "n": 297,
+     "t": "            wood = wood - 3",
+     "c": false
+    },
+    {
+     "n": 298,
+     "t": "            stone = stone - 2",
+     "c": false
+    },
+    {
+     "n": 299,
+     "t": "            crafted.append(PICKAXE)",
+     "c": true,
+     "swapped": true
+    },
+    {
+     "n": 300,
+     "t": "    elif craft == \"b\":",
+     "c": false
+    },
+    {
+     "n": 301,
+     "t": "        if try_craft(\"a shelter\", wood, stone, iron, 20, 10):",
+     "c": false
+    },
+    {
+     "n": 302,
+     "t": "            wood = wood - 20",
+     "c": false
+    },
+    {
+     "n": 303,
+     "t": "            stone = stone - 10",
+     "c": false
+    },
+    {
+     "n": 304,
+     "t": "            crafted.append(SHELTER)",
+     "c": true,
+     "swapped": true
+    },
+    {
+     "n": 305,
+     "t": "    elif craft == \"c\":",
+     "c": false
+    },
+    {
+     "n": 306,
+     "t": "        if try_craft(\"a crafting bench\", wood, stone, iron, 10, 5, 2):",
+     "c": false
+    },
+    {
+     "n": 307,
+     "t": "            wood = wood - 10",
+     "c": false
+    },
+    {
+     "n": 308,
+     "t": "            stone = stone - 5",
+     "c": false
+    },
     {
      "n": 309,
-     "t": "    crafted.append(item_name)",
-     "c": true
-    }
-   ],
-   [
-    {
-     "n": 312,
-     "t": "def craft_menu(player, crafted):",
+     "t": "            iron = iron - 2",
      "c": false
     },
     {
-     "n": 313,
-     "t": "    \"\"\"The Week 6 crafting menu, now driven by the RECIPES dict.\"\"\"",
-     "c": false
+     "n": 310,
+     "t": "            crafted.append(BENCH)",
+     "c": true,
+     "swapped": true
     }
    ]
   ],
@@ -823,6 +885,7 @@ var DEMOS = [
   "now": "append whatever was crafted",
   "buys": "One line now works for every recipe, instead of one line per flag.",
   "note": "Three lines become one, and that one does not name a recipe. Write it in each branch for now &mdash; by TODO 6b all three branches share a single copy inside <code>try_craft</code>, which is where the after column shows it.",
+  "src9": true,
   "band": "Goes INSIDE each branch, where has_pickaxe = True used to be --\nthree branches, three appends, each naming its own constant. The\npane shows where STEP 6 finally puts it, once try_craft is handed\nthe crafted list. This week it is not, so it stays in the branches."
  },
  {
@@ -951,6 +1014,7 @@ var DEMOS = [
   "now": "<code>in</code>, asking the list",
   "buys": "Asking the list works for any recipe, so these lines never need editing again.",
   "note": "Same <code>in</code> you used on strings in Module 7 and on lists in Module 8. Nothing new &mdash; it is just pointed at the game's own data now.",
+  "src9": false,
   "band": "Asks the list whether the shelter is in it, so the night check\nworks for anything you have built."
  },
  {
@@ -1082,6 +1146,7 @@ var DEMOS = [
   "now": "one dictionary, keyed by name",
   "buys": "The resources can be <strong>looped over</strong> once they are in a dictionary. There is no way to say &ldquo;for each resource&rdquo; about six separate variables.",
   "note": "This is the change the rest of Part B is built on. TODO 7 and TODO 8 are both impossible without it, and neither is about dictionaries for their own sake: one asks <em>which</em> resources are low, the other prints every resource from a single loop.",
+  "src9": false,
   "band": "Builds one dictionary holding all six resources, each under its\nown name."
  },
  {
@@ -1186,6 +1251,7 @@ var DEMOS = [
   "now": "one argument in, nothing out",
   "buys": "A dictionary can be changed in place, just like the list in Part A, so the function does not need to return anything.",
   "note": "The same lesson as <code>add_journal</code>, arriving a second time on a different type. <strong>Mutable means the caller sees the change without being handed anything back</strong> &mdash; which is what deletes the <code>return</code> and the unpacking together.",
+  "src9": false,
   "band": "Hands the whole dictionary to the function, which changes it\ndirectly -- so there is nothing to catch on the way out."
  },
  {
@@ -1255,6 +1321,7 @@ var DEMOS = [
   "now": "a dict of dicts, at the top of the file",
   "buys": "The recipes become <strong>data</strong>. Adding a fourth one is a line at the top of the file instead of a new branch.",
   "note": "Each value is itself a dictionary, which is why <code>RECIPES[\"shelter\"]</code> hands back <code>{\"wood\": 20, \"stone\": 10}</code> rather than a single number. Notice the bench needs iron and the pickaxe does not &mdash; the recipes no longer have to agree on which ingredients exist.",
+  "src9": false,
   "band": "Stores every recipe and what it costs as data at the top of the\nfile, where adding one is a line rather than a branch."
  },
  {
@@ -1469,6 +1536,7 @@ var DEMOS = [
   "now": "a lookup, then two loops over whatever that recipe needs",
   "buys": "One function now handles a recipe with any number of ingredients, without being rewritten.",
   "note": "<strong>Two loops, not one.</strong> Check everything first, then spend &mdash; spend as you go and a recipe you cannot afford still takes your wood. And <code>.get(resource, 0)</code> is load-bearing: the pickaxe recipe never mentions iron, and a player who has never held iron has no <code>\"iron\"</code> key, so <code>player[\"iron\"]</code> would raise <code>KeyError</code> and end the game. Keep both of your old messages &mdash; you are moving them, not deleting them.",
+  "src9": false,
   "band": "Looks the costs up by name, checks every ingredient before it\nspends any of them, then spends them and records the craft."
  },
  {
@@ -1651,6 +1719,7 @@ var DEMOS = [
   "now": "one call, naming the recipe",
   "buys": "The branch only has to say which recipe. Everything else moved into try_craft.",
   "note": "This is where Part A and Part B meet: the flag went away in TODO 3a and the cost parameters went away in 6b, so what is left is the branch saying <em>which recipe</em> and nothing else.",
+  "src9": false,
   "band": "Calls try_craft with the recipe name. The branch no longer knows\nor repeats any of the costs."
  },
  {
@@ -1714,6 +1783,7 @@ var DEMOS = [
   "now": "a dict comprehension over the dict from TODO 4",
   "buys": "One expression can ask about <em>all</em> the resources at once, including any you add later.",
   "note": "It is the list comprehension from Module 8 with a colon in it, and the colon is what makes the result a dict instead of a list. Leave the colon out and you have built a set.",
+  "src9": false,
   "band": "Builds a small dictionary of just the resources under five, and\nprints them only when there are some."
  },
  {
@@ -1828,6 +1898,7 @@ var DEMOS = [
   "now": "one loop over the dict",
   "buys": "The rows are built from the dictionary, so adding a resource makes a row appear with no change here at all.",
   "note": "<code>name.title()</code> is doing the work your typed labels used to do &mdash; <code>\"wood\"</code> becomes <code>Wood:</code>. The <code>continue</code> skips health, which lives in the same dict but is not a resource.",
+  "src9": false,
   "band": "Loops the dictionary and prints one aligned row per resource,\nstepping over health."
  },
  {
@@ -1898,6 +1969,7 @@ var DEMOS = [
   "now": "one call, in both places",
   "buys": "There is only one copy of the rows now, so the two displays cannot disagree.",
   "note": "Those rows were duplicated in <strong>two</strong> functions, so every change had to be made twice or the two displays disagreed. That is a whole class of bug, deleted rather than fixed.",
+  "src9": false,
   "band": "Calls the one function that prints the resource rows, so both\ndisplays read from the same place."
  }
 ];

@@ -239,13 +239,25 @@
 # TODO 3c: when a recipe succeeds, append its name.
 #
 #          WHERE IT GOES: exactly where the flag used to be. Inside the
-#          branch, inside the `if try_craft(...)`, after the subtraction:
+#          branch, inside the `if try_craft(...)`, after the subtraction.
+#          All three, so there is no guessing:
 #
-#              if craft == "b":
+#              if craft == "a":
+#                  if try_craft("a wooden pickaxe", wood, stone, iron, 3, 2):
+#                      wood = wood - 3
+#                      stone = stone - 2
+#                      crafted.append(PICKAXE)     <- was has_pickaxe = True
+#              elif craft == "b":
 #                  if try_craft("a shelter", wood, stone, iron, 20, 10):
 #                      wood = wood - 20
 #                      stone = stone - 10
 #                      crafted.append(SHELTER)     <- was has_shelter = True
+#              elif craft == "c":
+#                  if try_craft("a crafting bench", wood, stone, iron, 10, 5, 2):
+#                      wood = wood - 10
+#                      stone = stone - 5
+#                      iron = iron - 2
+#                      crafted.append(BENCH)       <- was has_bench = True
 #
 #          THREE branches, THREE appends -- one per recipe, each naming its
 #          own constant. Not one append at the end of the function: the
