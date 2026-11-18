@@ -100,12 +100,6 @@ def test_resources_change_during_events():
         r"^\s+(%s)\s*(?:=\s*\1\s*[-+]|[-+]=)" % names, code,
         re.MULTILINE | re.IGNORECASE,
     )
-    # Week 10 moves the resources into a dictionary, where the same change is
-    # spelled  player["wood"] = player["wood"] + 3.  Identical behaviour, and
-    # this row is about whether an event costs or earns the player anything --
-    # not about where the number happens to be kept.
-    changed = changed + re.findall(
-        r"\[\s*[\"'](%s)[\"']\s*\]\s*(?:=[^=]|[-+]=)" % names, code, re.IGNORECASE)
     assert changed, (
         "No resource changes inside an event. An event that prints a message "
         "but leaves wood, food and health untouched has not cost or earned "
