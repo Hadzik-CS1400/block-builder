@@ -6,7 +6,7 @@ game &mdash; double-click a file and read it.
 | File | What it is |
 |---|---|
 | `week07_refactor.html` | **The Week 7 refactor, shown.** Ten blocks of this game before and after, side by side, with the block lit in both places and the one line left behind where it used to be. Each one names what had to go in as a parameter and what had to come out as a return. |
-| `week10_data.html` | **The Week 10 reshape, shown.** The eight changes that week, before and after, with the real lines from each file. Under every pair: the shape it was, the shape it becomes, and the one thing the old shape could not do. |
+| `week10_data.html` | **The Week 10 reshape, stepped.** One step per TODO, in the skeleton's own order, each with the real lines from both game files side by side. Under every pair: the shape it was, the shape it becomes, and the one thing the old shape could not do. |
 
 ## For the instructor
 

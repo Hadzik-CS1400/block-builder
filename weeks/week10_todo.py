@@ -69,13 +69,16 @@
 #     shuffle your status panel.
 #
 # CANNOT PICTURE WHAT "CHANGE THE SHAPE" MEANS?
-#   Open docs/week10_data.html in a browser -- double-click it. It shows the
-#   eight changes below as THIS game before and after, side by side, with the
-#   real lines from each file. Under every pair it names the shape it was, the
-#   shape it becomes, and the one thing the old shape could not do -- which is
-#   the only reason any of these changes are worth making. Nothing in it runs;
-#   it is about the shape of your data, the way week07_refactor.html was about
-#   the shape of your file.
+#   Open docs/week10_data.html in a browser -- double-click it. It has ONE
+#   STEP PER TODO BELOW, in this order, and arrow keys walk it. Each step puts
+#   THIS game's real lines side by side -- your Week 9 code on the left, the
+#   same place after that one TODO on the right -- and then names the shape it
+#   was, the shape it becomes, and the one thing the old shape could not do.
+#   That last part is the only reason any of these changes are worth making.
+#
+#   So when you are stuck on, say, TODO 6b, open it and press along to 6b.
+#   Nothing in it runs; it is about the shape of your data, the way
+#   week07_refactor.html was about the shape of your file.
 # =============================================================================
 
 
