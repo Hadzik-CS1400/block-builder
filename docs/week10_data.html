@@ -254,29 +254,29 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 463,
+     "n": 457,
      "t": "max_days = 30",
      "c": false
     },
     {
-     "n": 464,
+     "n": 458,
      "t": "game_over = False",
      "c": false
     },
     {
-     "n": 465,
+     "n": 459,
      "t": "journal = []",
      "c": true
     }
    ],
    [
     {
-     "n": 468,
+     "n": 462,
      "t": "print()",
      "c": false
     },
     {
-     "n": 469,
+     "n": 463,
      "t": "print(\"You chose \" + mode + \" mode.\")",
      "c": false
     }
@@ -377,27 +377,27 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 480,
+     "n": 474,
      "t": "    print(\"=\" * 50)",
      "c": false
     },
     {
-     "n": 481,
+     "n": 475,
      "t": "    print(\"[bold]Day \" + str(day) + \" of \" + str(max_days) + \"[/bold]\")",
      "c": false
     },
     {
-     "n": 482,
+     "n": 476,
      "t": "    add_journal(journal, day, \"a new day began\")",
      "c": true
     },
     {
-     "n": 483,
+     "n": 477,
      "t": "    show_inventory(player)",
      "c": false
     },
     {
-     "n": 484,
+     "n": 478,
      "t": "    print(\"=\" * 50)",
      "c": false
     }
@@ -520,25 +520,25 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 406,
+     "n": 400,
      "t": "    print(f\"  {'Health:':<12} {player['health']:>5}\")",
      "c": false
     },
     {
-     "n": 407,
+     "n": 401,
      "t": "    show_inventory(player)",
      "c": false
     }
    ],
    [
     {
-     "n": 411,
+     "n": 405,
      "t": "    if journal:",
      "c": true,
      "why": "Only when there is something to show -- the same empty-list test as the guard above."
     },
     {
-     "n": 412,
+     "n": 406,
      "t": "        print(\"  [dim]Lately: \" + \"; \".join(journal[-3:]) + \"[/dim]\")",
      "c": true,
      "why": "[-3:] is the last three. On day 1 it hands back the one entry rather than failing, which is why no length check is needed."
@@ -546,12 +546,12 @@ var DEMOS = [
    ],
    [
     {
-     "n": 414,
+     "n": 408,
      "t": "    if player[\"health\"] < 30 and player[\"food\"] < 5:",
      "c": false
     },
     {
-     "n": 415,
+     "n": 409,
      "t": "        print(\"[bold red]CRITICAL: Low health AND low food![/bold red]\")",
      "c": false
     }
@@ -612,29 +612,29 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 464,
+     "n": 458,
      "t": "game_over = False",
      "c": false
     },
     {
-     "n": 465,
+     "n": 459,
      "t": "journal = []",
      "c": false
     },
     {
-     "n": 466,
+     "n": 460,
      "t": "crafted = []",
      "c": true
     }
    ],
    [
     {
-     "n": 468,
+     "n": 462,
      "t": "print()",
      "c": false
     },
     {
-     "n": 469,
+     "n": 463,
      "t": "print(\"You chose \" + mode + \" mode.\")",
      "c": false
     }
@@ -687,13 +687,13 @@ var DEMOS = [
    ],
    [
     {
-     "n": 121,
-     "t": "def show_inventory(player):",
+     "n": 136,
+     "t": "def show_starting_status(name, day, player):",
      "c": false
     },
     {
-     "n": 122,
-     "t": "    \"\"\"The ONE place that prints the resources (STEP 7).",
+     "n": 137,
+     "t": "    \"\"\"The Week 2 starting status block, now reading one dict.\"\"\"",
      "c": false
     }
    ]
@@ -953,58 +953,58 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 352,
+     "n": 346,
      "t": "    print(\"-\" * 50)",
      "c": false
     },
     {
-     "n": 353,
+     "n": 347,
      "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
      "c": false
     }
    ],
    [
     {
-     "n": 355,
+     "n": 349,
      "t": "    if SHELTER in crafted:",
      "c": true,
      "why": "Asks the list instead of a flag. Reads the same as the English: is shelter in what I have crafted?"
     },
     {
-     "n": 356,
+     "n": 350,
      "t": "        print(\"[green]Safe inside the shelter you built.[/green]\")",
      "c": false
     },
     {
-     "n": 357,
+     "n": 351,
      "t": "    elif player[\"wood\"] >= 5:",
      "c": false
     }
    ],
    [
     {
-     "n": 429,
+     "n": 423,
      "t": "        print()",
      "c": false
     },
     {
-     "n": 430,
+     "n": 424,
      "t": "        print(\"[bold green]\" + name + \" survived \" + str(max_days) + \" days![/bold green]\")",
      "c": false
     },
     {
-     "n": 431,
+     "n": 425,
      "t": "        if SHELTER in crafted and BENCH in crafted:",
      "c": true,
      "why": "The same question twice, joined with `and`. No new variables needed for a second recipe."
     },
     {
-     "n": 432,
+     "n": 426,
      "t": "            print(\"[bold green]With a shelter AND a crafting bench \u2014 master crafter![/bold green]\")",
      "c": false
     },
     {
-     "n": 433,
+     "n": 427,
      "t": "        elif SHELTER in crafted:",
      "c": false
     }
@@ -1067,63 +1067,63 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 447,
+     "n": 441,
      "t": "title_screen()",
      "c": false
     }
    ],
    [
     {
-     "n": 449,
+     "n": 443,
      "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()",
      "c": false
     }
    ],
    [
     {
-     "n": 453,
+     "n": 447,
      "t": "player = {",
      "c": true,
      "why": "One name for the whole player, instead of six loose ones."
     },
     {
-     "n": 454,
+     "n": 448,
      "t": "    \"health\": health,",
      "c": true,
      "why": "Health lives here too, which is why later loops have to step over it."
     },
     {
-     "n": 455,
+     "n": 449,
      "t": "    \"wood\": wood,",
      "c": true,
      "why": "The key is a string; the value is what the loose variable held."
     },
     {
-     "n": 456,
+     "n": 450,
      "t": "    \"stone\": stone,",
      "c": true,
      "why": "Nothing is computed here -- the values are simply moved in."
     },
     {
-     "n": 457,
+     "n": 451,
      "t": "    \"iron\": 0,",
      "c": true,
      "why": "Iron starts at 0, exactly as the loose variable did."
     },
     {
-     "n": 458,
+     "n": 452,
      "t": "    \"food\": food,",
      "c": true,
      "why": "Food."
     },
     {
-     "n": 459,
+     "n": 453,
      "t": "    \"water\": water,",
      "c": true,
      "why": "Water. Six resources, one name."
     },
     {
-     "n": 460,
+     "n": 454,
      "t": "}",
      "c": true,
      "why": "The closing brace. From here, player[\"wood\"] is the wood."
@@ -1131,12 +1131,12 @@ var DEMOS = [
    ],
    [
     {
-     "n": 462,
+     "n": 456,
      "t": "day = 1",
      "c": false
     },
     {
-     "n": 463,
+     "n": 457,
      "t": "max_days = 30",
      "c": false
     }
@@ -1207,28 +1207,28 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 525,
+     "n": 519,
      "t": "            player[\"water\"] = player[\"water\"] + gather(\"water\", 3, 7)",
      "c": false
     },
     {
-     "n": 526,
+     "n": 520,
      "t": "        elif choice == \"5\":",
      "c": false
     },
     {
-     "n": 527,
+     "n": 521,
      "t": "            explore(player)",
      "c": true,
      "why": "No unpacking on the left. explore changes the dictionary it was handed, so there is nothing to catch."
     },
     {
-     "n": 528,
+     "n": 522,
      "t": "        elif choice == \"6\":",
      "c": false
     },
     {
-     "n": 529,
+     "n": 523,
      "t": "            craft_menu(player, crafted)",
      "c": true,
      "why": "Same for crafting. Two arguments instead of six, and no return line to keep in step."
@@ -1236,12 +1236,12 @@ var DEMOS = [
    ],
    [
     {
-     "n": 531,
+     "n": 525,
      "t": "    eat_and_drink(player)",
      "c": false
     },
     {
-     "n": 532,
+     "n": 526,
      "t": "    night_phase(day, player, crafted)",
      "c": false
     }
@@ -1306,13 +1306,13 @@ var DEMOS = [
    ],
    [
     {
-     "n": 121,
-     "t": "def show_inventory(player):",
+     "n": 136,
+     "t": "def show_starting_status(name, day, player):",
      "c": false
     },
     {
-     "n": 122,
-     "t": "    \"\"\"The ONE place that prints the resources (STEP 7).",
+     "n": 137,
+     "t": "    \"\"\"The Week 2 starting status block, now reading one dict.\"\"\"",
      "c": false
     }
    ]
@@ -1425,107 +1425,107 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 294,
+     "n": 288,
      "t": "def try_craft(player, crafted, item_name):",
      "c": true,
      "why": "Three parameters now: who, what they have built, and which recipe. No costs."
     },
     {
-     "n": 295,
+     "n": 289,
      "t": "    \"\"\"Spend resources on one item if every ingredient is available.\"\"\"",
      "c": true,
      "why": "One line, because the explanation moved out of the code."
     },
     {
-     "n": 296,
+     "n": 290,
      "t": "    costs = RECIPES[item_name]",
      "c": true,
      "why": "Looks the recipe up by name. costs is now a little dictionary of ingredient:amount."
     },
     {
-     "n": 297,
+     "n": 291,
      "t": "",
      "c": true
     },
     {
-     "n": 298,
+     "n": 292,
      "t": "    # Week 4 taught that a recipe needs EVERY ingredient. .get() hands back 0",
      "c": true,
      "why": "The comment names the trap before the line that avoids it."
     },
     {
-     "n": 299,
+     "n": 293,
      "t": "    # for a resource the player has never held, instead of raising KeyError.",
      "c": true,
      "why": "A player who has never held iron has no \"iron\" key at all."
     },
     {
-     "n": 300,
+     "n": 294,
      "t": "    for resource, needed in costs.items():",
      "c": true,
      "why": "TWO names after `for` -- first time in this game\n    .items() hands over a PAIR each pass\n    resource = the key, needed = the value\n    one name alone would catch only the key\nFIRST LOOP -- checks only, spends nothing"
     },
     {
-     "n": 301,
+     "n": 295,
      "t": "        if player.get(resource, 0) < needed:",
      "c": true,
      "why": ".get(resource, 0) hands back 0 for a key that is missing, where player[resource] would raise KeyError and end the game."
     },
     {
-     "n": 302,
+     "n": 296,
      "t": "            print(\"[red]    Not enough resources for \" + item_name + \".[/red]\")",
      "c": true,
      "why": "Says which item failed."
     },
     {
-     "n": 303,
+     "n": 297,
      "t": "            print(\"[red]    Need \" + str(needed) + \" \" + resource",
      "c": true,
      "why": "And says which ingredient ran short -- `resource` is the name the loop is holding when it gives up."
     },
     {
-     "n": 304,
+     "n": 298,
      "t": "                  + \", have \" + str(player.get(resource, 0)) + \".[/red]\")",
      "c": true,
      "why": "How much is needed against how much there is."
     },
     {
-     "n": 305,
+     "n": 299,
      "t": "            return False",
      "c": true,
      "why": "Leaves WITHOUT SPENDING ANYTHING. This is why the check is a separate loop: stop here and nothing has been taken."
     },
     {
-     "n": 306,
+     "n": 300,
      "t": "",
      "c": true
     },
     {
-     "n": 307,
+     "n": 301,
      "t": "    for resource, needed in costs.items():",
      "c": true,
      "why": "SECOND LOOP -- the spend. It only runs because the first loop finished without returning, so everything is affordable."
     },
     {
-     "n": 308,
+     "n": 302,
      "t": "        player[resource] = player[resource] - needed",
      "c": true,
      "why": "Takes the cost off the dictionary. The caller sees it, because it is the caller's dictionary."
     },
     {
-     "n": 309,
+     "n": 303,
      "t": "    crafted.append(item_name)",
      "c": true,
      "why": "Records the craft by name, for the `in crafted` checks."
     },
     {
-     "n": 310,
+     "n": 304,
      "t": "    print(\"[bold green]    Crafted \" + item_name + \"![/bold green]\")",
      "c": true,
      "why": "Tells the player it worked."
     },
     {
-     "n": 311,
+     "n": 305,
      "t": "    return True",
      "c": true,
      "why": "True, for anything that wants to know."
@@ -1656,60 +1656,60 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 324,
+     "n": 318,
      "t": "        if craft != \"a\" and craft != \"b\" and craft != \"c\" and craft != \"d\":",
      "c": false
     },
     {
-     "n": 325,
+     "n": 319,
      "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
      "c": false
     }
    ],
    [
     {
-     "n": 327,
+     "n": 321,
      "t": "    if craft == \"a\":",
      "c": true,
      "why": "The menu letter still chooses the branch."
     },
     {
-     "n": 328,
+     "n": 322,
      "t": "        try_craft(player, crafted, PICKAXE)",
      "c": true,
      "why": "One line. The branch names the recipe and nothing else -- no costs, no unpacking, no flag."
     },
     {
-     "n": 329,
+     "n": 323,
      "t": "    elif craft == \"b\":",
      "c": true,
      "why": "Second letter."
     },
     {
-     "n": 330,
+     "n": 324,
      "t": "        try_craft(player, crafted, SHELTER)",
      "c": true,
      "why": "Identical shape. Compare this with the four lines it replaced."
     },
     {
-     "n": 331,
+     "n": 325,
      "t": "    elif craft == \"c\":",
      "c": true,
      "why": "Third letter."
     },
     {
-     "n": 332,
+     "n": 326,
      "t": "        try_craft(player, crafted, BENCH)",
      "c": true,
      "why": "Add a fourth recipe and this is the only place in the function that grows."
     },
     {
-     "n": 333,
+     "n": 327,
      "t": "def eat_and_drink(player, food_cost=2, water_cost=2):",
      "c": false
     },
     {
-     "n": 334,
+     "n": 328,
      "t": "    \"\"\"Week 4 eating, with the daily costs as default parameters.\"\"\"",
      "c": false
     }
@@ -1730,37 +1730,37 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 127,
-     "t": "    separate variables could never do.",
+     "n": 117,
+     "t": "    BENCH:   {\"wood\": 10, \"stone\": 5, \"iron\": 2},",
      "c": false
     },
     {
-     "n": 128,
-     "t": "    \"\"\"",
+     "n": 118,
+     "t": "}",
      "c": false
     }
    ],
    [
     {
-     "n": 136,
+     "n": 130,
      "t": "    low = {name: amount for name, amount in player.items()",
      "c": true,
      "why": "A DICT comprehension: name: amount builds pairs, so `low` is itself a little dictionary."
     },
     {
-     "n": 137,
+     "n": 131,
      "t": "           if name != \"health\" and amount < 5}",
      "c": true,
      "why": "The condition on the end filters. Health is skipped because it is not a resource, and under five is what counts as low."
     },
     {
-     "n": 138,
+     "n": 132,
      "t": "    if low:",
      "c": true,
      "why": "An empty dictionary is False, so this asks \"did anything come back?\""
     },
     {
-     "n": 139,
+     "n": 133,
      "t": "        print(\"  [yellow]Running low: \" + \", \".join(low) + \"[/yellow]\")",
      "c": true,
      "why": "Joining a dictionary joins its KEYS, which is exactly the list of names wanted."
@@ -1768,12 +1768,12 @@ var DEMOS = [
    ],
    [
     {
-     "n": 142,
+     "n": 136,
      "t": "def show_starting_status(name, day, player):",
      "c": false
     },
     {
-     "n": 143,
+     "n": 137,
      "t": "    \"\"\"The Week 2 starting status block, now reading one dict.\"\"\"",
      "c": false
     }
@@ -1847,50 +1847,40 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 127,
-     "t": "    separate variables could never do.",
-     "c": false
+     "n": 121,
+     "t": "def show_inventory(player):",
+     "c": true,
+     "why": "A NEW function -- this is where show_inventory comes from.\n    TODO 8b calls it from both status displays\n    put it near your other defs, above the main loop"
     },
     {
-     "n": 128,
-     "t": "    \"\"\"",
-     "c": false
+     "n": 122,
+     "t": "    \"\"\"The ONE place that prints the resource rows.\"\"\"",
+     "c": true,
+     "why": "One line is enough. The reason it exists is in the panel below."
     },
     {
-     "n": 129,
+     "n": 123,
      "t": "    for name, amount in player.items():",
      "c": true,
      "why": ".items() hands over the key and the value together, so one loop can print both."
     },
     {
-     "n": 130,
+     "n": 124,
      "t": "        if name == \"health\":",
      "c": true,
      "why": "Health is in this dictionary but is not a resource."
     },
     {
-     "n": 131,
+     "n": 125,
      "t": "            continue",
      "c": true,
      "why": "continue skips just this one pass and goes to the next key."
     },
     {
-     "n": 132,
+     "n": 126,
      "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")",
      "c": true,
      "why": "name.title() turns \"wood\" into \"Wood\", and the widths keep the column aligned however long the name is."
-    }
-   ],
-   [
-    {
-     "n": 136,
-     "t": "    low = {name: amount for name, amount in player.items()",
-     "c": false
-    },
-    {
-     "n": 137,
-     "t": "           if name != \"health\" and amount < 5}",
-     "c": false
     }
    ]
   ],
@@ -1939,27 +1929,27 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 156,
+     "n": 150,
      "t": "    print(\"-\" * 40)",
      "c": false
     },
     {
-     "n": 157,
+     "n": 151,
      "t": "    print(\"[bold cyan]Resources:[/bold cyan]\")",
      "c": false
     },
     {
-     "n": 158,
+     "n": 152,
      "t": "    show_inventory(player)",
      "c": true
     },
     {
-     "n": 159,
+     "n": 153,
      "t": "    print(\"-\" * 40)",
      "c": false
     },
     {
-     "n": 160,
+     "n": 154,
      "t": "    print(\"Total resources: \" + str(total_resources))",
      "c": false
     }
