@@ -88,9 +88,12 @@
   .before .code div.ln { background:rgba(138,61,79,.12); }
   .after .code div.ln  { background:rgba(64,162,92,.11); }
   /* Unchanged code, shown only so the snippet can be located in a file whose
-     line numbers are not ours. Dimmed rather than hidden: it has to be
-     readable enough to search for, and quiet enough not to compete. */
-  .code div.ctx { opacity:.5; }
+     line numbers are not ours. Drained of its syntax colors rather than
+     faded: opacity .5 on this ground was genuinely hard to read, and the
+     contrast that matters here is COLORED vs GRAY, not bright vs dim. The
+     changed lines keep every color; the landmarks go monochrome and stay
+     perfectly legible. */
+  .code div.ctx, .code div.ctx span { color:#9099ad; font-style:normal; }
   .gap { text-align:center; color:#585b70; padding:.15rem 0 !important; }
   /* Syntax colors, identical to the other steppers in this course. */
   .code .kw { color:#cba6f7; } .code .fn { color:#89dceb; }
@@ -205,10 +208,12 @@ var DEMOS = [
      "n": 455,
      "t": "crafted = []",
      "c": false
-    },
+    }
+   ],
+   [
     {
-     "n": 456,
-     "t": "",
+     "n": 457,
+     "t": "print()",
      "c": false
     }
    ]
@@ -432,15 +437,17 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 398,
-     "t": "    # NEW: slicing a list. [-3:] is \"the last three\", and it is safe on a",
+     "n": 395,
+     "t": "    print(f\"  {'Health:':<12} {player['health']:>5}\")",
      "c": false
     },
     {
-     "n": 399,
-     "t": "    # list of one -- it just hands back the one.",
+     "n": 396,
+     "t": "    show_inventory(player)",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 400,
      "t": "    if journal:",
@@ -450,15 +457,17 @@ var DEMOS = [
      "n": 401,
      "t": "        print(\"  [dim]Lately: \" + \"; \".join(journal[-3:]) + \"[/dim]\")",
      "c": true
-    },
-    {
-     "n": 402,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 403,
      "t": "    if player[\"health\"] < 30 and player[\"food\"] < 5:",
+     "c": false
+    },
+    {
+     "n": 404,
+     "t": "        print(\"[bold red]CRITICAL: Low health AND low food![/bold red]\")",
      "c": false
     }
    ]
@@ -498,15 +507,17 @@ var DEMOS = [
      "n": 445,
      "t": "has_pickaxe = False",
      "c": true
-    },
-    {
-     "n": 446,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 447,
      "t": "print()",
+     "c": false
+    },
+    {
+     "n": 448,
+     "t": "print(\"You chose \" + mode + \" mode.\")",
      "c": false
     }
    ]
@@ -527,15 +538,17 @@ var DEMOS = [
      "n": 455,
      "t": "crafted = []",
      "c": true
-    },
-    {
-     "n": 456,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 457,
      "t": "print()",
+     "c": false
+    },
+    {
+     "n": 458,
+     "t": "print(\"You chose \" + mode + \" mode.\")",
      "c": false
     }
    ]
@@ -605,15 +618,19 @@ var DEMOS = [
      "n": 306,
      "t": "            has_bench = True",
      "c": true
-    },
-    {
-     "n": 307,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 308,
      "t": "    return wood, stone, iron, has_pickaxe, has_shelter, has_bench",
+     "c": false
+    }
+   ],
+   [
+    {
+     "n": 311,
+     "t": "def eat_and_drink(food, water, health, food_cost=2, water_cost=2):",
      "c": false
     }
    ]
@@ -659,15 +676,17 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 334,
-     "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
+     "n": 333,
+     "t": "    print(\"-\" * 50)",
      "c": false
     },
     {
-     "n": 335,
-     "t": "",
+     "n": 334,
+     "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 336,
      "t": "    if has_shelter:",
@@ -715,15 +734,17 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 342,
-     "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
+     "n": 341,
+     "t": "    print(\"-\" * 50)",
      "c": false
     },
     {
-     "n": 343,
-     "t": "",
+     "n": 342,
+     "t": "    print(\"[bold]Night \" + str(day) + \" falls...[/bold]\")",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 344,
      "t": "    if \"shelter\" in crafted:",
@@ -780,15 +801,19 @@ var DEMOS = [
   "before": [
    [
     {
+     "n": 424,
+     "t": "    return False",
+     "c": false
+    }
+   ],
+   [
+    {
      "n": 434,
      "t": "title_screen()",
      "c": false
-    },
-    {
-     "n": 435,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 436,
      "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()",
@@ -819,15 +844,19 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 440,
-     "t": "# Six separate variables become one dictionary. Everything that used to",
+     "n": 436,
+     "t": "title_screen()",
      "c": false
-    },
+    }
+   ],
+   [
     {
-     "n": 441,
-     "t": "# be passed around six at a time is now passed around once.",
+     "n": 438,
+     "t": "name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 442,
      "t": "player = {",
@@ -867,15 +896,17 @@ var DEMOS = [
      "n": 449,
      "t": "}",
      "c": true
-    },
-    {
-     "n": 450,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 451,
      "t": "day = 1",
+     "c": false
+    },
+    {
+     "n": 452,
+     "t": "max_days = 30",
      "c": false
     }
    ]
@@ -925,15 +956,17 @@ var DEMOS = [
      "n": 511,
      "t": "                wood, stone, iron, has_pickaxe, has_shelter, has_bench)",
      "c": true
-    },
-    {
-     "n": 512,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 513,
      "t": "    food, water, health = eat_and_drink(food, water, health)",
+     "c": false
+    },
+    {
+     "n": 514,
+     "t": "    health = night_phase(day, health, has_shelter, wood)",
      "c": false
     }
    ]
@@ -964,15 +997,17 @@ var DEMOS = [
      "n": 518,
      "t": "            craft_menu(player, crafted)",
      "c": true
-    },
-    {
-     "n": 519,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 520,
      "t": "    eat_and_drink(player)",
+     "c": false
+    },
+    {
+     "n": 521,
+     "t": "    night_phase(day, player, crafted)",
      "c": false
     }
    ]
@@ -990,15 +1025,17 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 101,
-     "t": "",
+     "n": 99,
+     "t": "    for entry in journal:",
      "c": false
     },
     {
-     "n": 102,
-     "t": "",
+     "n": 100,
+     "t": "        print(\"  \" + entry)",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 103,
      "t": "RECIPES = {",
@@ -1023,15 +1060,17 @@ var DEMOS = [
      "n": 107,
      "t": "}",
      "c": true
-    },
+    }
+   ],
+   [
     {
-     "n": 108,
-     "t": "",
+     "n": 110,
+     "t": "def show_inventory(player):",
      "c": false
     },
     {
-     "n": 109,
-     "t": "",
+     "n": 111,
+     "t": "    \"\"\"The ONE place that prints the resources (STEP 7).",
      "c": false
     }
    ]
@@ -1245,15 +1284,17 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 293,
-     "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
+     "n": 292,
+     "t": "        if craft != \"a\" and craft != \"b\" and craft != \"c\" and craft != \"d\":",
      "c": false
     },
     {
-     "n": 294,
-     "t": "",
+     "n": 293,
+     "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 295,
      "t": "    if craft == \"a\":",
@@ -1313,15 +1354,19 @@ var DEMOS = [
      "n": 306,
      "t": "            has_bench = True",
      "c": true
-    },
-    {
-     "n": 307,
-     "t": "",
-     "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 308,
      "t": "    return wood, stone, iron, has_pickaxe, has_shelter, has_bench",
+     "c": false
+    }
+   ],
+   [
+    {
+     "n": 311,
+     "t": "def eat_and_drink(food, water, health, food_cost=2, water_cost=2):",
      "c": false
     }
    ]
@@ -1329,15 +1374,17 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 314,
-     "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
+     "n": 313,
+     "t": "        if craft != \"a\" and craft != \"b\" and craft != \"c\" and craft != \"d\":",
      "c": false
     },
     {
-     "n": 315,
-     "t": "",
+     "n": 314,
+     "t": "            print(\"[red]    Enter a, b, c, or d.[/red]\")",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 316,
      "t": "    if craft == \"a\":",
@@ -1393,15 +1440,17 @@ var DEMOS = [
   "after": [
    [
     {
-     "n": 123,
-     "t": "    # A DICT comprehension. Same shape as the list one, but it builds",
+     "n": 120,
+     "t": "            continue",
      "c": false
     },
     {
-     "n": 124,
-     "t": "    # key: value pairs, so `low` is itself a little dictionary.",
+     "n": 121,
+     "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")",
      "c": false
-    },
+    }
+   ],
+   [
     {
      "n": 125,
      "t": "    low = {name: amount for name, amount in player.items()",
@@ -1421,15 +1470,17 @@ var DEMOS = [
      "n": 128,
      "t": "        print(\"  [yellow]Running low: \" + \", \".join(low) + \"[/yellow]\")",
      "c": true
-    },
+    }
+   ],
+   [
     {
-     "n": 129,
-     "t": "",
+     "n": 131,
+     "t": "def show_starting_status(name, day, player):",
      "c": false
     },
     {
-     "n": 130,
-     "t": "",
+     "n": 132,
+     "t": "    \"\"\"The Week 2 starting status block, now reading one dict.\"\"\"",
      "c": false
     }
    ]
@@ -1528,15 +1579,17 @@ var DEMOS = [
      "n": 121,
      "t": "        print(f\"  {name.title() + ':':<12} {amount:>5}\")",
      "c": true
-    },
+    }
+   ],
+   [
     {
-     "n": 122,
-     "t": "",
+     "n": 125,
+     "t": "    low = {name: amount for name, amount in player.items()",
      "c": false
     },
     {
-     "n": 123,
-     "t": "    # A DICT comprehension. Same shape as the list one, but it builds",
+     "n": 126,
+     "t": "           if name != \"health\" and amount < 5}",
      "c": false
     }
    ]
@@ -1571,10 +1624,12 @@ var DEMOS = [
      "n": 395,
      "t": "    print(\"Food: \" + str(food) + \"  Water: \" + str(water))",
      "c": false
-    },
+    }
+   ],
+   [
     {
-     "n": 396,
-     "t": "",
+     "n": 397,
+     "t": "    if health < 30 and food < 5:",
      "c": false
     }
    ]
