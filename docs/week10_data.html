@@ -886,7 +886,7 @@ var DEMOS = [
   "buys": "One line now works for every recipe, instead of one line per flag.",
   "note": "Three lines become one, and that one does not name a recipe. Write it in each branch for now &mdash; by TODO 6b all three branches share a single copy inside <code>try_craft</code>, which is where the after column shows it.",
   "src9": true,
-  "band": "Goes INSIDE each branch, where has_pickaxe = True used to be --\nthree branches, three appends, each naming its own constant. The\npane shows where STEP 6 finally puts it, once try_craft is handed\nthe crafted list. This week it is not, so it stays in the branches."
+  "band": "goes where the flag was -- inside each branch\n    three branches, three appends\n    each names its own constant"
  },
  {
   "todo": "3d",
@@ -1463,7 +1463,7 @@ var DEMOS = [
      "n": 300,
      "t": "    for resource, needed in costs.items():",
      "c": true,
-     "why": "TWO names after `for`, and this is the first time in this game.\nA dictionary holds pairs, and .items() hands over the whole pair each time round -- so the loop needs somewhere to put both: the key goes in `resource`, the value in `needed`. One name would catch only the key.\n`resource` and `needed` are names YOU chose, not keywords. Call them k and v and it runs the same; call them what they are and the next line reads like English.\nIt is still the Module 4 for loop. One pass per ingredient -- two for a pickaxe, three for the bench -- and FIRST LOOP means it only checks. Nothing is spent yet."
+     "why": "TWO names after `for` -- first time in this game\n    .items() hands over a PAIR each pass\n    resource = the key, needed = the value\n    one name alone would catch only the key\nFIRST LOOP -- checks only, spends nothing"
     },
     {
      "n": 301,
