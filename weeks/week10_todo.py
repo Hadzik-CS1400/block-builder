@@ -83,6 +83,61 @@
 
 
 # =============================================================================
+# PART 0 - TWO FIXES, BEFORE ANYTHING ELSE
+# =============================================================================
+# Neither of these is about lists or dictionaries. They are repairs, and they
+# come first because the rest of the week builds on this code and you do not
+# want to be debugging Week 7 while you are learning dictionaries.
+#
+# The second one is our fault, not yours. It is written up plainly below.
+
+# -----------------------------------------------------------------------------
+# STEP 0: run the game against something that has no habits
+# -----------------------------------------------------------------------------
+# TODO 0a: before you change a single line, run:
+#
+#              python playtest.py all
+#
+#          and fix whatever it reports.
+#
+#          Why now: the weekly tests only ever chop wood. Six hundred times.
+#          So every bug that lives in exploring, crafting or resting has
+#          never once been run by anything that grades you, and can sit in
+#          your file for a month looking like nothing is wrong. playtest
+#          presses the other keys.
+#
+#          It tells you the error, the file and the line, and for the common
+#          ones it tells you what the error usually means. Expect it to find
+#          something. Finding nothing is also a result -- note it and move on.
+#
+# TODO 0b: give try_craft an iron parameter, if it does not have one.
+#
+#          THIS ONE IS OUR MISTAKE. Week 7 asked you to write
+#
+#              def try_craft(item_name, wood, stone, wood_cost, stone_cost):
+#
+#          -- no iron. But the crafting bench costs 2 iron, so that function
+#          cannot check the one ingredient that matters for it, and the
+#          bench has been craftable without iron ever since. The worked
+#          answer we published took iron; the instructions did not. They
+#          should have matched, and they will next semester.
+#
+#          If yours already takes iron, there is nothing to do here.
+#          Otherwise add it alongside the others:
+#
+#              def try_craft(item_name, wood, stone, iron,
+#                            wood_cost, stone_cost, iron_cost=0):
+#
+#          `iron_cost=0` is a default parameter, from Week 7: most recipes
+#          do not use iron, so most calls can leave it off entirely.
+#
+#          STEP 6 rewrites this function completely, so this is the last
+#          time you will touch its parameter list. Fix it anyway -- a
+#          refactor that starts from a broken function produces a broken
+#          function in a nicer shape.
+
+
+# =============================================================================
 # PART A - LISTS
 # =============================================================================
 
