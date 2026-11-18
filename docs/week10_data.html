@@ -22,65 +22,94 @@
           --before:#8a3d4f; --after:#1f3d24; --acc:#0a7040; --card:#fff; }
   * { box-sizing: border-box; }
   body { margin:0; padding:1.1rem; background:var(--bg); color:var(--ink);
-         font-family:'Segoe UI',system-ui,Arial,sans-serif; line-height:1.5; }
-  h1 { font-size:1.3rem; margin:0 0 .25rem; }
-  .sub { margin:0 0 .9rem; color:var(--dim); font-size:.93rem; max-width:72ch; }
+         font-family:'Segoe UI',system-ui,Arial,sans-serif; line-height:1.55;
+         font-size:17px; }
+  h1 { font-size:1.6rem; margin:0 0 .3rem; }
+  .sub { margin:0 0 .9rem; color:var(--dim); font-size:1.02rem; max-width:70ch; }
   .rail { display:flex; flex-wrap:wrap; gap:.3rem; align-items:center;
           margin-bottom:.8rem; }
-  .rail .pl { font-size:.7rem; font-weight:800; letter-spacing:.05em;
+  .rail .pl { font-size:.8rem; font-weight:800; letter-spacing:.05em;
               color:var(--dim); text-transform:uppercase; margin:0 .3rem; }
-  .dot { font:inherit; font-size:.78rem; font-weight:700; cursor:pointer;
-         min-width:2.4rem; padding:.3rem .25rem; border:1px solid var(--line);
+  .dot { font:inherit; font-size:.92rem; font-weight:700; cursor:pointer;
+         min-width:2.7rem; padding:.35rem .3rem; border:1px solid var(--line);
          border-radius:6px; background:var(--card); color:var(--ink); }
   .dot[aria-pressed="true"] { background:var(--acc); color:#fff;
                               border-color:var(--acc); }
   .dot.done { border-color:var(--acc); color:var(--acc); }
   .bar { display:flex; gap:.5rem; align-items:center; margin-bottom:.7rem;
          flex-wrap:wrap; }
-  .bar button { font:inherit; font-size:.9rem; padding:.4rem .9rem;
+  .bar button { font:inherit; font-size:1.02rem; padding:.5rem 1.1rem;
                 border:1px solid var(--line); border-radius:7px;
                 background:var(--card); cursor:pointer; }
   .bar button:disabled { opacity:.4; cursor:default; }
-  .count { color:var(--dim); font-size:.85rem; }
+  .count { color:var(--dim); font-size:.95rem; }
   .kbd { border:1px solid var(--line); border-radius:4px; padding:0 .3rem;
-         font-size:.8rem; background:var(--card); }
+         font-size:.9rem; background:var(--card); }
   .head { background:var(--card); border:1px solid var(--line);
           border-left:4px solid var(--acc); border-radius:10px;
           padding:.7rem 1rem; margin-bottom:.8rem; }
-  .head .tn { font-size:.72rem; font-weight:800; letter-spacing:.05em;
+  .head .tn { font-size:.82rem; font-weight:800; letter-spacing:.05em;
               color:var(--acc); text-transform:uppercase; }
-  .head h2 { margin:.1rem 0 0; font-size:1.05rem; }
+  .head h2 { margin:.1rem 0 0; font-size:1.3rem; }
   .cols { display:flex; gap:.9rem; flex-wrap:wrap; }
-  .col { flex:1 1 27rem; min-width:0; }
-  .colhead { font-size:.76rem; font-weight:800; letter-spacing:.04em;
+  .col { flex:1 1 32rem; min-width:0; }
+  .colhead { font-size:.86rem; font-weight:800; letter-spacing:.04em;
              padding:.25rem .1rem; text-transform:uppercase; }
   .before .colhead { color:var(--before); }
   .after .colhead { color:var(--after); }
-  .code { background:#11111b; border-radius:9px; padding:.65rem .35rem;
+  /* ---- the editor ------------------------------------------------------
+     Dressed as a code editor on purpose: a filename tab, a gutter with real
+     line numbers, a change mark per line, and the same syntax colors the
+     steppers in Modules 4-11 use. A student reads this next to VS Code, and
+     two different color schemes for the same Python is a gap they have to
+     close in their head for no reason. */
+  .pane { border-radius:9px; overflow:hidden; border:1px solid #2a2c33; }
+  .tabbar { background:#1a1b23; display:flex; align-items:center;
+            gap:.5rem; padding:.3rem .55rem; border-bottom:1px solid #2a2c33; }
+  .tabbar .fname { background:#11111b; color:#cdd6f4; font-size:.92rem;
+                   font-family:Consolas,'Courier New',monospace;
+                   padding:.2rem .6rem; border-radius:5px 5px 0 0;
+                   border-top:2px solid var(--acc); }
+  .before .tabbar .fname { border-top-color:var(--before); }
+  .tabbar .meta { color:#7f849c; font-size:.82rem; letter-spacing:.03em;
+                  text-transform:uppercase; font-weight:700; }
+  .code { background:#11111b; padding:.5rem 0;
           overflow-x:auto; font-family:Consolas,'Courier New',monospace;
-          font-size:.83rem; line-height:1.55; }
-  .code div { white-space:pre; color:#cdd6f4; padding:0 .5rem; }
-  .code .n { display:inline-block; min-width:3.2ch; text-align:right;
-             margin-right:.9rem; color:#585b70; }
+          font-size:1.02rem; line-height:1.65; }
+  .code div { white-space:pre; color:#cdd6f4; padding:0 .7rem 0 0; }
+  .code .n { display:inline-block; min-width:4ch; text-align:right;
+             margin-right:.8rem; padding-right:.55rem; color:#585b70;
+             border-right:1px solid #2a2c33; user-select:none; }
+  /* The change mark, where an IDE puts its gutter diff bar. */
+  .code .mk { display:inline-block; width:1.2ch; margin-right:.4rem;
+              font-weight:800; user-select:none; }
+  .before .code .mk { color:#8a3d4f; }
+  .after .code .mk { color:#40a25c; }
+  .before .code div.ln { background:rgba(138,61,79,.12); }
+  .after .code div.ln  { background:rgba(64,162,92,.11); }
   .gap { text-align:center; color:#585b70; padding:.15rem 0 !important; }
+  /* Syntax colors, identical to the other steppers in this course. */
+  .code .kw { color:#cba6f7; } .code .fn { color:#89dceb; }
+  .code .st { color:#a6e3a1; } .code .nm { color:#fab387; }
+  .code .cm { color:#6c7086; font-style:italic; }
   .none { background:var(--card); border:1px dashed var(--line);
-          border-radius:9px; padding:1rem; color:var(--dim); font-size:.89rem;
+          border-radius:9px; padding:1rem; color:var(--dim); font-size:1rem;
           font-style:italic; }
   .shape { display:flex; gap:.9rem; flex-wrap:wrap; margin:.9rem 0 .25rem; }
   .box { flex:1 1 16rem; background:var(--card); border:1px solid var(--line);
          border-radius:10px; padding:.7rem .95rem; }
-  .box h3 { margin:0 0 .3rem; font-size:.82rem; text-transform:uppercase;
+  .box h3 { margin:0 0 .35rem; font-size:.88rem; text-transform:uppercase;
             letter-spacing:.04em; color:var(--dim); }
   .box.was { border-left:4px solid var(--before); }
   .box.now { border-left:4px solid var(--after); }
   .box.buys { border-left:4px solid var(--acc); flex-basis:100%; }
-  .box p { margin:0; font-size:.92rem; }
+  .box p { margin:0; font-size:1.02rem; }
   .note { background:#fff8e1; border-left:4px solid #8f6a00;
-          border-radius:10px; padding:.8rem 1.05rem; font-size:.93rem;
+          border-radius:10px; padding:.9rem 1.15rem; font-size:1.04rem;
           max-width:88ch; }
   code { background:#eef0f4; padding:.05rem .3rem; border-radius:4px;
          font-family:Consolas,'Courier New',monospace; font-size:.92em; }
-  .legend { color:var(--dim); font-size:.84rem; margin-top:1rem;
+  .legend { color:var(--dim); font-size:.93rem; margin-top:1rem;
             max-width:82ch; }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -983,7 +1012,42 @@ function esc(s) {
                   .replace(/>/g, "&gt;");
 }
 
-function codeHTML(segments) {
+/* One pass, first alternative wins, so a keyword inside a string is never
+   re-colored. A colorer, not a parser -- written against the constructs
+   these two game files actually use.
+
+   The string alternative sits above the word ones and allows backslash
+   escapes, which is what makes the f-strings in this week's code come out
+   right: f"  {name.title() + ':':<12} {amount:>5}" has single quotes INSIDE
+   a double-quoted string, and a naive pattern ends the string at them and
+   then colors the rest of the line as if it were code. */
+var TOKENS = new RegExp([
+  "(#.*$)",                                                  // comment
+  "(\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*')",   // string
+  "\\b(print|len|input|int|str|float|range|list|dict|sorted|" +
+    "enumerate|append|items|keys|values|get|title|upper|lower|" +
+    "strip|split|join|randint|choice|ceil|remove|pop|sort)\\b",
+  "\\b(def|class|return|if|elif|else|for|while|in|not|and|or|" +
+    "None|True|False|import|from|break|continue|pass|try|except|" +
+    "raise|with|as|del|is|global)\\b",
+  "\\b(\\d+\\.\\d+|\\d+)\\b"                                // number
+].join("|"), "g");
+
+function hi(src) {
+  return esc(src).replace(TOKENS, function (m, cm, st, fn, kw, nm) {
+    if (cm) { return '<span class="cm">' + cm + "</span>"; }
+    if (st) { return '<span class="st">' + st + "</span>"; }
+    if (fn) { return '<span class="fn">' + fn + "</span>"; }
+    if (kw) { return '<span class="kw">' + kw + "</span>"; }
+    return '<span class="nm">' + nm + "</span>";
+  });
+}
+
+function codeHTML(segments, side) {
+  var mark = side === "before" ? "-" : "+";
+  var label = side === "before" ? "Week 9" : "this TODO";
+  var head = '<div class="tabbar"><span class="fname">game.py</span>' +
+             '<span class="meta">' + label + "</span></div>";
   if (!segments) {
     return '<p class="none">Nothing. This code did not exist last week ' +
            "&mdash; there was no shape that could hold it.</p>";
@@ -992,11 +1056,12 @@ function codeHTML(segments) {
   segments.forEach(function (seg, i) {
     if (i) { out.push('<div class="gap">&middot; &middot; &middot;</div>'); }
     seg.forEach(function (ln) {
-      out.push("<div><span class=\"n\">" + ln.n + "</span>" +
-               esc(ln.t) + "</div>");
+      out.push('<div class="ln"><span class="n">' + ln.n + "</span>" +
+               '<span class="mk">' + mark + "</span>" + hi(ln.t) + "</div>");
     });
   });
-  return '<div class="code">' + out.join("") + "</div>";
+  return '<div class="pane">' + head +
+         '<div class="code">' + out.join("") + "</div></div>";
 }
 
 function buildRail() {
@@ -1028,9 +1093,9 @@ function render() {
       " &middot; TODO " + esc(d.todo) + '</div><h2>' + esc(d.title) + "</h2></div>" +
     '<div class="cols">' +
       '<div class="col before"><div class="colhead">Before &mdash; your Week 9 game</div>' +
-        codeHTML(d.before) + "</div>" +
+        codeHTML(d.before, "before") + "</div>" +
       '<div class="col after"><div class="colhead">After &mdash; this TODO</div>' +
-        codeHTML(d.after) + "</div>" +
+        codeHTML(d.after, "after") + "</div>" +
     "</div>" +
     '<div class="shape">' +
       '<div class="box was"><h3>The shape it was</h3><p>' + d.was + "</p></div>" +
