@@ -179,6 +179,34 @@
 <script>
 var DEMOS = [
  {
+  "todo": "0b",
+  "part": "0",
+  "title": "Give try_craft the iron parameter it was never given",
+  "before": [
+   [
+    {
+     "n": 158,
+     "t": "#         def try_craft(item_name, wood, stone, wood_cost, stone_cost):",
+     "c": true
+    }
+   ]
+  ],
+  "after": [
+   [
+    {
+     "n": 260,
+     "t": "def try_craft(item_name, wood, stone, iron, wood_cost, stone_cost, iron_cost=0):",
+     "c": true
+    }
+   ]
+  ],
+  "was": "five parameters, and no way to see iron at all",
+  "now": "iron alongside the others, with a default cost of 0",
+  "buys": "The crafting bench costs 2 iron. Without that parameter the function cannot check the one ingredient that matters for it, so the bench has been craftable without iron all term.",
+  "note": "<strong>This one is our mistake, not yours.</strong> The left pane is the line Week 7 printed in its instructions; the right is what the published answer actually used. They should have matched and they did not. <code>iron_cost=0</code> is a default parameter from Week 7 &mdash; most recipes do not use iron, so most calls can still leave it off. STEP 6 replaces this function entirely, so fix it now and you will not touch its parameters again.",
+  "band": "replaces:  #         def try_craft(item_name, wood, stone, wood_cost, stone_cost):"
+ },
+ {
   "todo": "1a",
   "part": "A",
   "title": "Start the journal as a list",
@@ -1767,7 +1795,7 @@ var DEMOS = [
   "band": "replaces:  print(\"Wood: \" + str(wood) + \"  Stone: \" + str(stone) + \"  Iron: \" + str(iron))"
  }
 ];
-var PARTS = {"A": "Part A &mdash; Lists", "B": "Part B &mdash; Dictionaries"};
+var PARTS = {"0": "Part 0 &mdash; Fix first", "A": "Part A &mdash; Lists", "B": "Part B &mdash; Dictionaries"};
 var at = 0;
 var railEl = document.getElementById("rail");
 var stage = document.getElementById("stage");
