@@ -98,6 +98,15 @@
   /* Indentation is always measured at the smaller size, so four spaces are
      four spaces on every row and the code lines up in one column. */
   .code .ind { display:inline-block; font-size:.94rem; }
+  /* The THIS STEP band, same shape as the CS 2420 steppers use. It
+     carries what the code cannot: which old line just went. */
+  .code div.calc { background:#f9e2af; color:#1e1e2e;
+                   white-space:pre-wrap; font-size:.94rem;
+                   padding:.4rem .9rem; margin:.15rem 0;
+                   border-left:4px solid #b8860b; }
+  .code div.calc::before { content:"THIS STEP"; font-size:.62rem;
+                           font-weight:800; letter-spacing:.08em;
+                           display:block; color:#6b4f04; }
   .before .code .mk { color:#8a3d4f; }
   .after .code .mk { color:#40a25c; }
   .before .code div.ln { background:rgba(138,61,79,.12); }
@@ -236,7 +245,8 @@ var DEMOS = [
   "was": "an empty string",
   "now": "an empty list",
   "buys": "A list holds each entry as its own item, so you can loop over it and slice it. The journal used to be one long piece of text.",
-  "note": "Both are &ldquo;empty&rdquo;. Only one of them can be appended to."
+  "note": "Both are &ldquo;empty&rdquo;. Only one of them can be appended to.",
+  "band": "replaces:  journal = \"\""
  },
  {
   "todo": "1b",
@@ -283,7 +293,8 @@ var DEMOS = [
   "was": "build a NEW string and hand it back",
   "now": "change the list that already exists",
   "buys": "A list can be changed in place, so the function does not need to hand anything back.",
-  "note": "<strong>This is the whole week in one function.</strong> A string cannot be changed, so the only way to add to it was to make a new one and return it. A list is <em>mutable</em>: <code>.append()</code> changes the one list everybody is sharing, so the <code>return</code> has nothing left to do."
+  "note": "<strong>This is the whole week in one function.</strong> A string cannot be changed, so the only way to add to it was to make a new one and return it. A list is <em>mutable</em>: <code>.append()</code> changes the one list everybody is sharing, so the <code>return</code> has nothing left to do.",
+  "band": "replaces the 3 lines on the left, starting at\n           def add_journal(journal, day, event):"
  },
  {
   "todo": "1c",
@@ -350,7 +361,8 @@ var DEMOS = [
   "was": "catch the new journal on the way out",
   "now": "just call it",
   "buys": "The list was already changed inside the function, so there is nothing left to assign.",
-  "note": "<strong>The single most common way to lose an hour this week.</strong> Leave the <code>journal =</code> on the front and <code>journal</code> becomes <code>None</code>, because <code>.append()</code> returns nothing. The game runs on for a while and then fails somewhere else entirely, with nothing pointing back at this line."
+  "note": "<strong>The single most common way to lose an hour this week.</strong> Leave the <code>journal =</code> on the front and <code>journal</code> becomes <code>None</code>, because <code>.append()</code> returns nothing. The game runs on for a while and then fails somewhere else entirely, with nothing pointing back at this line.",
+  "band": "replaces:  journal = add_journal(journal, day, \"a new day began\")"
  },
  {
   "todo": "2a",
@@ -442,7 +454,8 @@ var DEMOS = [
   "was": "split the string back apart, then skip the blanks",
   "now": "loop over the entries",
   "buys": "The entries are already separate, so there is nothing to split apart.",
-  "note": "Look at what left: <code>.split(\"\\n\")</code> and the <code>if entry.strip() != \"\"</code> that had to throw away the empty piece splitting always leaves behind. Both existed only to undo the joining. <code>if not journal:</code> is how you ask a list whether it is empty."
+  "note": "Look at what left: <code>.split(\"\\n\")</code> and the <code>if entry.strip() != \"\"</code> that had to throw away the empty piece splitting always leaves behind. Both existed only to undo the joining. <code>if not journal:</code> is how you ask a list whether it is empty.",
+  "band": "replaces the 7 lines on the left, starting at\n           def show_journal(journal):"
  },
  {
   "todo": "2b",
@@ -490,7 +503,8 @@ var DEMOS = [
   "was": "nothing &mdash; &ldquo;the last three&rdquo; of a string meant counting characters",
   "now": "a slice, <code>journal[-3:]</code>",
   "buys": "A slice gives you part of a list in one expression, and it copes when there are fewer than three entries.",
-  "note": "<code>[-3:]</code> reads as <em>from three before the end, to the end</em>. Try it on day 1 and watch it cope &mdash; that tolerance is why slices get used instead of index arithmetic."
+  "note": "<code>[-3:]</code> reads as <em>from three before the end, to the end</em>. Try it on day 1 and watch it cope &mdash; that tolerance is why slices get used instead of index arithmetic.",
+  "band": "2 new lines. Nothing was here last week."
  },
  {
   "todo": "3a",
@@ -571,7 +585,8 @@ var DEMOS = [
   "was": "three booleans",
   "now": "one list of names",
   "buys": "One list can hold everything you have built, so a fourth recipe does not mean a fourth variable.",
-  "note": "Three names that could only ever answer three fixed questions, replaced by one that can answer any of them &mdash; including ones you have not thought of yet."
+  "note": "Three names that could only ever answer three fixed questions, replaced by one that can answer any of them &mdash; including ones you have not thought of yet.",
+  "band": "replaces the 3 lines on the left, starting at\n           has_shelter = False"
  },
  {
   "todo": "3b",
@@ -624,7 +639,8 @@ var DEMOS = [
   "was": "the name typed as a bare string wherever it was needed",
   "now": "three constants, each written once",
   "buys": "A mistyped name becomes an error instead of silence. <code>SHELTER</code> spelled wrong is a NameError on the first run; <code>\"sheltr\"</code> is just never in the list.",
-  "note": "<code>if \"sheltr\" in crafted:</code> is perfectly good Python. It is simply always <code>False</code>, so the shelter never works and <strong>nothing points at the line that caused it</strong> &mdash; you would go hunting in night_phase. CAPITALS are the convention for a value that never changes, and you already have one in this game."
+  "note": "<code>if \"sheltr\" in crafted:</code> is perfectly good Python. It is simply always <code>False</code>, so the shelter never works and <strong>nothing points at the line that caused it</strong> &mdash; you would go hunting in night_phase. CAPITALS are the convention for a value that never changes, and you already have one in this game.",
+  "band": "3 new lines. Nothing was here last week."
  },
  {
   "todo": "3c",
@@ -739,7 +755,8 @@ var DEMOS = [
   "was": "set whichever flag this branch owns",
   "now": "append whatever was crafted",
   "buys": "One line now works for every recipe, instead of one line per flag.",
-  "note": "Three lines become one, and that one does not name a recipe. Write it in each branch for now &mdash; by TODO 6b all three branches share a single copy inside <code>try_craft</code>, which is where the after column shows it."
+  "note": "Three lines become one, and that one does not name a recipe. Write it in each branch for now &mdash; by TODO 6b all three branches share a single copy inside <code>try_craft</code>, which is where the after column shows it.",
+  "band": "replaces the 3 lines on the left, starting at\n           has_pickaxe = True"
  },
  {
   "todo": "3d",
@@ -864,7 +881,8 @@ var DEMOS = [
   "was": "a boolean per thing you might have built",
   "now": "<code>in</code>, asking the list",
   "buys": "Asking the list works for any recipe, so these lines never need editing again.",
-  "note": "Same <code>in</code> you used on strings in Module 7 and on lists in Module 8. Nothing new &mdash; it is just pointed at the game's own data now."
+  "note": "Same <code>in</code> you used on strings in Module 7 and on lists in Module 8. Nothing new &mdash; it is just pointed at the game's own data now.",
+  "band": "replaces:  if has_shelter:\n           if has_shelter and has_bench:"
  },
  {
   "todo": "4",
@@ -986,7 +1004,8 @@ var DEMOS = [
   "was": "six separate names",
   "now": "one dictionary, keyed by name",
   "buys": "The resources can be <strong>looped over</strong> once they are in a dictionary. There is no way to say &ldquo;for each resource&rdquo; about six separate variables.",
-  "note": "This is the change the rest of Part B is built on. TODO 7 and TODO 8 are both impossible without it, and neither is about dictionaries for their own sake: one asks <em>which</em> resources are low, the other prints every resource from a single loop."
+  "note": "This is the change the rest of Part B is built on. TODO 7 and TODO 8 are both impossible without it, and neither is about dictionaries for their own sake: one asks <em>which</em> resources are low, the other prints every resource from a single loop.",
+  "band": "replaces:  name, mode, health, actions_per_day, wood, stone, food, water = get_player_info()\n           iron = 0"
  },
  {
   "todo": "5",
@@ -1087,7 +1106,8 @@ var DEMOS = [
   "was": "a tuple out, unpacked into the same names, at every call",
   "now": "one argument in, nothing out",
   "buys": "A dictionary can be changed in place, just like the list in Part A, so the function does not need to return anything.",
-  "note": "The same lesson as <code>add_journal</code>, arriving a second time on a different type. <strong>Mutable means the caller sees the change without being handed anything back</strong> &mdash; which is what deletes the <code>return</code> and the unpacking together."
+  "note": "The same lesson as <code>add_journal</code>, arriving a second time on a different type. <strong>Mutable means the caller sees the change without being handed anything back</strong> &mdash; which is what deletes the <code>return</code> and the unpacking together.",
+  "band": "replaces the 4 lines on the left, starting at\n           health, wood, stone, iron, food, water = explore("
  },
  {
   "todo": "6a",
@@ -1150,7 +1170,8 @@ var DEMOS = [
   "was": "nothing &mdash; the costs were numbers typed into three separate calls",
   "now": "a dict of dicts, at the top of the file",
   "buys": "The recipes become <strong>data</strong>. Adding a fourth one is a line at the top of the file instead of a new branch.",
-  "note": "Each value is itself a dictionary, which is why <code>RECIPES[\"shelter\"]</code> hands back <code>{\"wood\": 20, \"stone\": 10}</code> rather than a single number. Notice the bench needs iron and the pickaxe does not &mdash; the recipes no longer have to agree on which ingredients exist."
+  "note": "Each value is itself a dictionary, which is why <code>RECIPES[\"shelter\"]</code> hands back <code>{\"wood\": 20, \"stone\": 10}</code> rather than a single number. Notice the bench needs iron and the pickaxe does not &mdash; the recipes no longer have to agree on which ingredients exist.",
+  "band": "5 new lines. Nothing was here last week."
  },
  {
   "todo": "6b",
@@ -1347,7 +1368,8 @@ var DEMOS = [
   "was": "a parameter per ingredient, with defaults for the unused ones",
   "now": "a lookup, then two loops over whatever that recipe needs",
   "buys": "One function now handles a recipe with any number of ingredients, without being rewritten.",
-  "note": "<strong>Two loops, not one.</strong> Check everything first, then spend &mdash; spend as you go and a recipe you cannot afford still takes your wood. And <code>.get(resource, 0)</code> is load-bearing: the pickaxe recipe never mentions iron, and a player who has never held iron has no <code>\"iron\"</code> key, so <code>player[\"iron\"]</code> would raise <code>KeyError</code> and end the game. Keep both of your old messages &mdash; you are moving them, not deleting them."
+  "note": "<strong>Two loops, not one.</strong> Check everything first, then spend &mdash; spend as you go and a recipe you cannot afford still takes your wood. And <code>.get(resource, 0)</code> is load-bearing: the pickaxe recipe never mentions iron, and a player who has never held iron has no <code>\"iron\"</code> key, so <code>player[\"iron\"]</code> would raise <code>KeyError</code> and end the game. Keep both of your old messages &mdash; you are moving them, not deleting them.",
+  "band": "replaces the 16 lines on the left, starting at\n           def try_craft(item_name, wood, stone, iron, wood_cost, stone_cost, iron_cost=0):"
  },
  {
   "todo": "6c",
@@ -1502,7 +1524,8 @@ var DEMOS = [
   "was": "unpack four values, then set the matching flag",
   "now": "one call, naming the recipe",
   "buys": "The branch only has to say which recipe. Everything else moved into try_craft.",
-  "note": "This is where Part A and Part B meet: the flag went away in TODO 3a and the cost parameters went away in 6b, so what is left is the branch saying <em>which recipe</em> and nothing else."
+  "note": "This is where Part A and Part B meet: the flag went away in TODO 3a and the cost parameters went away in 6b, so what is left is the branch saying <em>which recipe</em> and nothing else.",
+  "band": "replaces the 12 lines on the left, starting at\n           if craft == \"a\":"
  },
  {
   "todo": "7",
@@ -1560,7 +1583,8 @@ var DEMOS = [
   "was": "nothing &mdash; it would have meant six <code>if</code> statements, one per variable",
   "now": "a dict comprehension over the dict from TODO 4",
   "buys": "One expression can ask about <em>all</em> the resources at once, including any you add later.",
-  "note": "It is the list comprehension from Module 8 with a colon in it, and the colon is what makes the result a dict instead of a list. Leave the colon out and you have built a set."
+  "note": "It is the list comprehension from Module 8 with a colon in it, and the colon is what makes the result a dict instead of a list. Leave the colon out and you have built a set.",
+  "band": "4 new lines. Nothing was here last week."
  },
  {
   "todo": "8a",
@@ -1669,7 +1693,8 @@ var DEMOS = [
   "was": "one <code>print</code> per resource, hand-written",
   "now": "one loop over the dict",
   "buys": "The rows are built from the dictionary, so adding a resource makes a row appear with no change here at all.",
-  "note": "<code>name.title()</code> is doing the work your typed labels used to do &mdash; <code>\"wood\"</code> becomes <code>Wood:</code>. The <code>continue</code> skips health, which lives in the same dict but is not a resource."
+  "note": "<code>name.title()</code> is doing the work your typed labels used to do &mdash; <code>\"wood\"</code> becomes <code>Wood:</code>. The <code>continue</code> skips health, which lives in the same dict but is not a resource.",
+  "band": "replaces the 6 lines on the left, starting at\n           print(\"[bold cyan]Resources:[/bold cyan]\")"
  },
  {
   "todo": "8b",
@@ -1738,7 +1763,8 @@ var DEMOS = [
   "was": "the same rows written out in two different functions",
   "now": "one call, in both places",
   "buys": "There is only one copy of the rows now, so the two displays cannot disagree.",
-  "note": "Those rows were duplicated in <strong>two</strong> functions, so every change had to be made twice or the two displays disagreed. That is a whole class of bug, deleted rather than fixed."
+  "note": "Those rows were duplicated in <strong>two</strong> functions, so every change had to be made twice or the two displays disagreed. That is a whole class of bug, deleted rather than fixed.",
+  "band": "replaces:  print(\"Wood: \" + str(wood) + \"  Stone: \" + str(stone) + \"  Iron: \" + str(iron))"
  }
 ];
 var PARTS = {"A": "Part A &mdash; Lists", "B": "Part B &mdash; Dictionaries"};
@@ -1785,7 +1811,7 @@ function hi(src) {
   });
 }
 
-function codeHTML(segments, side, ahead) {
+function codeHTML(segments, side, band) {
   var mark = side === "before" ? "-" : "+";
   var label = side === "before" ? "Week 9" : "this TODO";
   var head = '<div class="tabbar"><span class="fname">game.py</span>' +
@@ -1795,6 +1821,12 @@ function codeHTML(segments, side, ahead) {
            "&mdash; there was no shape that could hold it.</p>";
   }
   var out = [];
+  /* The band goes under the LAST changed line of the pane, the way CT18's
+     stepper puts it under the line it explains. */
+  var lastChanged = -1;
+  segments.forEach(function (seg) {
+    seg.forEach(function (ln) { if (ln.c) { lastChanged = ln.n; } });
+  });
   segments.forEach(function (seg, i) {
     if (i) { out.push('<div class="gap">&middot; &middot; &middot;</div>'); }
     seg.forEach(function (ln) {
@@ -1813,6 +1845,9 @@ function codeHTML(segments, side, ahead) {
                '<span class="mk">' + m + "</span>" +
                '<span class="ind">' + cut[1] + "</span>" +
                hi(cut[2]) + "</div>");
+      if (side === "after" && band && ln.n === lastChanged) {
+        out.push('<div class="calc">' + esc(band) + "</div>");
+      }
     });
   });
   return '<div class="pane">' + head +
@@ -1850,7 +1885,7 @@ function render() {
       '<div class="col before"><div class="colhead">Before &mdash; your Week 9 game</div>' +
         codeHTML(d.before, "before") + "</div>" +
       '<div class="col after"><div class="colhead">After &mdash; this TODO</div>' +
-        codeHTML(d.after, "after", d.ahead) + "</div>" +
+        codeHTML(d.after, "after", d.band) + "</div>" +
     "</div>" +
     '<div class="shape">' +
       '<div class="box was"><h3>The shape it was</h3><p>' + d.was + "</p></div>" +
