@@ -1,0 +1,20 @@
+# mixed.txt - a bit of everything
+#
+# Walks the whole action menu in order, then the crafting bench, then round
+# again. The widest script here: if a menu option is broken, this is the one
+# most likely to find it. It is also the least focused, so when it does break
+# the other scripts tell you where.
+
+PlayTester   # the name, asked once when the game starts
+1            # difficulty, asked once - easy
+---          # below here repeats for as long as the game asks
+1     # action menu - chop wood
+2     # action menu - mine stone
+3     # action menu - gather food
+4     # action menu - collect water
+5     # action menu - explore
+1     # explore's "1 or 2" - risky option
+5     # action menu - explore again
+2     # explore's "1 or 2" - safe option
+6     # action menu - open the crafting bench
+a     # craft menu - wooden pickaxe

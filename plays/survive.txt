@@ -1,0 +1,16 @@
+# survive.txt - stay alive, the long way
+#
+# Food, water, then the materials for a shelter. The only script that plays
+# the game the way it is meant to be played, so it is the one that reaches
+# the late days -- and the only one that finds bugs that need a high day
+# number to happen.
+
+PlayTester   # the name, asked once when the game starts
+2            # difficulty, asked once - normal
+---          # below here repeats for as long as the game asks
+3     # action menu - gather food, or you starve
+4     # action menu - collect water
+1     # action menu - chop wood for the shelter
+2     # action menu - mine stone for the shelter
+6     # action menu - open the crafting bench
+b     # craft menu - build the shelter, which stops the nightly damage
