@@ -131,6 +131,31 @@ def multi_returns(tree):
     return out
 
 
+MUTATORS = ("append", "remove", "pop", "insert", "extend", "update", "clear")
+
+
+def changes_a_parameter(fn):
+    """True if fn changes a list or dict it was handed, in place.
+
+    player["wood"] = ..., player["wood"] += 3, journal.append(...) -- the
+    Week 10 shape. A mutable parameter changed in place reaches the caller
+    with no return at all, which is the whole point of that week.
+    """
+    params = {a.arg for a in fn.args.args}
+    for node in ast.walk(fn):
+        targets = []
+        if isinstance(node, ast.Assign):
+            targets = node.targets
+        elif isinstance(node, ast.AugAssign):
+            targets = [node.target]
+        for t in targets:
+            if isinstance(t, ast.Subscript) and isinstance(t.value, ast.Name)                     and t.value.id in params:
+                return True
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)                 and node.func.attr in MUTATORS                 and isinstance(node.func.value, ast.Name)                 and node.func.value.id in params:
+            return True
+    return False
+
+
 # ---------------------------------------------------------------------------
 # The four scored tests
 # ---------------------------------------------------------------------------
@@ -201,6 +226,15 @@ def test_a_function_hands_back_several_values():
     tree = get_tree()
 
     multi = multi_returns(tree)
+    # Week 10 moves the resources into a dictionary, and explore() stops
+    # returning six values because it changes the one dict it was handed.
+    # That is what this row's own message promises ("a list fixes it"), so an
+    # in-place change counts as the SECOND -- never the first, which must
+    # still be a function handing back several values at once.
+    if multi:
+        named = {name for name, _ in multi}
+        multi = multi + [(f.name, 0) for f in functions(tree)
+                         if f.name not in named and changes_a_parameter(f)]
     # TWO, not one. try_craft() is one of Week 7's four graded functions and
     # it already hands back several values, so `if not multi` would pay this
     # row out for work done last week. Part B adds explore(), night_phase(),
