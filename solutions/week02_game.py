@@ -4,7 +4,7 @@
 # NEW this week: variables, input(), int/float/str, arithmetic
 # From before: print(), comments
 #
-# This is one correct answer, not the only one. Your starting numbers, colours
+# This is one correct answer, not the only one. Your starting numbers, colors
 # and wording can all differ and still score full marks.
 # =============================================================================
 
