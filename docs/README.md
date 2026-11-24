@@ -7,10 +7,11 @@ game &mdash; double-click a file and read it.
 |---|---|
 | `week07_refactor.html` | **The Week 7 refactor, shown.** Ten blocks of this game before and after, side by side, with the block lit in both places and the one line left behind where it used to be. Each one names what had to go in as a parameter and what had to come out as a return. |
 | `week10_data.html` | **The Week 10 reshape, stepped.** One step per TODO, in the order the week asks for them, and the arrow walks each step ONE LINE AT A TIME with a note saying what that line is for. Under every pair: the shape it was, the shape it becomes, and the one thing the old shape could not do. |
+| `debug_stepper.html` | **A real repo, debugged.** The instructor's own demo repo as it actually stood, and the twenty-four faults we worked out of it on screen. One step per fault, each with what it did, what was really wrong, the fix &mdash; and **which tool caught it**, which for eight of them was nothing at all. |
 
 ## For the instructor
 
-Both pages are **generated** &mdash; do not hand-edit either:
+All three pages are **generated** &mdash; do not hand-edit any of them:
 
 ```
 python Scripts/build_refactor_viewer.py      # Week 7, from the real game files
@@ -20,6 +21,10 @@ python Scripts/sabotage_refactor_viewer.py   # and that that harness fails close
 python Scripts/build_week10_viewer.py        # Week 10, same idea
 python Scripts/test_week10_viewer.py         # every drawn line, and TODO coverage
 node   Scripts/test_week10_render.js         # and that the page actually draws
+
+python Scripts/build_debug_viewer.py         # the debug session
+python Scripts/test_debug_viewer.py          # drawn lines + fault coverage
+node   Scripts/test_debug_render.js          # and that the page actually draws
 ```
 
 Every chunk in either page is sliced at build time out of two real game files,
@@ -28,6 +33,12 @@ that every line still matches both sources and refuse a page that has been
 hand-edited.
 
 Week 7's slices come from `solutions/week06_game.py` and the Week 7 answer.
+The debug stepper's come from the demo repo frozen at `d239a02` and the
+repaired copy, both kept in `block-builder-staging/debug-session/`. Its
+harness also checks the badges it is least able to fake: it runs
+`scope_check.py` on the snapshot and refuses the page unless the four steps
+claiming that tool really are the four functions it reports.
+
 Week 10's come from `solutions/week09_game.py` &mdash; the answer that ships
 this week, so the left pane is a file students hold &mdash; and the Week 10
 answer. Its harness also checks the mapping **both ways**: every step names a
