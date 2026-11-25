@@ -496,28 +496,55 @@ var DEMOS = [
   "before": [
    [
     {
-     "n": 436,
-     "t": "        print(\"You have enough wood to build a sturdy shelter.\"",
+     "n": 414,
+     "t": "    print(f\"  Survival: [{'=' * filled}{'-' * (width - filled)}] {ratio:.0%}\")",
      "c": false
     },
     {
-     "n": 437,
-     "t": "        \"You sleep safely and wake up refreshed.\")",
+     "n": 416,
+     "t": "    show_day_status(day, health, wood, stone, food, water)",
      "c": false
     },
     {
-     "n": 438,
-     "t": "    elif SHELTER in crafted: #cold night, lose 5-10 health",
+     "n": 418,
+     "t": "def shelter_plan(wood, walls_needed=4, wood_per_wall=5):",
      "c": true
     },
     {
-     "n": 439,
-     "t": "        health_loss = random.randint(5, 10) # lose a random amount of health between 5 and 10",
+     "n": 419,
+     "t": "    \"\"\"Plan the shelter based on available wood.",
      "c": false
     },
     {
-     "n": 440,
-     "t": "        health -= health_loss # subtract the health loss from total health",
+     "n": 421,
+     "t": "    Arguments:",
+     "c": false
+    }
+   ],
+   [
+    {
+     "n": 607,
+     "t": "    print(\"[bold]Night falls...[/bold]\")",
+     "c": false
+    },
+    {
+     "n": 609,
+     "t": "    eat_and_drink(food, water, health)",
+     "c": false
+    },
+    {
+     "n": 610,
+     "t": "    shelter_plan(wood)",
+     "c": true
+    },
+    {
+     "n": 611,
+     "t": "    draw_progress(day, max_days)",
+     "c": false
+    },
+    {
+     "n": 622,
+     "t": "    game_over = check_game_over(health, day, max_days) # check if the game is over based on health and day",
      "c": false
     }
    ]
@@ -549,12 +576,39 @@ var DEMOS = [
      "t": "    Arguments:",
      "c": false
     }
+   ],
+   [
+    {
+     "n": 626,
+     "t": "    print(\"[bold]Night falls...[/bold]\")",
+     "c": false
+    },
+    {
+     "n": 628,
+     "t": "    eat_and_drink(player)",
+     "c": false
+    },
+    {
+     "n": 629,
+     "t": "    shelter_plan(player, crafted)",
+     "c": true
+    },
+    {
+     "n": 630,
+     "t": "    draw_progress(day, max_days)",
+     "c": false
+    },
+    {
+     "n": 631,
+     "t": "    show_day_status(day, player)",
+     "c": false
+    }
    ]
   ],
   "symptom": "Nothing. A read, so it is silent.",
   "cause": "<code>crafted</code> is a module-level list that this function never asked for. It happens to work, which is exactly what makes it hard to notice.",
-  "fix": "Take <code>crafted</code> as a parameter, alongside <code>player</code>.",
-  "note": "Found in the same <code>scope_check</code> run as A2. A function that reaches outward works until somebody calls it from somewhere else &mdash; and then it does not, for reasons that have nothing to do with the call.",
+  "fix": "Take <code>crafted</code> as a parameter, and have the caller pass it.",
+  "note": "<strong>Look at where the change is not.</strong> The line that actually reads the list &mdash; <code>elif SHELTER in crafted:</code>, twenty lines below the signature &mdash; is byte-for-byte identical before and after. Nothing at the site of the fault changes at all; the whole repair is in the signature and the call. That is why reading the body of a function will not find this, and why <code>scope_check</code> &mdash; which compares what a function uses against what it was given &mdash; will. Found in the same run as A2. A function that reaches outward works until somebody calls it from somewhere else, and then it does not, for reasons that have nothing to do with the call.",
   "band": "crafted arrives as a parameter instead of being reached for."
  },
  {
