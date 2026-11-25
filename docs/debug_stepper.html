@@ -645,6 +645,33 @@ var DEMOS = [
      "t": "    Parameters:",
      "c": false
     }
+   ],
+   [
+    {
+     "n": 82,
+     "t": "    print(\"Your name is: \" + name) # concatenate the name onto the string to print it back",
+     "c": false
+    },
+    {
+     "n": 83,
+     "t": "    print(\"You chose difficulty: \" + difficulty) # concat the difficulty onto the string to print it back",
+     "c": false
+    },
+    {
+     "n": 86,
+     "t": "    total_resources = wood + stone + food + water + iron # addition not concatenation because they are ints",
+     "c": true
+    },
+    {
+     "n": 88,
+     "t": "    days_of_food = food // 2",
+     "c": false
+    },
+    {
+     "n": 91,
+     "t": "    walls_needed = 4",
+     "c": false
+    }
    ]
   ],
   "after": [
@@ -674,12 +701,44 @@ var DEMOS = [
      "t": "    Arguments:",
      "c": false
     }
+   ],
+   [
+    {
+     "n": 109,
+     "t": "    print(\"Your name is: \" + name) # concatenate the name onto the string to print it back",
+     "c": false
+    },
+    {
+     "n": 110,
+     "t": "    print(\"You chose difficulty: \" + difficulty) # concat the difficulty onto the string to print it back",
+     "c": false
+    },
+    {
+     "n": 113,
+     "t": "    total_resources = (player[\"wood\"] + player[\"stone\"] + player[\"food\"]",
+     "c": true
+    },
+    {
+     "n": 114,
+     "t": "                       + player[\"water\"] + player[\"iron\"]) # ints, so this adds",
+     "c": true
+    },
+    {
+     "n": 116,
+     "t": "    days_of_food = player[\"food\"] // 2",
+     "c": false
+    },
+    {
+     "n": 119,
+     "t": "    walls_needed = 4",
+     "c": false
+    }
    ]
   ],
   "symptom": "Nothing.",
   "cause": "It prints <code>actions_per_day</code> twice and never takes it. Ten parameters is itself the reason the missing eleventh was invisible &mdash; nobody reads a ten-parameter signature and checks it against the body.",
   "fix": "Pass the dictionary instead. Ten parameters become five, and the one that was missing is now named.",
-  "note": "<strong>Neither I nor anyone else spotted this by reading.</strong> It came out of <code>scope_check.py</code>, which is the argument for having the tool at all.",
+  "note": "<strong>Changing the signature is not the whole job.</strong> The second pair is there to show what the first pair costs: every bare <code>wood</code> in the body becomes <code>player[&quot;wood&quot;]</code>, and this one line carries five of them. That is the trade &mdash; one parameter instead of ten, paid for by touching every use inside. Worth saying out loud before anyone agrees to it. <strong>Neither I nor anyone else spotted the original fault by reading.</strong> It came out of <code>scope_check.py</code>, which is the argument for having the tool at all.",
   "band": "Ten parameters become five, and the missing one is now named."
  },
  {
@@ -716,6 +775,33 @@ var DEMOS = [
      "t": "        Arguments:",
      "c": false
     }
+   ],
+   [
+    {
+     "n": 352,
+     "t": "    print(f\"  {'Water:':<12} {water:>5}\")",
+     "c": false
+    },
+    {
+     "n": 353,
+     "t": "    print(\"-\" * 40)",
+     "c": false
+    },
+    {
+     "n": 355,
+     "t": "    if health <= 0: # death message",
+     "c": true
+    },
+    {
+     "n": 356,
+     "t": "        print(\"You have died. Game over.\")",
+     "c": false
+    },
+    {
+     "n": 357,
+     "t": "    elif health < 30 and food < 3: # critical warning ",
+     "c": false
+    }
    ]
   ],
   "after": [
@@ -745,12 +831,39 @@ var DEMOS = [
      "t": "    Arguments:",
      "c": false
     }
+   ],
+   [
+    {
+     "n": 359,
+     "t": "    show_inventory(player) # STEP 8: the same one place",
+     "c": false
+    },
+    {
+     "n": 360,
+     "t": "    print(\"-\" * 40)",
+     "c": false
+    },
+    {
+     "n": 362,
+     "t": "    if player[\"health\"] <= 0: # death message",
+     "c": true
+    },
+    {
+     "n": 363,
+     "t": "        print(\"You have died. Game over.\")",
+     "c": false
+    },
+    {
+     "n": 364,
+     "t": "    elif player[\"health\"] < 30 and player[\"food\"] < 3: # critical warning",
+     "c": false
+    }
    ]
   ],
   "symptom": "Nothing. The iron row showed a number, and the number was even right.",
   "cause": "<code>iron</code> is printed in the body and absent from the signature, so it resolved to module level.",
   "fix": "One parameter: the dictionary. Every resource it prints is now something it was handed.",
-  "note": "The second of the two faults only the tool found. Both A4 and A5 are status panels &mdash; code nobody suspects, because its output looks right.",
+  "note": "Same trade as A4, and the second pair shows it again: the signature loses five parameters and every use inside has to be respelled. The resource rows in this function go a step further and leave it altogether &mdash; <strong>E3</strong> is where they turn into one <code>show_inventory(player)</code> call shared by both panels. The second of the two faults only the tool found. Both A4 and A5 are status panels &mdash; code nobody suspects, because its output looks right.",
   "band": "One parameter. Every row it prints is something it was handed."
  },
  {
